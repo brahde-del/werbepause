@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Werbepause – Wer kennt die Marke?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B1F3B;
+    --ink-soft: #2E335A;
+    --cream: #FBF3E6;
+    --red: #E63946;
+    --mustard: #F4A300;
+    --green: #2A9D5C;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 20px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mustard);
+  }
+
+  .round-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: rgba(251,243,230,0.7);
+  }
+
+  .screen { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .hidden { display: none !important; }
+
+  .title {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    line-height: 1.15;
+    margin: 4px 0 0;
+    color: var(--cream);
+  }
+
+  .rules {
+    background: var(--ink-soft);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .rules h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mustard);
+    margin: 0 0 10px;
+  }
+  .rules ol {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .hint {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(251,243,230,0.75);
+  }
+  .rules .hint { margin-top: 12px; }
+
+  .player-input { display: flex; gap: 8px; margin: 0; }
+  .player-input input {
+    flex: 1;
+    background: var(--cream);
+    color: var(--ink);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+  .player-input input:focus { outline: 2px solid var(--mustard); }
+
+  .player-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .player-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-soft);
+    border-radius: 999px;
+    padding: 6px 8px 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .player-list button {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    touch-action: manipulation;
+  }
+
+  .settings-box {
+    background: var(--ink-soft);
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .settings-box label {
+    font-weight: 600;
+    color: rgba(251,243,230,0.9);
+  }
+  .settings-box select {
+    background: var(--cream);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  .settings-box select:focus {
+    outline: 2px solid var(--mustard);
+  }
+
+  .btn {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .btn-primary { background: var(--mustard); color: var(--ink); }
+  .btn-secondary { background: var(--cream); color: var(--ink); }
+  .btn-correct { background: var(--green); color: var(--cream); }
+  .btn-wrong { background: var(--red); color: var(--cream); }
+  .btn-text {
+    background: none;
+    color: rgba(251,243,230,0.65);
+    text-decoration: underline;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 8px;
+    align-self: center;
+  }
+
+  .turn-indicator {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: var(--cream);
+    margin: 0;
+  }
+
+  .tag-card-wrapper {
+    position: relative;
+    -webkit-perspective: 1200px;
+    perspective: 1200px;
+    min-height: 300px;
+    margin-top: 4px;
+  }
+  .tag-hole {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 4px solid var(--ink-soft);
+    z-index: 3;
+  }
+  .tag-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    transition: transform 0.6s cubic-bezier(.4,.2,.2,1);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  .tag-card.flipped {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+  .tag-card.no-transition {
+    transition: none !important;
+  }
+  .tag-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px 24px;
+    border-radius: 18px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  .tag-front {
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+  .tag-back {
+    background: var(--mustard);
+    color: var(--ink);
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+
+  .tag-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+  .tag-blank {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+    letter-spacing: 4px;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+  .tag-brand {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+  }
+  .tag-quote {
+    font-size: clamp(15px, 4.4vw, 19px);
+    line-height: 1.4;
+    font-style: italic;
+    margin: 0;
+  }
+
+  #revealActions { display: flex; justify-content: center; }
+  #revealActions .btn { min-width: 220px; }
+  #judgeActions { display: flex; gap: 12px; }
+  #judgeActions .btn { flex: 1; }
+  #judgeActions.hidden, #revealActions.hidden { display: none !important; }
+
+  .scoreboard { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .team-total { text-align: center; }
+  .team-total .big-number {
+    font-family: 'Anton', sans-serif;
+    font-size: 44px;
+    color: var(--mustard);
+    line-height: 1;
+  }
+  .team-total .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(251,243,230,0.6);
+    margin-top: 4px;
+  }
+  .player-rows { display: flex; flex-direction: column; gap: 8px; }
+  .player-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--ink-soft);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .player-row.active { box-shadow: inset 0 0 0 2px var(--mustard); }
+  .player-name { font-weight: 700; }
+  .tally { display: flex; align-items: center; }
+  .tally-group { position: relative; display: inline-flex; gap: 2px; margin-right: 6px; }
+  .bar { width: 3px; height: 14px; background: var(--cream); display: inline-block; border-radius: 1px; }
+  .tally-group .strike {
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background: var(--red);
+    top: 6px;
+    left: -2px;
+    transform: rotate(-50deg);
+  }
+  .tally-num {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+
+  .end-summary { font-size: 15px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <span class="eyebrow">📺 Werbepause</span>
+    <span class="round-counter" id="roundCounter"></span>
+  </header>
+
+  <section id="setup" class="screen">
+    <h1 class="title">Wer kennt die<br>meisten Werbesprüche?</h1>
+
+    <div class="rules">
+      <h2>So geht's</h2>
+      <ol>
+        <li>Setzt euch in eine Runde – das Handy wandert reihum.</li>
+        <li>Wer das Handy hat, liest den Werbespruch vor, ohne die Marke zu verraten.</li>
+        <li>Die nächste Person rät, von welcher Marke der Spruch stammt.</li>
+        <li>Auf „Marke zeigen“ tippen, Antwort vergleichen und mit ✅ oder ❌ bewerten.</li>
+        <li>Handy weitergeben – nächste Frage, nächste Person.</li>
+	<li>Viel Spaß, euer Didi B.</li>
+      </ol>
+      <p class="hint">Spielernamen eintragen für eine automatische Strichliste – geht aber auch ohne, dann zählt nur, wie viele ihr zusammen schafft.</p>
+    </div>
+
+    <div id="playerForm" class="player-input">
+      <input id="playerNameInput" placeholder="Name eingeben…" maxlength="16">
+      <button type="button" id="addPlayerBtn" class="btn btn-secondary">+ Hinzufügen</button>
+    </div>
+    
+    <ul id="playerList" class="player-list"></ul>
+
+    <div class="settings-box">
+      <label for="questionCountSelect">Fragen pro Runde:</label>
+      <select id="questionCountSelect">
+        <option value="30" selected>30 Fragen</option>
+        <option value="50">50 Fragen</option>
+        <option value="100">100 Fragen</option>
+        <option value="all">Alle Fragen</option>
+      </select>
+    </div>
+
+    <button id="startBtn" class="btn btn-primary">📺 Werbepause starten</button>
+  </section>
+
+  <section id="game" class="screen hidden">
+    <p class="turn-indicator" id="turnIndicator"></p>
+
+    <div class="tag-card-wrapper">
+      <div class="tag-hole"></div>
+      <div class="tag-card" id="tagCard">
+        <div class="tag-face tag-front">
+          <span class="tag-label">Marke:</span>
+          <span class="tag-blank">______</span>
+          <p class="tag-quote" id="frontQuote"></p>
+        </div>
+        <div class="tag-face tag-back">
+          <span class="tag-label">Marke:</span>
+          <span class="tag-brand" id="backBrand"></span>
+          <p class="tag-quote" id="backQuote"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="revealActions">
+      <button id="revealBtn" class="btn btn-secondary">🔍 Marke zeigen</button>
+    </div>
+    <div id="judgeActions" class="hidden">
+      <button id="wrongBtn" class="btn btn-wrong">❌ Falsch</button>
+      <button id="correctBtn" class="btn btn-correct">✅ Richtig</button>
+    </div>
+
+    <div class="scoreboard" id="scoreboard"></div>
+
+    <button id="restartBtn" class="btn btn-text">🔄 Neu mischen &amp; von vorn</button>
+  </section>
+
+  <section id="end" class="screen hidden">
+    <h1 class="title">Ergebnis</h1>
+    <div class="team-total" id="endTotal"></div>
+    <p class="end-summary" id="endSummary"></p>
+    <div class="player-rows" id="endPlayerRows"></div>
+    <button id="playAgainBtn" class="btn btn-primary">🔁 Nochmal spielen</button>
+    <button id="backToSetupBtn" class="btn btn-text">⚙️ Spieler bearbeiten</button>
+  </section>
+
+</div>
+
+<script>
+  // --- Sichtbare Fehleranzeige für Geräte ohne Remote-Debugging (z.B. iPhone) ---
+  // Falls irgendwo ein Skriptfehler auftritt, wird er unten am Bildschirm
+  // als roter Balken angezeigt, statt die App lautlos zu blockieren.
+  function showDebugError(msg) {
+    let box = document.getElementById('debugBox');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'debugBox';
+      box.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#E63946;color:#fff;' +
+        'padding:10px 14px;font-size:12px;font-family:monospace;z-index:99999;' +
+        'max-height:40vh;overflow:auto;white-space:pre-wrap;box-shadow:0 -4px 12px rgba(0,0,0,0.4);';
+      document.body.appendChild(box);
+    }
+    const line = document.createElement('div');
+    line.textContent = msg;
+    line.style.borderTop = '1px solid rgba(255,255,255,0.3)';
+    line.style.paddingTop = '4px';
+    line.style.marginTop = '4px';
+    box.appendChild(line);
+  }
+  window.addEventListener('error', (e) => {
+    showDebugError('Fehler: ' + e.message + ' (Zeile ' + e.lineno + ', Spalte ' + e.colno + ')');
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    showDebugError('Promise-Fehler: ' + e.reason);
+  });
+
+  const SLOGANS = [
+    { brand: "Real", slogan: "Einmal hin, alles drin." },
+    { brand: "Media Markt", slogan: "Ich bin doch nicht blöd!" },
+    { brand: "Saturn", slogan: "Geiz ist geil!" },
+    { brand: "Audi", slogan: "Vorsprung durch Technik." },
+    { brand: "Ritter Sport", slogan: "Quadratisch. Praktisch. Gut." },
+    { brand: "Haribo", slogan: "Haribo macht Kinder froh – und Erwachsene ebenso." },
+    { brand: "Toyota", slogan: "Nichts ist unmöglich." },
+    { brand: "Mercedes-Benz", slogan: "Das Beste oder nichts." },
+    { brand: "Persil", slogan: "Da weiß man, was man hat." },
+    { brand: "Edeka", slogan: "Wir lieben Lebensmittel." },
+    { brand: "Ikea", slogan: "Wohnst du noch, oder lebst du schon?" },
+    { brand: "Sparkasse", slogan: "Wenn's um Geld geht." },
+    { brand: "Volksbanken Raiffeisenbanken", slogan: "Wir machen den Weg frei." },
+    { brand: "Nike", slogan: "Just do it." },
+    { brand: "McDonald's", slogan: "Ich liebe es." },
+    { brand: "Hornbach", slogan: "Es gibt immer was zu tun." },
+    { brand: "Twix", slogan: "Raider heißt jetzt Twix, sonst ändert sich nix." },
+    { brand: "Mastercard", slogan: "Es gibt Dinge im Leben, die man nicht mit Geld bezahlen kann. Für alles andere gibt es Mastercard." },
+    { brand: "Telekom", slogan: "Erleben, was verbindet." },
+    { brand: "Rama", slogan: "Rama macht das Frühstück gut." },
+    { brand: "BMW", slogan: "Aus Freude am Fahren." },
+    { brand: "Lidl", slogan: "Lidl lohnt sich." },
+    { brand: "dm-drogerie markt", slogan: "Hier bin ich Mensch, hier kauf ich ein." },
+    { brand: "L'Oréal", slogan: "Weil ich es mir wert bin." },
+    { brand: "Tempo", slogan: "Hast du mal 'n Tempo?" },
+    { brand: "Toom Baumarkt", slogan: "Respekt, wer's selber macht." },
+    { brand: "Rennie", slogan: "Rennie räumt den Magen auf – schnell und zuverlässig." },
+    { brand: "Giotto", slogan: "So klein, so fein, so Giotto." },
+    { brand: "Targobank", slogan: "So geht Bank heute." },
+    { brand: "Schöfferhofer", slogan: "Prickelt länger, als man trinkt." },
+    { brand: "Gard", slogan: "Schönes Haar ist dir gegeben, lass es leben mit Gard." },
+    { brand: "Snickers", slogan: "Du bist nicht du, wenn du hungrig bist." },
+    { brand: "Nivea", slogan: "Die Pflege." },
+    { brand: "Bild", slogan: "Bild dir deine Meinung." },
+    { brand: "Krombacher", slogan: "Eine Perle der Natur." },
+    { brand: "Vodafone", slogan: "Power to you." },
+    { brand: "Allianz", slogan: "Hoffentlich Allianz versichert." },
+    { brand: "Commerzbank", slogan: "Leistung aus Leidenschaft." },
+    { brand: "Deutsche Bank", slogan: "Vertrauen ist der Anfang von allem." },
+    { brand: "ZDF", slogan: "Mit dem Zweiten sieht man besser." },
+    { brand: "ProSieben", slogan: "We love to entertain you." },
+    { brand: "Sat.1", slogan: "Sat.1 zeigt's allen." },
+    { brand: "Apple", slogan: "Think different." },
+    { brand: "Nokia", slogan: "Connecting People." },
+    { brand: "LG", slogan: "Life's Good." },
+    { brand: "Philips", slogan: "Sense and simplicity." },
+    { brand: "Bosch", slogan: "Technik fürs Leben." },
+    { brand: "O2", slogan: "Can do." },
+    { brand: "1&1", slogan: "Du merkst den Unterschied." },
+    { brand: "Adidas", slogan: "Impossible is Nothing." },
+    { brand: "Puma", slogan: "Forever Faster." },
+    { brand: "Opel", slogan: "Wir leben Autos." },
+    { brand: "Volkswagen", slogan: "Das Auto." },
+    { brand: "Skoda", slogan: "Einfach clever." },
+    { brand: "Honda", slogan: "The Power of Dreams." },
+    { brand: "Citroën", slogan: "Créative Technologie." },
+    { brand: "Peugeot", slogan: "Motion & Emotion." },
+    { brand: "Volvo", slogan: "for life." },
+    { brand: "Renault", slogan: "Drive the change." },
+    { brand: "Ford", slogan: "Fahr was du fühlst." },
+    { brand: "Hyundai", slogan: "Neue Wege denken." },
+    { brand: "Kia", slogan: "The Power to Surprise." },
+    { brand: "Mazda", slogan: "Zoom-Zoom." },
+    { brand: "Nissan", slogan: "Innovation that excites." },
+    { brand: "Seat", slogan: "auto emoción." },
+    { brand: "Aral", slogan: "Alles super." },
+    { brand: "Shell", slogan: "Du kommst weiter mit Shell." },
+    { brand: "Red Bull", slogan: "Red Bull verleiht Flügel." },
+    { brand: "Coca-Cola", slogan: "Mach dir Freude auf." },
+    { brand: "Bitburger", slogan: "Bitte ein Bit." },
+    { brand: "Jever", slogan: "Hopfen und mehr, das ist Jever." },
+    { brand: "Warsteiner", slogan: "Eins der feinsten Biere der Welt." },
+    { brand: "Paulaner", slogan: "Gut, besser, Paulaner." },
+    { brand: "Beck's", slogan: "Sail Away." },
+    { brand: "Apollinaris", slogan: "Das spritzigste Mineralwasser Deutschlands." },
+    { brand: "Fritz-Kola", slogan: "Wach bis ans Ende der Nacht." },
+    { brand: "Milka", slogan: "Die zarteste Versuchung, seit es Schokolade gibt." },
+    { brand: "Lindor", slogan: "Wenn er schmilzt, beginnt der Genuss." },
+    { brand: "Mars", slogan: "Mars macht mobil – bei Arbeit, Sport und Spiel." },
+    { brand: "Knoppers", slogan: "Die Pause, die es in sich hat." },
+    { brand: "Merci", slogan: "Merci, dass es dich gibt." },
+    { brand: "Werther's Original", slogan: "So schmeckt nur ein Werther's Original." },
+    { brand: "Aldi Süd", slogan: "Einfach ist mehr." },
+    { brand: "Kaufland", slogan: "Mehr für dein Geld." },
+    { brand: "Rewe", slogan: "Jeden Tag ein bisschen besser." },
+    { brand: "Nestlé", slogan: "Gute Lebensmittel, gutes Leben." },
+    { brand: "Iglo", slogan: "Du bist, was du isst." },
+    { brand: "Dr. Oetker", slogan: "Qualität, die man schmeckt." },
+    { brand: "Erasco", slogan: "Das Gute daran ist das Gute darin." },
+    { brand: "Odol", slogan: "Im Munde fühlt man sich wohl." },
+    { brand: "Ariel", slogan: "Sauber ist nicht gleich sauber." },
+    { brand: "Lenor", slogan: "Der Duft, der bleibt." },
+    { brand: "Calgon", slogan: "Waschmaschinen leben länger mit Calgon." },
+    { brand: "Domestos", slogan: "Tötet alle bekannten Keime. Punkt." },
+    { brand: "Vanish", slogan: "Trau dich, Farbe zu tragen." },
+    { brand: "Garnier", slogan: "Take care." },
+    { brand: "4711", slogan: "Das echte Kölnisch Wasser." },
+    { brand: "Uhu", slogan: "Klebt." },
+    { brand: "Tesa", slogan: "Hält." },
+    { brand: "C&A", slogan: "Hier spielt die Mode." },
+    { brand: "H&M", slogan: "Mode und Qualität zum besten Preis." },
+    { brand: "Zalando", slogan: "Schrei vor Glück." },
+    { brand: "Tchibo", slogan: "Jede Woche eine neue Welt." },
+    { brand: "Neckermann", slogan: "Neckermann macht's möglich." },
+    { brand: "Douglas", slogan: "Douglas macht das Leben schöner." },
+    { brand: "Praktiker", slogan: "20% auf alles, außer Tiernahrung." },
+    { brand: "Bauhaus", slogan: "Der Profi-Baumarkt." },
+    { brand: "Otto", slogan: "Otto … find ich gut!" },
+    { brand: "Perwoll", slogan: "Neu? Nein, mit Perwoll gewaschen." },
+    { brand: "ratiopharm", slogan: "Gute Preise. Gute Besserung." },
+    { brand: "Carglass", slogan: "Carglass repariert, Carglass tauscht aus." },
+    { brand: "Müller Milch", slogan: "Die Milchmacher." },
+    { brand: "Oreo", slogan: "Dreh, leck, tauch." },
+    { brand: "Hohes C", slogan: "Die Sonne im Glas." },
+    { brand: "Intel", slogan: "Intel Inside." },
+    { brand: "Lufthansa", slogan: "Nonstop you." },
+    { brand: "Kitkat", slogan: "Have a break, have a Kit Kat." },
+    { brand: "Maybelline", slogan: "Maybe she's born with it. Maybe it's Maybelline." },
+    { brand: "Frosch", slogan: "Putzen mit gutem Gewissen." },
+    { brand: "Knorr", slogan: "Is(s) gut." },
+    { brand: "Maggi", slogan: "Ideen für jeden Tag." },
+    { brand: "Old Spice", slogan: "Der Mann, den dein Mann sein könnte riechen könnte." },
+    { brand: "Axe", slogan: "The Axe Effect." },
+    { brand: "Gillette", slogan: "The Best a Man Can Get." },
+    { brand: "Sony", slogan: "like.no.other." },
+    { brand: "Fiat", slogan: "Driven by Passion." },
+    { brand: "Suzuki", slogan: "Way of Life!" },
+    { brand: "Deichmann", slogan: "Deichmann ist immer in Ihrer Nähe." },
+    { brand: "Sky", slogan: "Endlich richtig fernsehen." },
+    { brand: "Der Spiegel", slogan: "Sagen, was ist." },
+    { brand: "Miele", slogan: "Immer Besser." },
+    { brand: "Fielmann", slogan: "Brille: Fielmann." },
+    { brand: "Levi's", slogan: "Quality never goes out of style." },
+    { brand: "Swatch", slogan: "Time is what you make of it." },
+    { brand: "Subway", slogan: "Eat Fresh." },
+    { brand: "Burger King", slogan: "Be your way." },
+    { brand: "Siemens", slogan: "Ingenuity for life." },
+    { brand: "Pirelli", slogan: "Power is Nothing Without Control." },
+    { brand: "Hasseröder", slogan: "Männer wissen warum." },
+    { brand: "König Pilsener", slogan: "Auf gute Freunde, König Pilsener." },
+    { brand: "AOK", slogan: "Die Gesundheitskasse." },
+    { brand: "Check24", slogan: "Lass dir die Welt erklären." },
+    { brand: "Trivago", slogan: "Hotel? Trivago." },
+    { brand: "Yello Strom", slogan: "Ist doch eigentlich ganz einfach." },
+    { brand: "Schauma", slogan: "Für Haare wie aus der Werbung." },
+    { brand: "Fa", slogan: "Lust am Leben." },
+    { brand: "Dove", slogan: "Echte Schönheit." },
+    { brand: "Head & Shoulders", slogan: "Keine Chance für Schuppen." },
+    { brand: "Hipp", slogan: "Aus Liebe zum Leben." },
+    { brand: "Jacobs Krönung", slogan: "Wunderbar." }
+  ];
+
+  const els = {
+    setup: document.getElementById('setup'),
+    game: document.getElementById('game'),
+    end: document.getElementById('end'),
+    roundCounter: document.getElementById('roundCounter'),
+    playerForm: document.getElementById('playerForm'), // Neu
+    playerNameInput: document.getElementById('playerNameInput'),
+    addPlayerBtn: document.getElementById('addPlayerBtn'),
+    playerList: document.getElementById('playerList'),
+    startBtn: document.getElementById('startBtn'),
+    turnIndicator: document.getElementById('turnIndicator'),
+    tagCard: document.getElementById('tagCard'),
+    frontQuote: document.getElementById('frontQuote'),
+    backBrand: document.getElementById('backBrand'),
+    backQuote: document.getElementById('backQuote'),
+    revealActions: document.getElementById('revealActions'),
+    revealBtn: document.getElementById('revealBtn'),
+    judgeActions: document.getElementById('judgeActions'),
+    correctBtn: document.getElementById('correctBtn'),
+    wrongBtn: document.getElementById('wrongBtn'),
+    scoreboard: document.getElementById('scoreboard'),
+    restartBtn: document.getElementById('restartBtn'),
+    endTotal: document.getElementById('endTotal'),
+    endSummary: document.getElementById('endSummary'),
+    endPlayerRows: document.getElementById('endPlayerRows'),
+    playAgainBtn: document.getElementById('playAgainBtn'),
+    backToSetupBtn: document.getElementById('backToSetupBtn'),
+    questionCountSelect: document.getElementById('questionCountSelect')
+  };
+
+  let players = [];
+  let order = [];
+  let idx = 0;
+  let currentPlayerIdx = 0;
+  let teamScore = 0;
+
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  function cleanSlogan(slogan, brand) {
+    const re = new RegExp(escapeRegex(brand), 'gi');
+    return slogan.replace(re, '___');
+  }
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function renderPlayerList() {
+    els.playerList.innerHTML = '';
+    players.forEach((p, i) => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = p.name;
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.setAttribute('aria-label', p.name + ' entfernen');
+      btn.addEventListener('click', () => {
+        players.splice(i, 1);
+        renderPlayerList();
+      });
+      li.appendChild(span);
+      li.appendChild(btn);
+      els.playerList.appendChild(li);
+    });
+  }
+
+  function addPlayer() {
+    const name = els.playerNameInput.value.trim();
+    if (!name) return;
+    players.push({ name, score: 0 });
+    els.playerNameInput.value = '';
+    renderPlayerList();
+    // els.playerNameInput.focus(); <- Entfernt gegen iOS Tastatur-Glitch
+  }
+
+  // iOS-sicher: kein natives Form-Submit mehr nötig.
+  // "+"-Button per Klick/Tap...
+  els.addPlayerBtn.addEventListener('click', () => {
+    addPlayer();
+  });
+  // ...und Enter-Taste auf der (iOS-)Tastatur fügt ebenfalls hinzu.
+  els.playerNameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addPlayer();
+    }
+  });
+
+  function renderTally(n) {
+    const full = Math.floor(n / 5);
+    const rem = n % 5;
+    let html = '<span class="tally">';
+    for (let i = 0; i < full; i++) {
+      html += '<span class="tally-group"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="strike"></span></span>';
+    }
+    for (let i = 0; i < rem; i++) {
+      html += '<span class="bar"></span>';
+    }
+    html += '<span class="tally-num">' + n + '</span></span>';
+    return html;
+  }
+
+  function renderScoreboard() {
+    let html = '<div class="team-total">' +
+      '<div class="big-number">' + teamScore + ' / ' + order.length + '</div>' +
+      '<div class="label">zusammen erkannt</div>' +
+      '</div>';
+    if (players.length > 0) {
+      html += '<div class="player-rows">';
+      players.forEach((p, i) => {
+        const active = i === currentPlayerIdx ? ' active' : '';
+        html += '<div class="player-row' + active + '">' +
+          '<span class="player-name">' + p.name + '</span>' +
+          renderTally(p.score) +
+          '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<p class="hint">Tipp: Tragt die Punkte zusätzlich auf einem Zettel als Strichliste ein – einer pro Spieler.</p>';
+    }
+    els.scoreboard.innerHTML = html;
+  }
+
+  function loadQuestion() {
+    if (idx >= order.length) {
+      showEnd();
+      return;
+    }
+    const item = order[idx];
+    els.frontQuote.textContent = '„' + cleanSlogan(item.slogan, item.brand) + '“';
+    els.backBrand.textContent = item.brand;
+    els.backQuote.textContent = '„' + item.slogan + '“';
+    els.tagCard.classList.remove('flipped');
+    els.revealActions.classList.remove('hidden');
+    els.judgeActions.classList.add('hidden');
+    els.roundCounter.textContent = 'Frage ' + (idx + 1) + ' / ' + order.length;
+    if (players.length > 0) {
+      els.turnIndicator.textContent = '🎯 ' + players[currentPlayerIdx].name + ' ist dran – wer rät die Marke?';
+    } else {
+      els.turnIndicator.textContent = '🎯 Nächste Person ist dran!';
+    }
+  }
+
+  els.revealBtn.addEventListener('click', () => {
+    els.tagCard.classList.add('flipped');
+    els.revealActions.classList.add('hidden');
+    els.judgeActions.classList.remove('hidden');
+  });
+
+  function judge(correct) {
+    if (correct) {
+      teamScore++;
+      if (players.length > 0) players[currentPlayerIdx].score++;
+    }
+    if (players.length > 0) {
+      currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+    }
+    idx++;
+    renderScoreboard();
+
+    els.tagCard.classList.add('no-transition');
+    els.tagCard.classList.remove('flipped');
+    void els.tagCard.offsetHeight; 
+    loadQuestion();
+    requestAnimationFrame(() => {
+      els.tagCard.classList.remove('no-transition');
+    });
+  }
+
+  els.correctBtn.addEventListener('click', () => judge(true));
+  els.wrongBtn.addEventListener('click', () => judge(false));
+
+  function startGame() {
+    let shuffledPool = shuffle(SLOGANS);
+    const countSetting = els.questionCountSelect.value;
+    
+    if (countSetting === 'all') {
+      order = shuffledPool;
+    } else {
+      const limit = parseInt(countSetting, 10);
+      order = shuffledPool.slice(0, limit);
+    }
+
+    idx = 0;
+    currentPlayerIdx = 0;
+    teamScore = 0;
+    players.forEach(p => p.score = 0);
+    els.setup.classList.add('hidden');
+    els.end.classList.add('hidden');
+    els.game.classList.remove('hidden');
+    renderScoreboard();
+    loadQuestion();
+  }
+
+  els.startBtn.addEventListener('click', startGame);
+
+  els.restartBtn.addEventListener('click', () => {
+    if (confirm('Aktuelle Runde abbrechen und neu mischen?')) {
+      startGame();
+    }
+  });
+
+  function showEnd() {
+    els.game.classList.add('hidden');
+    els.end.classList.remove('hidden');
+    els.roundCounter.textContent = '';
+    els.endTotal.innerHTML = '<div class="big-number">' + teamScore + ' / ' + order.length + '</div>' +
+      '<div class="label">Werbesprüche erkannt</div>';
+    const pct = Math.round((teamScore / order.length) * 100);
+    let msg;
+    if (pct >= 85) msg = 'Wahnsinn – ihr seid quasi die Werbeagentur höchstpersönlich! 🏆';
+    else if (pct >= 60) msg = 'Starke Leistung, da steckt einiges an Werbe-Wissen in euch! 📺';
+    else if (pct >= 35) msg = 'Solide Quote – Zeit für mehr Werbepausen vor dem Fernseher 😄';
+    else msg = 'Naja… offenbar habt ihr alle Werbeblöcke immer weggezappt 😂';
+    els.endSummary.textContent = msg;
+
+    els.endPlayerRows.innerHTML = '';
+    if (players.length > 0) {
+      const sorted = players.slice().sort((a, b) => b.score - a.score);
+      sorted.forEach((p, i) => {
+        const crown = (i === 0 && p.score > 0) ? ' 👑' : '';
+        const row = document.createElement('div');
+        row.className = 'player-row';
+        row.innerHTML = '<span class="player-name">' + p.name + crown + '</span>' + renderTally(p.score);
+        els.endPlayerRows.appendChild(row);
+      });
+    }
+  }
+
+  els.playAgainBtn.addEventListener('click', () => {
+    els.end.classList.add('hidden');
+    startGame();
+  });
+
+  els.backToSetupBtn.addEventListener('click', () => {
+    els.end.classList.add('hidden');
+    els.setup.classList.remove('hidden');
+    renderPlayerList();
+  });
+</script>
+</body>
+</html>
