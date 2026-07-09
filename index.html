@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Roadtrip Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,247 +17,226 @@
     --green: #2A9D5C;
     --blue: #003399;
   }
-
-  * { box-sizing: border-box; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-    margin: 0;
-    min-height: 100%;
-    background: var(--ink);
-    color: var(--cream);
-    font-family: 'Inter', sans-serif;
-    -webkit-tap-highlight-color: transparent;
+    min-height: 100%; background: var(--ink); color: var(--cream);
+    font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent;
   }
+  .app { max-width: 480px; margin: 0 auto; padding: 16px 16px 48px; min-height: 100vh; display: flex; flex-direction: column; }
 
-  .app {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 20px 20px 40px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  /* Topbar */
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--mustard); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .round-counter { font-family: 'Space Mono', monospace; font-size: 12px; color: rgba(251,243,230,0.7); flex-shrink: 0; }
 
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-
-  .eyebrow {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--mustard);
-  }
-
-  .round-counter {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: rgba(251,243,230,0.7);
-  }
-
-  .screen { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .screen { display: flex; flex-direction: column; gap: 14px; flex: 1; }
   .hidden { display: none !important; }
 
-  .title {
-    font-family: 'Anton', sans-serif;
-    font-size: 32px;
-    line-height: 1.15;
-    margin: 4px 0 0;
-    color: var(--cream);
-  }
+  .title { font-family: 'Anton', sans-serif; font-size: 30px; line-height: 1.15; color: var(--cream); }
 
-  /* Game Selector */
-  .game-selector {
-    background: var(--mustard);
-    padding: 4px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 8px;
+  /* Game Tabs */
+  .game-tabs { display: flex; background: var(--ink-soft); border-radius: 14px; padding: 4px; gap: 4px; }
+  .game-tab {
+    flex: 1; border: none; background: transparent; color: rgba(251,243,230,0.55);
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700;
+    padding: 10px 4px; border-radius: 10px; cursor: pointer; line-height: 1.2;
+    transition: all 0.2s; text-align: center;
   }
-  .game-selector select {
-    background: transparent;
-    color: var(--ink);
-    border: none;
-    padding: 12px 14px;
-    font-family: 'Anton', sans-serif;
-    font-size: 22px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    outline: none;
-    -webkit-appearance: none;
-  }
+  .game-tab .tab-emoji { display: block; font-size: 18px; margin-bottom: 3px; }
+  .game-tab.active { background: var(--mustard); color: var(--ink); }
 
-  .rules {
-    background: var(--ink-soft);
-    border-radius: 14px;
-    padding: 16px 18px;
-  }
-  .rules h2 {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--mustard);
-    margin: 0 0 10px;
-  }
-  .rules ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 1.4; }
-  .hint { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(251,243,230,0.75); }
-  .rules .hint { margin-top: 12px; }
+  /* Rules */
+  .rules { background: var(--ink-soft); border-radius: 14px; padding: 14px 16px; }
+  .rules h2 { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--mustard); margin-bottom: 8px; }
+  .rules ol { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 13px; line-height: 1.4; }
+  .hint { font-size: 12px; line-height: 1.5; color: rgba(251,243,230,0.7); }
+  .rules .hint { margin-top: 10px; }
 
-  .player-input { display: flex; gap: 8px; margin: 0; }
+  /* Player Section */
+  .player-section { background: var(--ink-soft); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .player-section-header { display: flex; justify-content: space-between; align-items: center; }
+  .player-section-title { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--mustard); }
+  .player-input { display: flex; gap: 8px; }
   .player-input input {
-    flex: 1;
-    background: var(--cream);
-    color: var(--ink);
-    border: none;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
+    flex: 1; min-width: 0; background: var(--cream); color: var(--ink); border: none;
+    border-radius: 10px; padding: 11px 12px; font-size: 16px; font-family: 'Inter', sans-serif;
   }
   .player-input input:focus { outline: 2px solid var(--mustard); }
-
-  .player-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .player-input .btn { flex-shrink: 0; white-space: nowrap; padding: 11px 14px; font-size: 14px; }
+  .player-list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
   .player-list li {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--ink-soft); border-radius: 999px;
-    padding: 6px 8px 6px 14px; font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px; background: var(--ink);
+    border-radius: 999px; padding: 5px 6px 5px 12px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s;
   }
-  .player-list button { background: none; border: none; color: var(--red); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; }
+  .player-list li.selected { border-color: var(--mustard); }
+  .player-list li .remove-btn { background: none; border: none; color: var(--red); font-size: 16px; cursor: pointer; line-height: 1; padding: 2px 4px; }
 
+  /* Settings */
   .settings-box {
-    background: var(--ink-soft); padding: 14px 16px; border-radius: 12px;
-    display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-top: 4px;
+    background: var(--ink-soft); padding: 12px 14px; border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+    gap: 12px;
   }
-  .settings-box label { font-weight: 600; color: rgba(251,243,230,0.9); }
+  .settings-box label { font-weight: 600; color: rgba(251,243,230,0.9); flex-shrink: 0; }
   .settings-box select {
     background: var(--cream); color: var(--ink); border: none; border-radius: 8px;
-    padding: 8px 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    padding: 8px 10px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    min-width: 0; max-width: 100%;
   }
 
+  /* Buttons */
   .btn {
-    border: none; border-radius: 12px; padding: 14px 18px;
+    border: none; border-radius: 12px; padding: 13px 16px;
     font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
-    cursor: pointer; -webkit-tap-highlight-color: transparent;
-    transition: transform 0.1s;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.1s;
+    width: 100%;
   }
   .btn:active { transform: scale(0.97); }
   .btn-primary { background: var(--mustard); color: var(--ink); }
   .btn-secondary { background: var(--cream); color: var(--ink); }
   .btn-correct { background: var(--green); color: var(--cream); }
   .btn-wrong { background: var(--red); color: var(--cream); }
-  .btn-text { background: none; color: rgba(251,243,230,0.65); text-decoration: underline; font-weight: 500; font-size: 13px; padding: 8px; align-self: center; }
+  .btn-text { background: none; color: rgba(251,243,230,0.6); text-decoration: underline; font-weight: 500; font-size: 13px; align-self: center; padding: 8px; }
+  .btn-row { display: flex; gap: 10px; }
+  .btn-row .btn { flex: 1; }
 
-  .turn-indicator { text-align: center; font-family: 'Space Mono', monospace; font-size: 14px; color: var(--cream); margin: 0; }
+  .turn-indicator { text-align: center; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--cream); }
 
   /* GAME 1: Werbepause Card */
-  .tag-card-wrapper { position: relative; perspective: 1200px; min-height: 300px; margin-top: 4px; }
-  .tag-hole { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 26px; height: 26px; border-radius: 50%; background: var(--ink); border: 4px solid var(--ink-soft); z-index: 3; }
-  .tag-card { position: relative; width: 100%; height: 100%; min-height: 300px; transition: transform 0.6s cubic-bezier(.4,.2,.2,1); transform-style: preserve-3d; }
+  .tag-card-wrapper { position: relative; perspective: 1200px; min-height: 280px; margin-top: 4px; }
+  .tag-hole { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; border-radius: 50%; background: var(--ink); border: 4px solid var(--ink-soft); z-index: 3; }
+  .tag-card { position: relative; width: 100%; height: 100%; min-height: 280px; transition: transform 0.6s cubic-bezier(.4,.2,.2,1); transform-style: preserve-3d; }
   .tag-card.flipped { transform: rotateY(180deg); }
   .tag-card.no-transition { transition: none !important; }
-  .tag-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 24px; border-radius: 18px; backface-visibility: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-  .tag-front { background: var(--cream); color: var(--ink); transform: rotateY(0deg); }
+  .tag-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px 20px; border-radius: 16px; backface-visibility: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.35); overflow-y: auto; }
+  .tag-front { background: var(--cream); color: var(--ink); }
   .tag-back { background: var(--mustard); color: var(--ink); transform: rotateY(180deg); }
-  .tag-label { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
-  .tag-blank { font-family: 'Anton', sans-serif; font-size: 30px; letter-spacing: 4px; color: var(--red); margin-bottom: 18px; }
-  .tag-brand { font-family: 'Anton', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 18px; }
-  .tag-quote { font-size: clamp(15px, 4.4vw, 19px); line-height: 1.4; font-style: italic; margin: 0; }
+  .tag-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6; margin-bottom: 5px; }
+  .tag-blank { font-family: 'Anton', sans-serif; font-size: 28px; letter-spacing: 4px; color: var(--red); margin-bottom: 14px; }
+  .tag-brand { font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 1px; margin-bottom: 14px; }
+  .tag-quote { font-size: clamp(14px, 4vw, 18px); line-height: 1.4; font-style: italic; }
 
   /* GAME 2: Kennzeichen */
-  .license-plate-form { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+  .license-plate-form { display: flex; flex-direction: column; gap: 12px; }
   .license-plate {
     display: flex; background: #fff; border: 3px solid #000; border-radius: 8px;
     overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   }
-  .plate-euro { background: var(--blue); color: #fff; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 12px; font-weight: bold; width: 40px; }
-  .plate-euro-stars { font-size: 16px; line-height: 1; }
+  .plate-euro { background: var(--blue); color: #fff; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: bold; width: 38px; flex-shrink: 0; }
+  .plate-euro-stars { font-size: 14px; line-height: 1; }
   .plate-input {
-    flex: 1; border: none; font-family: 'Space Mono', monospace; font-size: 36px;
-    text-transform: uppercase; text-align: center; outline: none; color: #000;
-    padding: 10px; background: transparent;
+    flex: 1; min-width: 0; border: none; font-family: 'Space Mono', monospace; font-size: 32px;
+    text-transform: uppercase; text-align: left; outline: none; color: #000;
+    padding: 10px 12px; background: transparent; letter-spacing: 2px;
   }
-  .plate-result-box { background: var(--ink-soft); border-radius: 12px; padding: 24px; text-align: center; display: flex; flex-direction: column; gap: 12px; }
-  .plate-result-city { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--mustard); line-height: 1.1; margin: 0; }
-  .plate-result-district { font-size: 15px; color: var(--cream); opacity: 0.8; margin: 0; }
-  .award-points { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-  .award-points-title { font-family: 'Space Mono', monospace; font-size: 12px; text-transform: uppercase; color: var(--mustard); margin-bottom: 4px; }
+  .plate-input::placeholder { color: #aaa; font-size: 20px; letter-spacing: 0; }
+  .plate-result-box { background: var(--ink-soft); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .plate-kz { font-family: 'Space Mono', monospace; font-size: 13px; color: rgba(251,243,230,0.6); margin-bottom: 2px; }
+  .plate-result-city { font-family: 'Anton', sans-serif; font-size: 26px; color: var(--mustard); line-height: 1.1; }
+  .plate-result-district { font-size: 14px; color: var(--cream); opacity: 0.85; }
+  .plate-result-state { font-size: 13px; color: rgba(251,243,230,0.6); }
+  .award-points { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .award-points-title { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--mustard); }
   .award-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  
+  .award-grid .btn { padding: 10px 8px; font-size: 13px; }
+
   /* GAME 3: Zitate */
-  .quote-card { background: var(--cream); color: var(--ink); padding: 30px 24px; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-  .quote-text { font-size: 18px; line-height: 1.4; font-style: italic; margin: 0 0 20px; font-weight: 600; }
-  .mc-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .quote-card { background: var(--cream); color: var(--ink); padding: 26px 20px; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+  .quote-text { font-size: clamp(15px, 4.2vw, 18px); line-height: 1.4; font-style: italic; margin-bottom: 16px; font-weight: 600; }
+  .mc-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
   .mc-btn {
     background: var(--ink-soft); color: var(--cream); border: 2px solid transparent;
-    border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 600;
-    cursor: pointer; text-align: left; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    border-radius: 10px; padding: 13px 14px; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-align: left; transition: all 0.2s; font-family: 'Inter', sans-serif; width: 100%;
   }
   .mc-btn:disabled { cursor: default; opacity: 0.8; }
   .mc-btn.correct { background: var(--green); color: #fff; border-color: var(--green); }
   .mc-btn.wrong { background: var(--red); color: #fff; border-color: var(--red); }
 
-  /* Scoreboard shared */
-  .scoreboard { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  /* Scoreboard */
+  .scoreboard { display: flex; flex-direction: column; gap: 8px; }
   .team-total { text-align: center; }
-  .team-total .big-number { font-family: 'Anton', sans-serif; font-size: 44px; color: var(--mustard); line-height: 1; }
-  .team-total .label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(251,243,230,0.6); margin-top: 4px; }
-  .player-rows { display: flex; flex-direction: column; gap: 8px; }
-  .player-row { display: flex; justify-content: space-between; align-items: center; background: var(--ink-soft); border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+  .team-total .big-number { font-family: 'Anton', sans-serif; font-size: 42px; color: var(--mustard); line-height: 1; }
+  .team-total .label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(251,243,230,0.6); margin-top: 3px; }
+  .player-rows { display: flex; flex-direction: column; gap: 6px; }
+  .player-row { display: flex; justify-content: space-between; align-items: center; background: var(--ink-soft); border-radius: 10px; padding: 9px 12px; font-size: 13px; }
   .player-row.active { box-shadow: inset 0 0 0 2px var(--mustard); }
   .player-name { font-weight: 700; }
-  
-  .tally { display: flex; align-items: center; }
-  .tally-group { position: relative; display: inline-flex; gap: 2px; margin-right: 6px; }
-  .bar { width: 3px; height: 14px; background: var(--cream); display: inline-block; border-radius: 1px; }
-  .tally-group .strike { position: absolute; width: 20px; height: 2px; background: var(--red); top: 6px; left: -2px; transform: rotate(-50deg); }
-  .tally-num { font-family: 'Space Mono', monospace; font-weight: 700; margin-left: 4px; }
+  .tally { display: flex; align-items: center; flex-wrap: nowrap; }
+  .tally-group { position: relative; display: inline-flex; gap: 2px; margin-right: 5px; }
+  .bar { width: 3px; height: 13px; background: var(--cream); display: inline-block; border-radius: 1px; }
+  .tally-group .strike { position: absolute; width: 20px; height: 2px; background: var(--red); top: 5px; left: -2px; transform: rotate(-50deg); }
+  .tally-num { font-family: 'Space Mono', monospace; font-weight: 700; margin-left: 3px; font-size: 13px; }
 
-  .end-summary { font-size: 15px; line-height: 1.5; text-align: center; }
+  /* End screen */
+  .end-summary { font-size: 14px; line-height: 1.5; text-align: center; color: rgba(251,243,230,0.85); }
+
+  /* Plates: no-points mode */
+  .plates-info-mode .award-points { display: none; }
+
+  /* Player Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: flex; align-items: flex-end; justify-content: center;
+    z-index: 100; padding: 0;
+  }
+  .modal-overlay.hidden { display: none !important; }
+  .modal-box {
+    background: var(--ink); border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 480px; padding: 20px 16px 32px;
+    display: flex; flex-direction: column; gap: 14px;
+    max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.5);
+  }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-family: "Anton", sans-serif; font-size: 22px; color: var(--cream); }
+  .modal-close { background: none; border: none; color: rgba(251,243,230,0.6); font-size: 20px; cursor: pointer; padding: 4px 8px; }
+  .modal-player-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .modal-player-list li {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--ink-soft); border-radius: 10px; padding: 12px 14px;
+    cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s;
+    font-size: 15px; font-weight: 600;
+  }
+  .modal-player-list li.selected { border-color: var(--mustard); }
+  .modal-player-list li .check { color: var(--mustard); font-size: 18px; width: 24px; text-align: center; }
+  .modal-player-list li .del-btn { background: none; border: none; color: var(--red); font-size: 18px; cursor: pointer; padding: 4px 6px; }
+
 </style>
 </head>
 <body>
 <div class="app">
-
   <header class="topbar">
-    <span class="eyebrow" id="topbarTitle">📺 Werbepause</span>
+    <span class="eyebrow" id="topbarTitle">🚗 Roadtrip Games</span>
     <span class="round-counter" id="roundCounter"></span>
   </header>
 
+  <!-- SETUP -->
   <section id="setup" class="screen">
-    
-    <div class="game-selector">
-      <select id="gameSelect">
-        <option value="slogans">📺 Spiel: Werbepause</option>
-        <option value="plates">🚗 Spiel: Kennzeichen-Jäger</option>
-        <option value="quotes">⚽ Spiel: Fußball-Mythen</option>
-      </select>
+    <div class="game-tabs">
+      <button class="game-tab active" data-mode="plates"><span class="tab-emoji">🚗</span>Kennzeichen</button>
+      <button class="game-tab" data-mode="slogans"><span class="tab-emoji">📺</span>Werbepause</button>
+      <button class="game-tab" data-mode="quotes"><span class="tab-emoji">⚽</span>Fußball-Mythen</button>
     </div>
 
-    <div class="rules" id="rulesBox">
-      </div>
+    <div class="rules" id="rulesBox"></div>
 
-    <form id="playerForm" class="player-input">
-      <input id="playerNameInput" placeholder="Name eingeben…" maxlength="16">
-      <button type="submit" class="btn btn-secondary">+ Hinzufügen</button>
-    </form>
-    
-    <ul id="playerList" class="player-list"></ul>
+    <!-- Spieler-Verwaltung -->
+    <button id="openPlayerModalBtn" class="btn btn-secondary" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>👥 Spieler auswählen</span>
+      <span id="playerBadge" style="font-family:Space Mono,monospace;font-size:13px;opacity:0.7;">Niemand</span>
+    </button>
 
     <div class="settings-box">
       <label id="settingLabel">Einstellung:</label>
-      <select id="settingSelect">
-        </select>
+      <select id="settingSelect"></select>
     </div>
 
     <button id="startBtn" class="btn btn-primary">Spiel starten</button>
   </section>
 
+  <!-- GAME 1: Werbepause -->
   <section id="game-slogans" class="screen hidden">
     <p class="turn-indicator" id="turnIndicatorSlogans"></p>
     <div class="tag-card-wrapper">
@@ -275,64 +254,65 @@
         </div>
       </div>
     </div>
-    <div id="revealActions" style="display:flex; justify-content:center;">
-      <button id="revealBtn" class="btn btn-secondary" style="min-width: 220px;">🔍 Marke zeigen</button>
+    <div id="revealActions" style="display:flex;justify-content:center;">
+      <button id="revealBtn" class="btn btn-secondary" style="max-width:260px;">🔍 Marke zeigen</button>
     </div>
-    <div id="judgeActions" class="hidden" style="display:flex; gap:12px;">
-      <button id="wrongBtn" class="btn btn-wrong" style="flex:1;">❌ Falsch</button>
-      <button id="correctBtn" class="btn btn-correct" style="flex:1;">✅ Richtig</button>
+    <div id="judgeActions" class="hidden btn-row">
+      <button id="wrongBtn" class="btn btn-wrong">❌ Falsch</button>
+      <button id="correctBtn" class="btn btn-correct">✅ Richtig</button>
     </div>
     <div class="scoreboard" id="scoreboardSlogans"></div>
-    <button class="btn-text restart-btn">🔄 Zurück zum Menü</button>
+    <button class="btn btn-text restart-btn">🔄 Zurück zum Menü</button>
   </section>
 
+  <!-- GAME 2: Kennzeichen -->
   <section id="game-plates" class="screen hidden">
-    <p class="turn-indicator">Kennzeichen entdeckt? Schnell eintippen!</p>
-    
+    <p class="turn-indicator">Kennzeichen entdeckt? Abtippen!</p>
     <form id="plateForm" class="license-plate-form">
       <div class="license-plate">
         <div class="plate-euro">
           <span class="plate-euro-stars">🇪🇺</span>
           <span>D</span>
         </div>
-        <input type="text" id="plateInput" class="plate-input" placeholder="B, HH, BRA..." autocomplete="off" autocorrect="off" autocapitalize="characters">
+        <input type="text" id="plateInput" class="plate-input"
+          placeholder="z.B. LEV" autocomplete="off" autocorrect="off"
+          autocapitalize="characters" spellcheck="false" inputmode="text">
       </div>
       <button type="submit" class="btn btn-primary">🔍 Kennzeichen suchen</button>
     </form>
 
     <div id="plateResultArea" class="plate-result-box hidden">
-      <h2 class="plate-result-city" id="plateCity">Stadt</h2>
-      <p class="plate-result-district" id="plateDistrict">Landkreis</p>
-      
+      <div class="plate-kz" id="plateKZ"></div>
+      <div class="plate-result-city" id="plateCity"></div>
+      <div class="plate-result-district" id="plateDistrict"></div>
+      <div class="plate-result-state" id="plateState"></div>
+
       <div class="award-points" id="awardPointsBox">
-        <span class="award-points-title">Wer war zuerst? Punkt geben an:</span>
-        <div class="award-grid" id="awardGrid">
-          </div>
-        <button id="nobodyBtn" class="btn btn-secondary" style="margin-top:4px;">Niemand (Auslassen)</button>
+        <span class="award-points-title">Wer war zuerst? Punkt an:</span>
+        <div class="award-grid" id="awardGrid"></div>
+        <button id="nobodyBtn" class="btn btn-secondary">Niemand / Weiter</button>
       </div>
     </div>
 
     <div class="scoreboard" id="scoreboardPlates"></div>
-    <button class="btn-text restart-btn">🔄 Zurück zum Menü</button>
+    <button class="btn btn-text restart-btn">🔄 Zurück zum Menü</button>
   </section>
 
+  <!-- GAME 3: Zitate -->
   <section id="game-quotes" class="screen hidden">
     <p class="turn-indicator" id="turnIndicatorQuotes"></p>
-    
     <div class="quote-card">
       <p class="quote-text" id="quoteText">"..."</p>
-      <div class="mc-grid" id="mcGrid">
-        </div>
+      <div class="mc-grid" id="mcGrid"></div>
     </div>
-
     <button id="nextQuoteBtn" class="btn btn-primary hidden">Nächste Frage ➡️</button>
-
     <div class="scoreboard" id="scoreboardQuotes"></div>
-    <button class="btn-text restart-btn">🔄 Zurück zum Menü</button>
+    <button class="btn btn-text restart-btn">🔄 Zurück zum Menü</button>
   </section>
 
+  <!-- END -->
   <section id="end" class="screen hidden">
-    <h1 class="title" style="text-align: center;">Ergebnis</h1>
+    <h1 class="title" style="text-align:center;">Ergebnis</h1>
     <div class="team-total" id="endTotal"></div>
     <p class="end-summary" id="endSummary"></p>
     <div class="player-rows" id="endPlayerRows"></div>
@@ -340,597 +320,1505 @@
     <button id="backToSetupBtn" class="btn btn-secondary">⚙️ Hauptmenü</button>
   </section>
 
+  <!-- PLAYER MODAL -->
+  <div id="playerModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">👥 Spieler</span>
+        <button id="modalCloseBtn" class="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint" style="margin-bottom:10px;">Antippen = auswählen / abwählen. ✓ = aktiv für dieses Spiel.</p>
+        <ul id="modalPlayerList" class="modal-player-list"></ul>
+        <form id="modalPlayerForm" class="player-input" style="margin-top:12px;">
+          <input id="modalPlayerInput" placeholder="Neuen Spieler hinzufügen…" maxlength="16" autocomplete="off">
+          <button type="submit" class="btn btn-secondary" style="width:auto;padding:11px 14px;font-size:14px;">+ Neu</button>
+        </form>
+      </div>
+      <button id="modalDoneBtn" class="btn btn-primary">Fertig</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  const SLOGANS = [
-    { brand: "Real", slogan: "Einmal hin, alles drin." },
-    { brand: "Media Markt", slogan: "Ich bin doch nicht blöd!" },
-    { brand: "Saturn", slogan: "Geiz ist geil!" },
-    { brand: "Audi", slogan: "Vorsprung durch Technik." },
-    { brand: "Ritter Sport", slogan: "Quadratisch. Praktisch. Gut." },
-    { brand: "Haribo", slogan: "Haribo macht Kinder froh – und Erwachsene ebenso." },
-    { brand: "Toyota", slogan: "Nichts ist unmöglich." },
-    { brand: "Mercedes-Benz", slogan: "Das Beste oder nichts." },
-    { brand: "Persil", slogan: "Da weiß man, was man hat." },
-    { brand: "Edeka", slogan: "Wir lieben Lebensmittel." },
-    { brand: "Ikea", slogan: "Wohnst du noch, oder lebst du schon?" },
-    { brand: "Sparkasse", slogan: "Wenn's um Geld geht." },
-    { brand: "Volksbanken Raiffeisenbanken", slogan: "Wir machen den Weg frei." },
-    { brand: "Nike", slogan: "Just do it." },
-    { brand: "McDonald's", slogan: "Ich liebe es." },
-    { brand: "Hornbach", slogan: "Es gibt immer was zu tun." },
-    { brand: "Twix", slogan: "Raider heißt jetzt Twix, sonst ändert sich nix." },
-    { brand: "Mastercard", slogan: "Es gibt Dinge im Leben, die man nicht mit Geld bezahlen kann. Für alles andere gibt es Mastercard." },
-    { brand: "Telekom", slogan: "Erleben, was verbindet." },
-    { brand: "Rama", slogan: "Rama macht das Frühstück gut." },
-    { brand: "BMW", slogan: "Aus Freude am Fahren." },
-    { brand: "Lidl", slogan: "Lidl lohnt sich." },
-    { brand: "dm-drogerie markt", slogan: "Hier bin ich Mensch, hier kauf ich ein." },
-    { brand: "L'Oréal", slogan: "Weil ich es mir wert bin." },
-    { brand: "Tempo", slogan: "Hast du mal 'n Tempo?" },
-    { brand: "Toom Baumarkt", slogan: "Respekt, wer's selber macht." },
-    { brand: "Rennie", slogan: "Rennie räumt den Magen auf – schnell und zuverlässig." },
-    { brand: "Giotto", slogan: "So klein, so fein, so Giotto." },
-    { brand: "Targobank", slogan: "So geht Bank heute." },
-    { brand: "Schöfferhofer", slogan: "Prickelt länger, als man trinkt." },
-    { brand: "Gard", slogan: "Schönes Haar ist dir gegeben, lass es leben mit Gard." },
-    { brand: "Snickers", slogan: "Du bist nicht du, wenn du hungrig bist." },
-    { brand: "Nivea", slogan: "Die Pflege." },
-    { brand: "Bild", slogan: "Bild dir deine Meinung." },
-    { brand: "Krombacher", slogan: "Eine Perle der Natur." },
-    { brand: "Vodafone", slogan: "Power to you." },
-    { brand: "Allianz", slogan: "Hoffentlich Allianz versichert." },
-    { brand: "Commerzbank", slogan: "Leistung aus Leidenschaft." },
-    { brand: "Deutsche Bank", slogan: "Vertrauen ist der Anfang von allem." },
-    { brand: "ZDF", slogan: "Mit dem Zweiten sieht man besser." },
-    { brand: "ProSieben", slogan: "We love to entertain you." },
-    { brand: "Sat.1", slogan: "Sat.1 zeigt's allen." },
-    { brand: "Apple", slogan: "Think different." },
-    { brand: "Nokia", slogan: "Connecting People." },
-    { brand: "LG", slogan: "Life's Good." },
-    { brand: "Philips", slogan: "Sense and simplicity." },
-    { brand: "Bosch", slogan: "Technik fürs Leben." },
-    { brand: "O2", slogan: "Can do." },
-    { brand: "1&1", slogan: "Du merkst den Unterschied." },
-    { brand: "Adidas", slogan: "Impossible is Nothing." },
-    { brand: "Puma", slogan: "Forever Faster." },
-    { brand: "Opel", slogan: "Wir leben Autos." },
-    { brand: "Volkswagen", slogan: "Das Auto." },
-    { brand: "Skoda", slogan: "Einfach clever." },
-    { brand: "Honda", slogan: "The Power of Dreams." },
-    { brand: "Citroën", slogan: "Créative Technologie." },
-    { brand: "Peugeot", slogan: "Motion & Emotion." },
-    { brand: "Volvo", slogan: "for life." },
-    { brand: "Renault", slogan: "Drive the change." },
-    { brand: "Ford", slogan: "Fahr was du fühlst." },
-    { brand: "Hyundai", slogan: "Neue Wege denken." },
-    { brand: "Kia", slogan: "The Power to Surprise." },
-    { brand: "Mazda", slogan: "Zoom-Zoom." },
-    { brand: "Nissan", slogan: "Innovation that excites." },
-    { brand: "Seat", slogan: "auto emoción." },
-    { brand: "Aral", slogan: "Alles super." },
-    { brand: "Shell", slogan: "Du kommst weiter mit Shell." },
-    { brand: "Red Bull", slogan: "Red Bull verleiht Flügel." },
-    { brand: "Coca-Cola", slogan: "Mach dir Freude auf." },
-    { brand: "Bitburger", slogan: "Bitte ein Bit." },
-    { brand: "Jever", slogan: "Hopfen und mehr, das ist Jever." },
-    { brand: "Warsteiner", slogan: "Eins der feinsten Biere der Welt." },
-    { brand: "Paulaner", slogan: "Gut, besser, Paulaner." },
-    { brand: "Beck's", slogan: "Sail Away." },
-    { brand: "Apollinaris", slogan: "Das spritzigste Mineralwasser Deutschlands." },
-    { brand: "Fritz-Kola", slogan: "Wach bis ans Ende der Nacht." },
-    { brand: "Milka", slogan: "Die zarteste Versuchung, seit es Schokolade gibt." },
-    { brand: "Lindor", slogan: "Wenn er schmilzt, beginnt der Genuss." },
-    { brand: "Mars", slogan: "Mars macht mobil – bei Arbeit, Sport und Spiel." },
-    { brand: "Knoppers", slogan: "Die Pause, die es in sich hat." },
-    { brand: "Merci", slogan: "Merci, dass es dich gibt." },
-    { brand: "Werther's Original", slogan: "So schmeckt nur ein Werther's Original." },
-    { brand: "Aldi Süd", slogan: "Einfach ist mehr." },
-    { brand: "Kaufland", slogan: "Mehr für dein Geld." },
-    { brand: "Rewe", slogan: "Jeden Tag ein bisschen besser." },
-    { brand: "Nestlé", slogan: "Gute Lebensmittel, gutes Leben." },
-    { brand: "Iglo", slogan: "Du bist, was du isst." },
-    { brand: "Dr. Oetker", slogan: "Qualität, die man schmeckt." },
-    { brand: "Erasco", slogan: "Das Gute daran ist das Gute darin." },
-    { brand: "Odol", slogan: "Im Munde fühlt man sich wohl." },
-    { brand: "Ariel", slogan: "Sauber ist nicht gleich sauber." },
-    { brand: "Lenor", slogan: "Der Duft, der bleibt." },
-    { brand: "Calgon", slogan: "Waschmaschinen leben länger mit Calgon." },
-    { brand: "Domestos", slogan: "Tötet alle bekannten Keime. Punkt." },
-    { brand: "Vanish", slogan: "Trau dich, Farbe zu tragen." },
-    { brand: "Garnier", slogan: "Take care." },
-    { brand: "4711", slogan: "Das echte Kölnisch Wasser." },
-    { brand: "Uhu", slogan: "Klebt." },
-    { brand: "Tesa", slogan: "Hält." },
-    { brand: "C&A", slogan: "Hier spielt die Mode." },
-    { brand: "H&M", slogan: "Mode und Qualität zum besten Preis." },
-    { brand: "Zalando", slogan: "Schrei vor Glück." },
-    { brand: "Tchibo", slogan: "Jede Woche eine neue Welt." },
-    { brand: "Neckermann", slogan: "Neckermann macht's möglich." },
-    { brand: "Douglas", slogan: "Douglas macht das Leben schöner." },
-    { brand: "Praktiker", slogan: "20% auf alles, außer Tiernahrung." },
-    { brand: "Bauhaus", slogan: "Der Profi-Baumarkt." },
-    { brand: "Otto", slogan: "Otto … find ich gut!" },
-    { brand: "Perwoll", slogan: "Neu? Nein, mit Perwoll gewaschen." },
-    { brand: "ratiopharm", slogan: "Gute Preise. Gute Besserung." },
-    { brand: "Carglass", slogan: "Carglass repariert, Carglass tauscht aus." },
-    { brand: "Müller Milch", slogan: "Die Milchmacher." },
-    { brand: "Oreo", slogan: "Dreh, leck, tauch." },
-    { brand: "Hohes C", slogan: "Die Sonne im Glas." },
-    { brand: "Intel", slogan: "Intel Inside." },
-    { brand: "Lufthansa", slogan: "Nonstop you." },
-    { brand: "Kitkat", slogan: "Have a break, have a Kit Kat." },
-    { brand: "Maybelline", slogan: "Maybe she's born with it. Maybe it's Maybelline." },
-    { brand: "Frosch", slogan: "Putzen mit gutem Gewissen." },
-    { brand: "Knorr", slogan: "Is(s) gut." },
-    { brand: "Maggi", slogan: "Ideen für jeden Tag." },
-    { brand: "Old Spice", slogan: "Der Mann, den dein Mann sein könnte riechen könnte." },
-    { brand: "Axe", slogan: "The Axe Effect." },
-    { brand: "Gillette", slogan: "The Best a Man Can Get." },
-    { brand: "Sony", slogan: "like.no.other." },
-    { brand: "Fiat", slogan: "Driven by Passion." },
-    { brand: "Suzuki", slogan: "Way of Life!" },
-    { brand: "Deichmann", slogan: "Deichmann ist immer in Ihrer Nähe." },
-    { brand: "Sky", slogan: "Endlich richtig fernsehen." },
-    { brand: "Der Spiegel", slogan: "Sagen, was ist." },
-    { brand: "Miele", slogan: "Immer Besser." },
-    { brand: "Fielmann", slogan: "Brille: Fielmann." },
-    { brand: "Levi's", slogan: "Quality never goes out of style." },
-    { brand: "Swatch", slogan: "Time is what you make of it." },
-    { brand: "Subway", slogan: "Eat Fresh." },
-    { brand: "Burger King", slogan: "Be your way." },
-    { brand: "Siemens", slogan: "Ingenuity for life." },
-    { brand: "Pirelli", slogan: "Power is Nothing Without Control." },
-    { brand: "Hasseröder", slogan: "Männer wissen warum." },
-    { brand: "König Pilsener", slogan: "Auf gute Freunde, König Pilsener." },
-    { brand: "AOK", slogan: "Die Gesundheitskasse." },
-    { brand: "Check24", slogan: "Lass dir die Welt erklären." },
-    { brand: "Trivago", slogan: "Hotel? Trivago." },
-    { brand: "Yello Strom", slogan: "Ist doch eigentlich ganz einfach." },
-    { brand: "Schauma", slogan: "Für Haare wie aus der Werbung." },
-    { brand: "Fa", slogan: "Lust am Leben." },
-    { brand: "Dove", slogan: "Echte Schönheit." },
-    { brand: "Head & Shoulders", slogan: "Keine Chance für Schuppen." },
-    { brand: "Hipp", slogan: "Aus Liebe zum Leben." },
-    { brand: "Jacobs Krönung", slogan: "Wunderbar." }
-  ];
+// ============================================================
+// DATA
+// ============================================================
 
-  const QUOTES = [
-    { q: "Mailand oder Madrid, Hauptsache Italien.", a: "Andreas Möller", w: ["Lothar Matthäus", "Mario Basler", "Stefan Effenberg"] },
-    { q: "Wir dürfen jetzt nur nicht den Sand in den Kopf stecken.", a: "Lothar Matthäus", w: ["Kevin Großkreutz", "Lukas Podolski", "Olaf Thon"] },
-    { q: "Ich habe viel von meinem Geld für Alkohol, Weiber und schnelle Autos ausgegeben. Den Rest habe ich einfach verprasst.", a: "George Best", w: ["Paul Gascoigne", "Diego Maradona", "Mario Basler"] },
-    { q: "Fußball ist wie Schach, nur ohne Würfel.", a: "Lukas Podolski", w: ["Thomas Müller", "Per Mertesacker", "Bastian Schweinsteiger"] },
-    { q: "Da kam dann das Elfmeterschießen. Wir hatten alle die Hosen voll, aber bei mir lief's ganz flüssig.", a: "Paul Breitner", w: ["Andreas Brehme", "Uli Hoeneß", "Gerd Müller"] },
-    { q: "Zuerst hatten wir kein Glück, und dann kam auch noch Pech dazu.", a: "Jürgen Wegmann", w: ["Andi Brehme", "Thomas Häßler", "Horst Hrubesch"] },
-    { q: "Ich mache nie Voraussagen und werde das auch niemals tun.", a: "Paul Gascoigne", w: ["Berti Vogts", "Sepp Herberger", "Kevin Keegan"] },
-    { q: "Es ist ein schönes Gefühl, den Ball im Netz zappeln zu sehen.", a: "Thomas Müller", w: ["Miroslav Klose", "Mario Gomez", "Oliver Bierhoff"] },
-    { q: "Mal verliert man und mal gewinnen die anderen.", a: "Otto Rehhagel", w: ["Sepp Herberger", "Dragoslav Stepanovic", "Udo Lattek"] },
-    { q: "Die Schweden sind keine Holländer, das hat man ganz genau gesehen.", a: "Franz Beckenbauer", w: ["Günter Netzer", "Bela Rethy", "Marcel Reif"] },
-    { q: "Ich danke meinen Eltern, besonders meiner Mutter und meinem Vater.", a: "Altin Lala", w: ["Toni Polster", "Ailton", "Franck Ribéry"] },
-    { q: "Man hetzt die Leute auf mit Tatsachen, die nicht der Wahrheit entsprechen.", a: "Toni Polster", w: ["Giovanni Trapattoni", "Uli Hoeneß", "Karl-Heinz Rummenigge"] },
-    { q: "Wir spielen am liebsten mit dem Ball.", a: "Jürgen Klinsmann", w: ["Pep Guardiola", "Jogi Löw", "Otto Rehhagel"] },
-    { q: "Ein Drittel mehr Gehalt? Nee, ich will mindestens ein Viertel.", a: "Horst Szymaniak", w: ["Fritz Walter", "Paul Breitner", "Mario Basler"] },
-    { q: "Wir spielen immer hintenrum. Das ist ja wie beim Handball.", a: "Lothar Matthäus", w: ["Jens Lehmann", "Oliver Kahn", "Stefan Effenberg"] }
-  ];
+const SLOGANS = [
+  { brand:"Real", slogan:"Einmal hin, alles drin." },
+  { brand:"Media Markt", slogan:"Ich bin doch nicht blöd!" },
+  { brand:"Saturn", slogan:"Geiz ist geil!" },
+  { brand:"Audi", slogan:"Vorsprung durch Technik." },
+  { brand:"Ritter Sport", slogan:"Quadratisch. Praktisch. Gut." },
+  { brand:"Haribo", slogan:"Haribo macht Kinder froh – und Erwachsene ebenso." },
+  { brand:"Toyota", slogan:"Nichts ist unmöglich." },
+  { brand:"Mercedes-Benz", slogan:"Das Beste oder nichts." },
+  { brand:"Persil", slogan:"Da weiß man, was man hat." },
+  { brand:"Edeka", slogan:"Wir lieben Lebensmittel." },
+  { brand:"Ikea", slogan:"Wohnst du noch, oder lebst du schon?" },
+  { brand:"Sparkasse", slogan:"Wenn's um Geld geht." },
+  { brand:"Volksbanken Raiffeisenbanken", slogan:"Wir machen den Weg frei." },
+  { brand:"Nike", slogan:"Just do it." },
+  { brand:"McDonald's", slogan:"Ich liebe es." },
+  { brand:"Hornbach", slogan:"Es gibt immer was zu tun." },
+  { brand:"Twix", slogan:"Raider heißt jetzt Twix, sonst ändert sich nix." },
+  { brand:"Mastercard", slogan:"Es gibt Dinge im Leben, die man nicht mit Geld bezahlen kann. Für alles andere gibt es Mastercard." },
+  { brand:"Telekom", slogan:"Erleben, was verbindet." },
+  { brand:"Rama", slogan:"Rama macht das Frühstück gut." },
+  { brand:"BMW", slogan:"Aus Freude am Fahren." },
+  { brand:"Lidl", slogan:"Lidl lohnt sich." },
+  { brand:"dm-drogerie markt", slogan:"Hier bin ich Mensch, hier kauf ich ein." },
+  { brand:"L'Oréal", slogan:"Weil ich es mir wert bin." },
+  { brand:"Tempo", slogan:"Hast du mal 'n Tempo?" },
+  { brand:"Toom Baumarkt", slogan:"Respekt, wer's selber macht." },
+  { brand:"Rennie", slogan:"Rennie räumt den Magen auf – schnell und zuverlässig." },
+  { brand:"Giotto", slogan:"So klein, so fein, so Giotto." },
+  { brand:"Targobank", slogan:"So geht Bank heute." },
+  { brand:"Schöfferhofer", slogan:"Prickelt länger, als man trinkt." },
+  { brand:"Gard", slogan:"Schönes Haar ist dir gegeben, lass es leben mit Gard." },
+  { brand:"Snickers", slogan:"Du bist nicht du, wenn du hungrig bist." },
+  { brand:"Nivea", slogan:"Die Pflege." },
+  { brand:"Bild", slogan:"Bild dir deine Meinung." },
+  { brand:"Krombacher", slogan:"Eine Perle der Natur." },
+  { brand:"Vodafone", slogan:"Power to you." },
+  { brand:"Allianz", slogan:"Hoffentlich Allianz versichert." },
+  { brand:"Commerzbank", slogan:"Leistung aus Leidenschaft." },
+  { brand:"Deutsche Bank", slogan:"Vertrauen ist der Anfang von allem." },
+  { brand:"ZDF", slogan:"Mit dem Zweiten sieht man besser." },
+  { brand:"ProSieben", slogan:"We love to entertain you." },
+  { brand:"Sat.1", slogan:"Sat.1 zeigt's allen." },
+  { brand:"Apple", slogan:"Think different." },
+  { brand:"Nokia", slogan:"Connecting People." },
+  { brand:"LG", slogan:"Life's Good." },
+  { brand:"Philips", slogan:"Sense and simplicity." },
+  { brand:"Bosch", slogan:"Technik fürs Leben." },
+  { brand:"O2", slogan:"Can do." },
+  { brand:"1&1", slogan:"Du merkst den Unterschied." },
+  { brand:"Adidas", slogan:"Impossible is Nothing." },
+  { brand:"Puma", slogan:"Forever Faster." },
+  { brand:"Opel", slogan:"Wir leben Autos." },
+  { brand:"Volkswagen", slogan:"Das Auto." },
+  { brand:"Skoda", slogan:"Einfach clever." },
+  { brand:"Honda", slogan:"The Power of Dreams." },
+  { brand:"Citroën", slogan:"Créative Technologie." },
+  { brand:"Peugeot", slogan:"Motion & Emotion." },
+  { brand:"Volvo", slogan:"for life." },
+  { brand:"Renault", slogan:"Drive the change." },
+  { brand:"Ford", slogan:"Fahr was du fühlst." },
+  { brand:"Hyundai", slogan:"Neue Wege denken." },
+  { brand:"Kia", slogan:"The Power to Surprise." },
+  { brand:"Mazda", slogan:"Zoom-Zoom." },
+  { brand:"Nissan", slogan:"Innovation that excites." },
+  { brand:"Seat", slogan:"auto emoción." },
+  { brand:"Aral", slogan:"Alles super." },
+  { brand:"Shell", slogan:"Du kommst weiter mit Shell." },
+  { brand:"Red Bull", slogan:"Red Bull verleiht Flügel." },
+  { brand:"Coca-Cola", slogan:"Mach dir Freude auf." },
+  { brand:"Bitburger", slogan:"Bitte ein Bit." },
+  { brand:"Jever", slogan:"Hopfen und mehr, das ist Jever." },
+  { brand:"Warsteiner", slogan:"Eins der feinsten Biere der Welt." },
+  { brand:"Paulaner", slogan:"Gut, besser, Paulaner." },
+  { brand:"Beck's", slogan:"Sail Away." },
+  { brand:"Apollinaris", slogan:"Das spritzigste Mineralwasser Deutschlands." },
+  { brand:"Fritz-Kola", slogan:"Wach bis ans Ende der Nacht." },
+  { brand:"Milka", slogan:"Die zarteste Versuchung, seit es Schokolade gibt." },
+  { brand:"Lindor", slogan:"Wenn er schmilzt, beginnt der Genuss." },
+  { brand:"Mars", slogan:"Mars macht mobil – bei Arbeit, Sport und Spiel." },
+  { brand:"Knoppers", slogan:"Die Pause, die es in sich hat." },
+  { brand:"Merci", slogan:"Merci, dass es dich gibt." },
+  { brand:"Werther's Original", slogan:"So schmeckt nur ein Werther's Original." },
+  { brand:"Aldi Süd", slogan:"Einfach ist mehr." },
+  { brand:"Kaufland", slogan:"Mehr für dein Geld." },
+  { brand:"Rewe", slogan:"Jeden Tag ein bisschen besser." },
+  { brand:"Nestlé", slogan:"Gute Lebensmittel, gutes Leben." },
+  { brand:"Iglo", slogan:"Du bist, was du isst." },
+  { brand:"Dr. Oetker", slogan:"Qualität, die man schmeckt." },
+  { brand:"Erasco", slogan:"Das Gute daran ist das Gute darin." },
+  { brand:"Odol", slogan:"Im Munde fühlt man sich wohl." },
+  { brand:"Ariel", slogan:"Sauber ist nicht gleich sauber." },
+  { brand:"Lenor", slogan:"Der Duft, der bleibt." },
+  { brand:"Calgon", slogan:"Waschmaschinen leben länger mit Calgon." },
+  { brand:"Domestos", slogan:"Tötet alle bekannten Keime. Punkt." },
+  { brand:"Vanish", slogan:"Trau dich, Farbe zu tragen." },
+  { brand:"Garnier", slogan:"Take care." },
+  { brand:"4711", slogan:"Das echte Kölnisch Wasser." },
+  { brand:"Uhu", slogan:"Klebt." },
+  { brand:"Tesa", slogan:"Hält." },
+  { brand:"C&A", slogan:"Hier spielt die Mode." },
+  { brand:"H&M", slogan:"Mode und Qualität zum besten Preis." },
+  { brand:"Zalando", slogan:"Schrei vor Glück." },
+  { brand:"Tchibo", slogan:"Jede Woche eine neue Welt." },
+  { brand:"Neckermann", slogan:"Neckermann macht's möglich." },
+  { brand:"Douglas", slogan:"Douglas macht das Leben schöner." },
+  { brand:"Praktiker", slogan:"20% auf alles, außer Tiernahrung." },
+  { brand:"Bauhaus", slogan:"Der Profi-Baumarkt." },
+  { brand:"Otto", slogan:"Otto … find ich gut!" },
+  { brand:"Perwoll", slogan:"Neu? Nein, mit Perwoll gewaschen." },
+  { brand:"ratiopharm", slogan:"Gute Preise. Gute Besserung." },
+  { brand:"Carglass", slogan:"Carglass repariert, Carglass tauscht aus." },
+  { brand:"Müller Milch", slogan:"Die Milchmacher." },
+  { brand:"Oreo", slogan:"Dreh, leck, tauch." },
+  { brand:"Hohes C", slogan:"Die Sonne im Glas." },
+  { brand:"Intel", slogan:"Intel Inside." },
+  { brand:"Lufthansa", slogan:"Nonstop you." },
+  { brand:"Kit Kat", slogan:"Have a break, have a Kit Kat." },
+  { brand:"Maybelline", slogan:"Maybe she's born with it. Maybe it's Maybelline." },
+  { brand:"Frosch", slogan:"Putzen mit gutem Gewissen." },
+  { brand:"Knorr", slogan:"Is(s) gut." },
+  { brand:"Maggi", slogan:"Ideen für jeden Tag." },
+  { brand:"Axe", slogan:"The Axe Effect." },
+  { brand:"Gillette", slogan:"The Best a Man Can Get." },
+  { brand:"Sony", slogan:"like.no.other." },
+  { brand:"Fiat", slogan:"Driven by Passion." },
+  { brand:"Suzuki", slogan:"Way of Life!" },
+  { brand:"Deichmann", slogan:"Deichmann ist immer in Ihrer Nähe." },
+  { brand:"Sky", slogan:"Endlich richtig fernsehen." },
+  { brand:"Der Spiegel", slogan:"Sagen, was ist." },
+  { brand:"Miele", slogan:"Immer Besser." },
+  { brand:"Fielmann", slogan:"Brille: Fielmann." },
+  { brand:"Levi's", slogan:"Quality never goes out of style." },
+  { brand:"Subway", slogan:"Eat Fresh." },
+  { brand:"Burger King", slogan:"Be your way." },
+  { brand:"Siemens", slogan:"Ingenuity for life." },
+  { brand:"Pirelli", slogan:"Power is Nothing Without Control." },
+  { brand:"Hasseröder", slogan:"Männer wissen warum." },
+  { brand:"König Pilsener", slogan:"Auf gute Freunde, König Pilsener." },
+  { brand:"AOK", slogan:"Die Gesundheitskasse." },
+  { brand:"Check24", slogan:"Lass dir die Welt erklären." },
+  { brand:"Trivago", slogan:"Hotel? Trivago." },
+  { brand:"Yello Strom", slogan:"Ist doch eigentlich ganz einfach." },
+  { brand:"Schauma", slogan:"Für Haare wie aus der Werbung." },
+  { brand:"Fa", slogan:"Lust am Leben." },
+  { brand:"Dove", slogan:"Echte Schönheit." },
+  { brand:"Head & Shoulders", slogan:"Keine Chance für Schuppen." },
+  { brand:"Hipp", slogan:"Aus Liebe zum Leben." },
+  { brand:"Jacobs Krönung", slogan:"Wunderbar." }
+];
 
-// Vollständiges, kompaktes Kennzeichen-Verzeichnis für Deutschland (ca. 800 Einträge)
+const QUOTES = [
+  { q:"Mailand oder Madrid, Hauptsache Italien.", a:"Andreas Möller", w:["Lothar Matthäus", "Mario Basler", "Stefan Effenberg"] },
+  { q:"Wir dürfen jetzt nur nicht den Sand in den Kopf stecken.", a:"Lothar Matthäus", w:["Kevin Großkreutz", "Lukas Podolski", "Olaf Thon"] },
+  { q:"Ich habe viel von meinem Geld für Alkohol, Weiber und schnelle Autos ausgegeben. Den Rest habe ich einfach verprasst.", a:"George Best", w:["Paul Gascoigne", "Diego Maradona", "Mario Basler"] },
+  { q:"Fußball ist wie Schach, nur ohne Würfel.", a:"Lukas Podolski", w:["Thomas Müller", "Per Mertesacker", "Bastian Schweinsteiger"] },
+  { q:"Zuerst hatten wir kein Glück, und dann kam auch noch Pech dazu.", a:"Jürgen Wegmann", w:["Andi Brehme", "Thomas Häßler", "Horst Hrubesch"] },
+  { q:"Ich mache nie Voraussagen und werde das auch niemals tun.", a:"Paul Gascoigne", w:["Berti Vogts", "Sepp Herberger", "Kevin Keegan"] },
+  { q:"Mal verliert man und mal gewinnen die anderen.", a:"Otto Rehhagel", w:["Sepp Herberger", "Dragoslav Stepanovic", "Udo Lattek"] },
+  { q:"Die Schweden sind keine Holländer, das hat man ganz genau gesehen.", a:"Franz Beckenbauer", w:["Günter Netzer", "Bela Rethy", "Marcel Reif"] },
+  { q:"Ich danke meinen Eltern, besonders meiner Mutter und meinem Vater.", a:"Altin Lala", w:["Toni Polster", "Ailton", "Franck Ribéry"] },
+  { q:"Wir spielen am liebsten mit dem Ball.", a:"Jürgen Klinsmann", w:["Pep Guardiola", "Jogi Löw", "Otto Rehhagel"] },
+  { q:"Wir brauchen Eier!", a:"Oliver Kahn", w:["Lothar Matthäus", "Stefan Effenberg", "Berti Vogts"] },
+  { q:"Der Ball ist rund und ein Spiel dauert 90 Minuten.", a:"Sepp Herberger", w:["Helmut Schön", "Otto Rehhagel", "Franz Beckenbauer"] },
+  { q:"Ich habe fertig!", a:"Giovanni Trapattoni", w:["Christoph Daum", "Ottmar Hitzfeld", "Rehhagel"] },
+  { q:"Nach dem Spiel ist vor dem Spiel.", a:"Sepp Herberger", w:["Franz Beckenbauer", "Günter Netzer", "Helmut Schön"] },
+  { q:"Das Runde muss ins Eckige.", a:"Sepp Herberger", w:["Gerd Müller", "Fritz Walter", "Horst Eckel"] },
+  { q:"Lebbe geht weider.", a:"Dragoslav Stepanovic", w:["Otto Rehhagel", "Christoph Daum", "Werner Lorant"] },
+  { q:"Zu 50 Prozent stehen wir im Viertelfinale, aber die halbe Miete ist das noch lange nicht.", a:"Rudi Völler", w:["Karl-Heinz Rummenigge", "Lothar Matthäus", "Oliver Bierhoff"] },
+  { q:"Es gibt nur eine Möglichkeit: Sieg, Unentschieden oder Niederlage.", a:"Franz Beckenbauer", w:["Sepp Herberger", "Otto Rehhagel", "Lothar Matthäus"] },
+  { q:"Wir müssen gewinnen, alles andere ist primär.", a:"Hans Krankl", w:["Toni Polster", "Andi Ogris", "Herbert Prohaska"] },
+  { q:"Zwei Chancen, ein Tor – das nenne ich hundertprozentige Chancenauswertung.", a:"Roland Wohlfarth", w:["Karl-Heinz Rummenigge", "Mario Basler", "Giovane Élber"] },
+  { q:"Fußball ist Ding, Dang, Dong. Es gibt nicht nur Ding.", a:"Giovanni Trapattoni", w:["Otto Rehhagel", "Louis van Gaal", "Christoph Daum"] },
+  { q:"Wenn wir hier nicht gewinnen, treten wir ihnen wenigstens den Rasen kaputt.", a:"Rolf Rüssmann", w:["Olaf Thon", "Thomas Häßler", "Andreas Möller"] },
+  { q:"Die Wahrheit liegt auf dem Platz.", a:"Otto Rehhagel", w:["Sepp Herberger", "Franz Beckenbauer", "Berti Vogts"] },
+  { q:"Man darf jetzt nicht alles so schlecht reden, wie es war.", a:"Fredi Bobic", w:["Oliver Bierhoff", "Dieter Eilts", "Jens Lehmann"] },
+  { q:"Das Tor gehört zu 70 Prozent mir und zu 40 Prozent dem Wilmots.", a:"Fredi Bobic", w:["Lukas Podolski", "Thomas Müller", "Mario Gomez"] },
+  { q:"Fußball ist ein einfaches Spiel. 22 Männer jagen 90 Minuten lang einem Ball nach, und am Ende gewinnen immer die Deutschen.", a:"Gary Lineker", w:["Johan Cruyff", "Pelé", "Bobby Charlton"] },
+  { q:"Ich sage nur ein Wort: Vielen Dank.", a:"Horst Hrubesch", w:["Karl-Heinz Rummenigge", "Paul Breitner", "Hans-Peter Briegel"] },
+  { q:"Jeder ist schon mal mit 1,07 Promille gefahren.", a:"Stefan Effenberg", w:["Mario Basler", "Sebastian Deisler", "Olaf Thon"] },
+  { q:"Ich habe in einem Jahr 16 Monate durchgespielt.", a:"Franz Beckenbauer", w:["Karl-Heinz Rummenigge", "Lothar Matthäus", "Jürgen Klinsmann"] },
+  { q:"Was erlauben Strunz?", a:"Giovanni Trapattoni", w:["Ottmar Hitzfeld", "Franz Beckenbauer", "Louis van Gaal"] },
+  { q:"Tore sind wie Ketchup – erst kommt nix, dann alles.", a:"Miroslav Klose", w:["Gerd Müller", "Karl-Heinz Rummenigge", "Mario Gomez"] },
+  { q:"Die Situation ist aussichtslos, aber nicht kritisch.", a:"Stefan Effenberg", w:["Oliver Kahn", "Lothar Matthäus", "Mario Basler"] },
+  { q:"Ob Felix Magath die Titanic gerettet hätte, weiß ich nicht. Aber die Überlebenden wären topfit gewesen.", a:"Jan-Aage Fjörtoft", w:["Roy Makaay", "Giovane Élber", "Claudio Pizarro"] },
+  { q:"Die Karten sind neu gewürfelt.", a:"Oliver Kahn", w:["Jens Lehmann", "Andreas Köpke", "Robert Enke"] },
+  { q:"Ich hatte vom Feeling her ein gutes Gefühl.", a:"Andreas Möller", w:["Mehmet Scholl", "Stefan Effenberg", "Paulo Sergio"] },
+  { q:"Haste Scheiße am Fuß, haste Scheiße am Fuß!", a:"Andi Brehme", w:["Lothar Matthäus", "Mario Basler", "Stefan Effenberg"] },
+  { q:"Da kam dann das Elfmeterschießen. Wir hatten alle die Hosen voll, aber bei mir lief's ganz flüssig.", a:"Paul Breitner", w:["Uli Hoeneß", "Gerd Müller", "Sepp Maier"] },
+  { q:"Wenn ich über's Wasser laufe, dann sagen meine Kritiker: Nicht mal schwimmen kann der.", a:"Berti Vogts", w:["Franz Beckenbauer", "Jogi Löw", "Erich Ribbeck"] },
+  { q:"Ein Drittel? Nee, ich will mindestens ein Viertel.", a:"Horst Szymaniak", w:["Fritz Walter", "Helmut Rahn", "Uwe Seeler"] },
+  { q:"Das habe ich ihm dann auch verbal gesagt.", a:"Mario Basler", w:["Stefan Effenberg", "Oliver Kahn", "Lothar Matthäus"] },
+  { q:"Schiedsrichter kommt für mich nicht in Frage, schon eher etwas, das mit Fußball zu tun hat.", a:"Lothar Matthäus", w:["Mario Basler", "Mehmet Scholl", "Stefan Effenberg"] },
+  { q:"Wir wollten in Bremen kein Gegentor kassieren. Das hat auch bis zum Gegentor ganz gut geklappt.", a:"Thomas Doll", w:["Otto Rehhagel", "Felix Magath", "Huub Stevens"] },
+  { q:"I think we have a grandios Saison gespielt.", a:"Roman Weidenfeller", w:["Kevin De Bruyne", "Franck Ribéry", "Lothar Matthäus"] },
+  { q:"Einige Leute halten Fußball für eine Sache von Leben und Tod... Ich versichere Ihnen, es ist viel ernster.", a:"Bill Shankly", w:["Sir Alex Ferguson", "Arsène Wenger", "José Mourinho"] },
+  { q:"Ich bin körperlich und physisch topfit.", a:"Thomas Häßler", w:["Pierre Littbarski", "Lothar Matthäus", "Jürgen Klinsmann"] },
+  { q:"Wir sind eine gut intrigierte Truppe.", a:"Lothar Matthäus", w:["Andreas Möller", "Olaf Thon", "Thomas Häßler"] },
+  { q:"Ich hoffe, dass dieses Spiel nicht mein einziges Debüt bleibt.", a:"Sebastian Deisler", w:["Bastian Schweinsteiger", "Mario Götze", "Michael Ballack"] },
+  { q:"Es war ein wunderschöner Augenblick, als der Bundestrainer sagte: Komm Stefan, zieh deine Sachen aus, jetzt geht's los.", a:"Stefan Kuntz", w:["Stefan Effenberg", "Stefan Kießling", "Stefan Reuter"] },
+  { q:"Der Jürgen Klinsmann und ich, wir sind ein gutes Trio. Ich meinte ein Quartett.", a:"Fritz Walter jun.", w:["Karl-Heinz Riedle", "Rudi Völler", "Oliver Bierhoff"] },
+  { q:"München ist wie ein Zahnarztbesuch. Muss jeder mal hin. Kann ziemlich weh tun. Kann aber auch glimpflich ausgehen.", a:"Christian Streich", w:["Jürgen Klopp", "Thomas Tuchel", "Julian Nagelsmann"] },
+  { q:"Ich wechsle nur aus, wenn sich einer ein Bein bricht.", a:"Werner Lorant", w:["Felix Magath", "Christoph Daum", "Hermann Gerland"] },
+  { q:"Ich bin Optimist. Sogar meine Blutgruppe ist positiv.", a:"Toni Polster", w:["Hans Krankl", "Andreas Herzog", "David Alaba"] },
+  { q:"Nein, liebe Zuschauer, das ist keine Zeitlupe, der läuft wirklich so langsam.", a:"Werner Hansch", w:["Bela Rethy", "Marcel Reif", "Wolf-Dieter Poschmann"] },
+  { q:"Wenn Sie dieses Spiel atemberaubend finden, dann haben Sie es an den Bronchien.", a:"Marcel Reif", w:["Fritz von Thurn und Taxis", "Johannes B. Kerner", "Gerd Rubenbauer"] },
+  { q:"Zlatan macht keine Probetrainings.", a:"Zlatan Ibrahimović", w:["Cristiano Ronaldo", "José Mourinho", "Eric Cantona"] },
+  { q:"Wenn die Möwen dem Trawler folgen, dann tun sie das, weil sie denken, dass Sardinen ins Meer geworfen werden.", a:"Eric Cantona", w:["José Mourinho", "Zlatan Ibrahimović", "Pep Guardiola"] },
+  { q:"Bitte nennt mich nicht arrogant, aber ich bin Champions-League-Sieger und ich glaube, ich bin ein Special One.", a:"José Mourinho", w:["Carlo Ancelotti", "Jürgen Klopp", "Sir Alex Ferguson"] },
+  { q:"Da geht er, ein großer Spieler. Ein Mann wie Steffi Graf.", a:"Jörg Dahlmann", w:["Frank Buschmann", "Wolff-Christoph Fuss", "Günter Jauch"] },
+  { q:"Halten Sie die Luft an, und vergessen Sie das Atmen nicht.", a:"Johannes B. Kerner", w:["Dieter Kürten", "Gerhard Delling", "Reinhold Beckmann"] },
+  { q:"Was wollen Sie jetzt von mir? [...] Ich leg mich jetzt erst mal drei Tage in die Eistonne.", a:"Per Mertesacker", w:["Toni Kroos", "Thomas Müller", "Bastian Schweinsteiger"] },
+  { q:"Wir haben ein Normal One in the building. Ich bin der Normal One.", a:"Jürgen Klopp", w:["Thomas Tuchel", "Hans-Dieter Flick", "Julian Nagelsmann"] },
+  { q:"Je länger das Spiel dauert, desto weniger Zeit bleibt.", a:"Marcel Reif", w:["Heribert Faßbender", "Tom Bartels", "Steffen Simon"] },
+  { q:"Ich sage nicht, dass ich der beste Trainer der Welt bin. Aber ich bin in den Top 1.", a:"Brian Clough", w:["Bill Shankly", "Sir Alex Ferguson", "José Mourinho"] },
+  { q:"Meine Eltern waren immer für mich da, seit ich etwa sieben war.", a:"David Beckham", w:["Wayne Rooney", "Lukas Podolski", "Mario Balotelli"] },
+  { q:"Warum immer ich? (Why always me?)", a:"Mario Balotelli", w:["Zlatan Ibrahimović", "Cristiano Ronaldo", "Luis Suárez"] },
+  { q:"Wir spielen hinten Mann gegen Mann, und ich spiel gegen den Libero.", a:"Olaf Thon", w:["Lothar Matthäus", "Jürgen Kohler", "Guido Buchwald"] },
+  { q:"Wir haben ein Abstimmungsproblem – das heißt, wir müssen uns besser abstimmen.", a:"Berti Vogts", w:["Erich Ribbeck", "Jogi Löw", "Michael Skibbe"] },
+  { q:"Ein Denkmal will ich nicht sein, darauf scheißen ja nur die Tauben.", a:"Toni Polster", w:["Hans Krankl", "Andreas Herzog", "Lothar Matthäus"] },
+  { q:"Es ist nichts scheißer als Platz zwei.", a:"Erik Meijer", w:["Mario Basler", "Stefan Effenberg", "Oliver Kahn"] },
+  { q:"Das wird alles hochkristallisiert.", a:"René Adler", w:["Manuel Neuer", "Jens Lehmann", "Timo Hildebrand"] },
+  { q:"Mal ist man der Hund, mal ist man der Baum.", a:"Mario Götze", w:["Thomas Müller", "Marco Reus", "Mesut Özil"] },
+  { q:"Die schönsten Tore sind diejenigen, bei denen der Ball schön flach oben reingeht.", a:"Mehmet Scholl", w:["Lothar Matthäus", "Mario Basler", "Andreas Möller"] },
+  { q:"Den hab ich doch nur ganz leicht retuschiert.", a:"Olaf Thon", w:["Stefan Effenberg", "Jürgen Kohler", "Guido Buchwald"] },
+  { q:"Speziell in der zweiten Halbzeit haben wir einen guten Tag erwischt.", a:"Andreas Möller", w:["Lothar Matthäus", "Thomas Häßler", "Mehmet Scholl"] },
+  { q:"Mein Problem ist, dass ich immer sehr selbstkritisch bin, auch mir selbst gegenüber.", a:"Andreas Möller", w:["Lukas Podolski", "Fredi Bobic", "Mario Basler"] },
+  { q:"Einige haben von einem recht guten Spiel gesprochen. Da frage ich mich, ob ich zum Augen- oder zum Ohrenarzt muss.", a:"Andreas Möller", w:["Rudi Völler", "Lothar Matthäus", "Thomas Häßler"] },
+  { q:"Jetzt müssen wir die Köpfe hochkrempeln. Und die Ärmel natürlich auch.", a:"Lukas Podolski", w:["Bastian Schweinsteiger", "Thomas Müller", "Mario Gomez"] },
+  { q:"So ist Fußball. Manchmal gewinnt der Bessere!", a:"Lukas Podolski", w:["Thomas Müller", "Miroslav Klose", "Mesut Özil"] },
+  { q:"Es ist bitter, wenn jeder Ball, der reingeht, ein Tor ist.", a:"Lukas Podolski", w:["Kevin Großkreutz", "Mario Götze", "Marco Reus"] },
+  { q:"Die Liebe zum Fußball ist wie zu Familie und Frau. Die ist immer da.", a:"Lukas Podolski", w:["Miroslav Klose", "Bastian Schweinsteiger", "Thomas Müller"] },
+  { q:"Fußball ist einfach: Rein das Ding – und ab nach Hause.", a:"Lukas Podolski", w:["Mario Gomez", "Miroslav Klose", "Thomas Müller"] },
+  { q:"Wäre, wäre, Fahrradkette.", a:"Lothar Matthäus", w:["Mario Basler", "Stefan Effenberg", "Andreas Möller"] },
+  { q:"Es ist wichtig, dass man 90 Minuten mit voller Konzentration an das nächste Spiel denkt.", a:"Lothar Matthäus", w:["Berti Vogts", "Andreas Möller", "Jürgen Klinsmann"] },
+  { q:"Ich hab gleich gemerkt, das ist ein Druckschmerz, wenn man drauf drückt.", a:"Lothar Matthäus", w:["Mario Basler", "Stefan Effenberg", "Oliver Kahn"] },
+  { q:"Wenn der Ball am Torwart vorbei geht, ist es meist ein Tor.", a:"Mario Basler", w:["Mehmet Scholl", "Lothar Matthäus", "Stefan Effenberg"] },
+  { q:"Am Ergebnis wird sich nicht mehr viel ändern. Es sei denn, es schießt einer ein Tor.", a:"Franz Beckenbauer", w:["Günter Netzer", "Sepp Herberger", "Otto Rehhagel"] },
+  { q:"Man sollte die Tür nie zu- oder aufmachen.", a:"Hasan Salihamidžić", w:["Lothar Matthäus", "Giovane Élber", "Mario Basler"] },
+  { q:"In letzter Konsequenz waren wir nicht konsequent genug.", a:"Karl-Heinz Rummenigge", w:["Franz Beckenbauer", "Uli Hoeneß", "Oliver Kahn"] },
+  { q:"Ich glaube, dass der Tabellenerste jederzeit den Spitzenreiter schlagen kann.", a:"Berti Vogts", w:["Otto Rehhagel", "Erich Ribbeck", "Jogi Löw"] },
+  { q:"Das wird alles von den Medien hochsterilisiert.", a:"Bruno Labbadia", w:["Felix Magath", "Thomas Doll", "Christoph Daum"] },
+  { q:"Das interessiert mich wie eine geplatzte Currywurst im ostfriesischen Wattenmeer.", a:"Dieter Eilts", w:["Mario Basler", "Thomas Doll", "Otto Rehhagel"] },
+  { q:"Es muss eine Kehrtwende geben. Und die muss 360 Grad sein.", a:"Eduard Geyer", w:["Peter Neururer", "Hans Meyer", "Frank Pagelsdorf"] },
+  { q:"Die Achillesferse von Bobic ist die rechte Schulter.", a:"Gerd Rubenbauer", w:["Werner Hansch", "Heribert Faßbender", "Marcel Reif"] },
+  { q:"Es steht im Augenblick 1:1, aber es hätte auch umgekehrt lauten können.", a:"Heribert Faßbender", w:["Gerd Rubenbauer", "Marcel Reif", "Werner Hansch"] },
+  { q:"Wenn wir alle schlagen, können wir es schaffen.", a:"Horst Hrubesch", w:["Uli Hoeneß", "Paul Breitner", "Rudi Völler"] },
+  { q:"Meine Gänsehaut hatte Gänsehaut.", a:"Dominik Salz", w:["Thomas Müller", "Kevin Großkreutz", "Lukas Podolski"] },
+  { q:"Der Schiedsrichter hat sehr gut für uns gepfiffen.", a:"Roland Wohlfarth", w:["Mario Basler", "Karl-Heinz Rummenigge", "Giovane Élber"] },
+  { q:"Die Spieler von Ghana erkennen Sie an den gelben Stutzen.", a:"Marcel Reif", w:["Bela Rethy", "Tom Bartels", "Gerd Rubenbauer"] },
+  { q:"Jetzt wechselt Jamaika den Torhüter aus!", a:"Gerd Rubenbauer", w:["Heribert Faßbender", "Werner Hansch", "Marcel Reif"] },
+  { q:"Sie sollten das Spiel nicht zu früh abschalten. Es kann noch schlimmer werden.", a:"Heribert Faßbender", w:["Marcel Reif", "Gerd Rubenbauer", "Werner Hansch"] },
+  { q:"Wenn man ihn jetzt ins kalte Wasser schmeißt, könnte er sich die Finger verbrennen.", a:"Gerhard Delling", w:["Johannes B. Kerner", "Reinhold Beckmann", "Bela Rethy"] },
+  { q:"Wer hinten so offen ist, kann nicht ganz dicht sein.", a:"Werner Hansch", w:["Marcel Reif", "Heribert Faßbender", "Gerd Rubenbauer"] },
+  { q:"Wenn man Gelb hat und so reingeht, kann man nur wichtige Termine haben.", a:"Johannes B. Kerner", w:["Gerhard Delling", "Reinhold Beckmann", "Dieter Kürten"] },
+  { q:"Die Luft, die nie drin war, ist raus aus dem Spiel.", a:"Gerhard Delling", w:["Marcel Reif", "Werner Hansch", "Heribert Faßbender"] },
+  { q:"Ja, Statistiken. Aber welche Statistik stimmt schon? Nach der Statistik ist jeder vierte Mensch ein Chinese, aber hier spielt gar kein Chinese mit.", a:"Werner Hansch", w:["Marcel Reif", "Gerd Rubenbauer", "Heribert Faßbender"] },
+  { q:"Die Viererkette ist nur noch ein Perlchen.", a:"Johannes B. Kerner", w:["Gerhard Delling", "Reinhold Beckmann", "Dieter Kürten"] },
+  { q:"Was nützt die schönste Viererkette, wenn sie anderweitig unterwegs ist.", a:"Johannes B. Kerner", w:["Marcel Reif", "Tom Bartels", "Gerd Rubenbauer"] },
+  { q:"Der Grund war nicht die Ursache, sondern der Auslöser.", a:"Franz Beckenbauer", w:["Günter Netzer", "Otto Rehhagel", "Sepp Herberger"] },
+  { q:"Ich habe ihn ausgewechselt, weil ich einen anderen Spieler einwechseln wollte. Da musste ich einen auswechseln.", a:"Ewald Lienen", w:["Felix Magath", "Frank Pagelsdorf", "Werner Lorant"] },
+  { q:"Das einzige, was jetzt klar ist, ist, dass es draußen dunkel ist.", a:"Winfried Schäfer", w:["Rolf Schafstall", "Hans Meyer", "Peter Neururer"] },
+  { q:"Ball rund muss in Tor eckig.", a:"Helmut Schulte", w:["Sepp Herberger", "Otto Rehhagel", "Horst Hrubesch"] },
+  { q:"Das größte Problem beim Fußball sind die Spieler. Wenn wir die abschaffen könnten, wäre alles gut.", a:"Helmut Schulte", w:["Felix Magath", "Christoph Daum", "Werner Lorant"] },
+  { q:"Der Ball ist rund. Wäre er eckig, wäre er ja ein Würfel.", a:"Gyula Lóránt", w:["Sepp Herberger", "Dragoslav Stepanovic", "Otto Rehhagel"] },
+  { q:"Das nächste Spiel ist immer das nächste.", a:"Matthias Sammer", w:["Jürgen Klinsmann", "Berti Vogts", "Rudi Völler"] },
+  { q:"Das sind Gefühle, wo man schwer beschreiben kann.", a:"Jürgen Klinsmann", w:["Rudi Völler", "Andreas Möller", "Lothar Matthäus"] },
+  { q:"Das war europäische Weltklasse!", a:"Felix Magath", w:["Ottmar Hitzfeld", "Christoph Daum", "Udo Lattek"] },
+  { q:"Es gibt nur einen Ball. Wenn der Gegner ihn hat, muss man sich fragen: Warum? Ja, warum?", a:"Giovanni Trapattoni", w:["Louis van Gaal", "Otto Rehhagel", "Christoph Daum"] },
+  { q:"Die deutschen Spieler hören erst dann auf zu kämpfen, wenn sie im Bus sitzen.", a:"Ronald Koeman", w:["Johan Cruyff", "Louis van Gaal", "Marco van Basten"] },
+  { q:"Die Null muss stehen.", a:"Huub Stevens", w:["Otto Rehhagel", "Felix Magath", "Werner Lorant"] },
+  { q:"Football, bloody hell!", a:"Sir Alex Ferguson", w:["José Mourinho", "Brian Clough", "Arsène Wenger"] },
+  { q:"They think it's all over. It is now!", a:"Kenneth Wolstenholme", w:["Gary Lineker", "John Motson", "Martin Tyler"] },
+];
+
+// Kennzeichen mit erweiterter Info: [Stadt/Ort, Kreis/Landkreis, Bundesland]
 const PLATES = {
-  "A": "Augsburg", "AA": "Aalen / Ostalbkreis", "AB": "Aschaffenburg", "ABG": "Altenburger Land", "ABI": "Anhalt-Bitterfeld", "AC": "Aachen", "AE": "Auerbach", "AH": "Ahaus", "AIB": "Bad Aibling", "AIC": "Aichach-Friedberg", "AK": "Altenkirchen", "ALF": "Alfeld", "ALZ": "Alzenau", "AM": "Amberg", "AN": "Ansbach", "ANA": "Annaberg", "ANG": "Angermünde", "ANK": "Anklam", "AÖ": "Altötting", "AP": "Apolda / Weimarer Land", "APD": "Apolda", "ARN": "Arnstadt", "ART": "Artern", "AS": "Amberg-Sulzbach", "ASL": "Aschersleben", "ASZ": "Aue-Schwarzenberg", "AT": "Altentreptow", "AU": "Aue", "AUR": "Aurich", "AW": "Ahrweiler", "AZ": "Alzey", "AZE": "Anhalt-Zerbst",
-  "B": "Berlin", "BA": "Bamberg", "BAD": "Baden-Baden", "BAR": "Barnim", "BB": "Böblingen", "BBG": "Bernburg", "BC": "Biberach", "BCH": "Buchen", "BE": "Beckum", "BED": "Brand-Erbisdorf", "BEL": "Belzig", "BER": "Bernau", "BF": "Burgsteinfurt", "BGD": "Berchtesgaden", "BGL": "Berchtesgadener Land", "BH": "Bühl", "BI": "Bielefeld", "BID": "Biedenkopf", "BIN": "Bingen", "BIR": "Birkenfeld", "BIT": "Bitburg", "BIW": "Bischofswerda", "BK": "Börde / Backnang", "BKS": "Bernkastel-Kues", "BL": "Balingen / Zollernalbkreis", "BLB": "Bad Berleburg", "BLK": "Burgenlandkreis", "BM": "Bergheim / Erftkreis", "BN": "Bonn", "BNA": "Borna", "BO": "Bochum", "BÖ": "Bördekreis", "BOG": "Bogen", "BOH": "Bocholt", "BOR": "Borken", "BOT": "Bottrop", "BR": "Bruchsal", "BRA": "Brake / Wesermarsch", "BRB": "Brandenburg an der Havel", "BRG": "Burg", "BRK": "Bad Brückenau", "BRL": "Braunlage", "BRV": "Bremervörde", "BS": "Braunschweig", "BSB": "Bersenbrück", "BSK": "Beeskow", "BT": "Bayreuth", "BTF": "Bitterfeld", "BÜD": "Büdingen", "BÜR": "Büren", "BÜS": "Büsingen am Hochrhein", "BÜZ": "Bützow", "BUL": "Burglengenfeld", "BZ": "Bautzen",
-  "C": "Chemnitz", "CA": "Calau", "CAS": "Castrop-Rauxel", "CB": "Cottbus", "CE": "Celle", "CHA": "Cham", "CLP": "Cloppenburg", "CLZ": "Clausthal-Zellerfeld", "CO": "Coburg", "COC": "Cochem", "COE": "Coesfeld", "CR": "Crailsheim", "CUX": "Cuxhaven", "CW": "Calw",
-  "D": "Düsseldorf", "DA": "Darmstadt", "DAH": "Dachau", "DAN": "Lüchow-Dannenberg", "DAU": "Daun / Eifel", "DBR": "Bad Doberan", "DD": "Dresden", "DE": "Dessau-Roßlau", "DEG": "Deggendorf", "DEL": "Delmenhorst", "DGF": "Dingolfing", "DH": "Diepholz", "DI": "Dieburg", "DIL": "Dillenburg", "DIN": "Dinslaken", "DIZ": "Diez", "DKB": "Dinkelsbühl", "DL": "Döbeln", "DLG": "Dillingen", "DM": "Demmin", "DN": "Düren", "DO": "Dortmund", "DON": "Donau-Ries", "DU": "Duisburg", "DUD": "Duderstadt", "DÜW": "Bad Dürkheim", "DW": "Dippoldiswalde", "DZ": "Delitzsch",
-  "E": "Essen", "EA": "Eisenach", "EB": "Eilenburg", "EBE": "Ebersberg", "EBF": "Ebermannstadt", "ECH": "Eckernförde", "ED": "Erding", "EE": "Elbe-Elster", "EF": "Erfurt", "EG": "Eggenfelden", "EH": "Eisenhüttenstadt", "EI": "Eichstätt", "EIL": "Eisleben", "EIN": "Einbeck", "EIS": "Eisenberg", "EL": "Emsland", "EM": "Emmendingen", "EMD": "Emden", "EMS": "Bad Ems", "EN": "Ennepe-Ruhr-Kreis", "ER": "Erlangen", "ERB": "Erbach / Odenwald", "ERH": "Erlangen-Höchstadt", "ERK": "Erkelenz", "ES": "Esslingen", "ESW": "Eschwege", "EU": "Euskirchen", "EW": "Eberswalde",
-  "F": "Frankfurt am Main", "FB": "Friedberg", "FD": "Fulda", "FDB": "Friedberg (Bayern)", "FEU": "Feuchtwangen", "FF": "Frankfurt an der Oder", "FG": "Freiberg / Mittelsachsen", "FI": "Finsterwalde", "FKB": "Frankenberg", "FL": "Flensburg", "FLÖ": "Flöha", "FN": "Friedrichshafen / Bodenseekreis", "FO": "Forchheim", "FOR": "Forst", "FR": "Freiburg im Breisgau", "FRG": "Freyung-Grafenau", "FRI": "Friesland", "FRW": "Bad Freienwalde", "FS": "Freising", "FT": "Frankenthal", "FÜ": "Fürth", "FÜS": "Füssen", "FW": "Fürstenwalde", "FZ": "Fritzlar",
-  "G": "Gera", "GA": "Gardelegen", "GAN": "Gandersheim", "GAP": "Garmisch-Partenkirchen", "GC": "Glauchau", "GD": "Schwäbisch Gmünd", "GE": "Gelsenkirchen", "GEL": "Geldern", "GEO": "Gerolzhofen", "GER": "Germersheim", "GF": "Gifhorn", "GG": "Groß-Gerau", "GHA": "Geithain", "GHC": "Gräfenhainichen", "GI": "Gießen", "GK": "Geilenkirchen", "GL": "Bergisch Gladbach / Rhein-Berg", "GLA": "Gladbeck", "GM": "Gummersbach / Oberberg", "GMN": "Grimmen", "GMS": "Greding", "GÖ": "Göttingen", "GOA": "St. Goar", "GOH": "St. Goarshausen", "GP": "Göppingen", "GR": "Görlitz", "GRA": "Grafenau", "GRH": "Großenhain", "GRI": "Bad Griesbach", "GRM": "Grimma", "GRZ": "Greiz", "GS": "Goslar", "GT": "Gütersloh", "GTH": "Gotha", "GÜ": "Güstrow", "GUB": "Guben", "GUN": "Gunzenhausen", "GV": "Grevenbroich", "GVM": "Grevesmühlen", "GW": "Greifswald", "GZ": "Günzburg",
-  "H": "Hannover", "HA": "Hagen", "HAB": "Hammelburg", "HAL": "Halle (Saale)", "HAM": "Hamm", "HAS": "Haßfurt", "HB": "Bremen / Bremerhaven", "HBS": "Halberstadt", "HC": "Hainichen", "HCH": "Hechingen", "HD": "Heidelberg / Rhein-Neckar", "HDH": "Heidenheim", "HDL": "Haldensleben", "HE": "Helmstedt", "HEB": "Hersbruck", "HEF": "Bad Hersfeld", "HEI": "Heide / Dithmarschen", "HEL": "Hessische Landesregierung", "HER": "Herne", "HET": "Hettstedt", "HF": "Herford", "HG": "Bad Homburg / Hochtaunus", "HGN": "Hagenow", "HGW": "Hansestadt Greifswald", "HH": "Hansestadt Hamburg", "HHM": "Hohenmölsen", "HI": "Hildesheim", "HIG": "Heiligenstadt", "HIP": "Hilpoltstein", "HK": "Heidekreis", "HL": "Hansestadt Lübeck", "HM": "Hameln-Pyrmont", "HMÜ": "Hannoversch Münden", "HN": "Heilbronn", "HO": "Hof", "HOG": "Hofgeismar", "HOR": "Horb", "HÖS": "Höchstadt", "HOT": "Hohenstein-Ernstthal", "HP": "Heppenheim / Bergstraße", "HR": "Homberg (Efze)", "HRO": "Hansestadt Rostock", "HS": "Heinsberg", "HSK": "Hochsauerlandkreis", "HST": "Hansestadt Stralsund", "HU": "Hanau", "HV": "Havelberg", "HVL": "Havelland", "HWI": "Hansestadt Wismar", "HX": "Höxter", "HY": "Hoyerswerda", "HZ": "Harz",
-  "IGB": "St. Ingbert", "IK": "Ilm-Kreis", "IL": "Ilmenau", "ILL": "Illertissen", "IN": "Ingolstadt", "IZ": "Itzehoe / Steinburg",
-  "J": "Jena", "JE": "Jessen", "JL": "Jerichower Land", "JÜL": "Jülich",
-  "K": "Köln", "KA": "Karlsruhe", "KB": "Korbach / Waldeck-Frankenberg", "KC": "Kronach", "KE": "Kempten (Allgäu)", "KEH": "Kelheim", "KEL": "Kehl", "KFF": "Kemnath", "KF": "Kaufbeuren", "KG": "Bad Kissingen", "KH": "Bad Kreuznach", "KI": "Kiel", "KIL": "Dingolfing (Klingenthal)", "KIZ": "Kirn", "KK": "Kempen-Krefeld", "KL": "Kaiserslautern", "KLE": "Kleve", "KLZ": "Klötze", "KM": "Kamenz", "KN": "Konstanz", "KO": "Koblenz", "KÖN": "Bad Königshofen", "KÖT": "Köthen", "KÖZ": "Kötzting", "KR": "Krefeld", "KRU": "Krumbach", "KS": "Kassel", "KT": "Kitzingen", "KU": "Kulmbach", "KÜN": "Künzelsau", "KUS": "Kusel", "KW": "Königs Wusterhausen", "KY": "Kyritz", "KYF": "Kyffhäuserkreis",
-  "L": "Leipzig", "LA": "Landshut", "LAN": "Landau an der Isar", "LDK": "Lahn-Dill-Kreis", "LDS": "Dahme-Spreewald", "LE": "Lemgo", "LEO": "Leonberg", "LER": "Leer", "LEV": "Leverkusen", "LF": "Laufen", "LG": "Lüneburg", "LH": "Lüdinghausen", "LI": "Lindau (Bodensee)", "LIB": "Bad Liebenwerda", "LIF": "Lichtenfels", "LIP": "Lippe", "LL": "Landsberg am Lech", "LM": "Limburg-Weilburg", "LN": "Lübben", "LÖ": "Lörrach", "LÖB": "Löbau", "LOS": "Oder-Spree", "LP": "Lippstadt", "LR": "Lahr", "LST": "Lichtenstein", "LSA": "Sachsen-Anhalt (Behörden)", "LSN": "Sachsen (Behörden)", "LU": "Ludwigshafen", "LÜN": "Lünen", "LUP": "Ludwigslust-Parchim", "LVA": "Rheinland-Pfalz (Behörden)", "LWI": "Ludwigslust",
-  "M": "München", "MA": "Mannheim", "MAB": "Marienberg", "MAI": "Mainburg", "MAK": "Marktredwitz", "MAL": "Mallersdorf", "MB": "Miesbach", "MC": "Malchin", "MD": "Magdeburg", "ME": "Mettmann", "MED": "Meldorf", "MEG": "Melsungen", "MEK": "Mittlerer Erzgebirgskreis", "MEL": "Melle", "MER": "Merseburg", "MET": "Mellrichstadt", "MG": "Mönchengladbach", "MGN": "Meiningen", "MH": "Mülheim an der Ruhr", "MHL": "Mühlhausen", "MI": "Minden", "MIL": "Miltenberg", "MK": "Märkischer Kreis", "MKL": "Mindelheim", "ML": "Mansfelder Land", "MM": "Memmingen", "MN": "Mindelheim / Unterallgäu", "MO": "Moers", "MOD": "Marktoberdorf", "MOL": "Märkisch-Oderland", "MON": "Monschau", "MOS": "Mosbach / Neckar-Odenwald", "MR": "Marburg-Biedenkopf", "MS": "Münster", "MSE": "Mecklenburgische Seenplatte", "MSH": "Mansfeld-Südharz", "MSP": "Main-Spessart", "MST": "Mecklenburg-Strelitz", "MTK": "Main-Taunus-Kreis", "MTL": "Muldental", "MÜ": "Mühldorf am Inn", "MUB": "Münchberg", "MÜL": "Müllheim", "MÜN": "Münsingen", "MUR": "Müritz", "MV": "Mecklenburg-Vorpommern (Behörden)", "MW": "Mittweida", "MY": "Mayen", "MYK": "Mayen-Koblenz", "MZ": "Mainz / Mainz-Bingen", "MZG": "Merzig-Wadern",
-  "N": "Nürnberg", "NAB": "Nabburg", "NAU": "Nauen", "NB": "Neubrandenburg", "ND": "Neuburg-Schrobenhausen", "NDH": "Nordhausen", "NE": "Neuss", "NEA": "Neustadt an der Aisch", "NEB": "Nebra", "NEC": "Neustadt bei Coburg", "NEN": "Neunburg", "NES": "Bad Neustadt / Rhön", "NEW": "Neustadt an der Waldnaab", "NF": "Nordfriesland", "NH": "Neuhaus am Rennweg", "NI": "Nienburg (Weser)", "NIL": "Niesky", "NK": "Neunkirchen", "NM": "Neumarkt in der Oberpfalz", "NMB": "Naumburg", "NMS": "Neumünster", "NOH": "Nordhorn / Grafschaft Bentheim", "NOL": "Niederschlesische Oberlausitz", "NOM": "Northeim", "NOR": "Norden", "NP": "Neuruppin", "NR": "Neuwied", "NRW": "Nordrhein-Westfalen (Behörden)", "NT": "Nürtingen", "NU": "Neu-Ulm", "NV": "Nürtingen (Aktiv)", "NW": "Neustadt an der Weinstraße", "NWM": "Nordwestmecklenburg", "NY": "Niesky (Aktiv)", "NZ": "Neustrelitz",
-"OA": "Oberallgäu", "OAL": "Ostallgäu", "OB": "Oberhausen", "OBG": "Osterburg", "OC": "Oschersleben", "OD": "Bad Oldesloe / Stormarn", "OE": "Olpe", "OF": "Offenbach am Main", "OG": "Offenburg / Ortenaukreis", "OH": "Ostholstein", "OHA": "Osterode am Harz", "ÖHR": "Öhringen", "OHV": "Oberhavel", "OHZ": "Osterholz-Scharmbeck", "OK": "Ohrekreis", "OL": "Oldenburg", "OP": "Opladen", "OPR": "Ostprignitz-Ruppin", "OS": "Osnabrück", "OSL": "Oberspreewald-Lausitz", "OVI": "Oberviechtach", "OVL": "Obervogtland", "OZ": "Oschatz","P": "Potsdam", "PA": "Passau", "PAF": "Pfaffenhofen", "PAN": "Pfarrkirchen / Rottal-Inn", "PAR": "Parsberg", "PB": "Paderborn", "PCH": "Parchim", "PE": "Peine", "PEG": "Pegnitz", "PF": "Pforzheim / Enzkreis", "PI": "Pinneberg", "PIR": "Pirna / Sächsische Schweiz", "PL": "Plauen", "PLÖ": "Plön", "PM": "Potsdam-Mittelmark", "PN": "Pößneck", "PR": "Prignitz", "PRÜ": "Prüm", "PS": "Pirmasens / Südwestpfalz", "PW": "Pasewalk", "PZ": "Pasewalk (Aktiv)","Q": "Halle / Saalkreis (Sonderrecht)", "QLB": "Quedlinburg","R": "Regensburg", 
-  "RA": "Rastatt", "RC": "Reichenbach", "RD": "Rendsburg-Eckernförde", "RDG": "Ribnitz-Damgarten", "RE": "Recklinghausen", "REG": "Regen / Bayerischer Wald", "REH": "Rehau", "REI": "Bad Reichenhall", "RG": "Riesa-Großenhain", "RH": "Roth", "RI": "Rinteln", "RIE": "Riesa", "RL": "Rochlitz", "RM": "Röbel/Müritz", "RN": "Rathenow", "RO": "Rosenheim", "ROD": "Roding", "ROF": "Rotenburg (Fulda)", "ROG": "Rotenburg (Wümme)", "ROL": "Rottenburg", "ROS": "Rostock (Landkreis)", "ROT": "Rothenburg ob der Tauber", "ROW": "Rotenburg (Wümme)", "RP": "Rhein-Pfalz-Kreis", "RPL": "Rheinland-Pfalz (Behörden)", "RS": "Remscheid", "RSL": "Roßlau", "RT": "Reutlingen", "RU": "Rudolstadt", "RÜD": "Rüdesheim / Rheingau-Taunus", "RÜG": "Rügen", "RV": "Ravensburg", "RW": "Rottweil", "RZ": "Ratzeburg / Herzogtum Lauenburg",
-  "S": "Stuttgart", "SAD": "Schwandorf", "SAL": "Saarland (Behörden)", "SAN": "Stadtsteinach", "SB": "Saarbrücken", "SBG": "Strasburg", "SBK": "Schönebeck", "SC": "Schwabach", "SCZ": "Schleiz", "SDH": "Sondershausen", "SDL": "Stendal", "SDW": "Schmalkalden-Meiningen", "SE": "Bad Segeberg", "SEB": "Sebnitz", "SEE": "Seelow", "SEF": "Scheinfeld", "GEL": "Geldern (Aktiv)", "SFB": "Senftenberg", "SFT": "Staßfurt", "SG": "Solingen", "SGH": "Sangerhausen", "SHA": "Schwäbisch Hall", "SHG": "Schaumburg", "SHK": "Saale-Holzland-Kreis", "SHL": "Suhl", "SI": "Siegen-Wittgenstein", "SIG": "Sigmaringen", "SIM": "Simmern / Rhein-Hunsrück", "SK": "Saalekreis", "SL": "Schleswig-Flensburg", "SLE": "Schleiden", "SLF": "Saalfeld-Rudolstadt", "SLG": "Saulgau", "SLN": "Schmölln", "SLS": "Saarlouis", "SLÜ": "Schlüchtern", "SLZ": "Bad Salzungen", "SM": "Schmalkalden-Meiningen", "SMÜ": "Schwabmünchen", "SN": "Schwerin", "SO": "Soest", "SOB": "Schrobenhausen", "SOG": "Schongau", "SOK": "Saale-Orla-Kreis", "SÖM": "Sömmerda", "SON": "Sonneberg", "SP": "Speyer", "SPB": "Spremberg", "SPN": "Spree-Neiße", "SR": "Straubing-Bogen", "SRB": "Strausberg", "SRE": "Spremberg (Aktiv)", "ST": "Steinfurt", "STA": "Starnberg", "STB": "Sternberg", "STD": "Stade", "STE": "Staffelstein", "STH": "Stadthagen", "STL": "Stollberg", "SU": "Siegburg / Rhein-Sieg-Kreis", "SUL": "Sulzbach-Rosenberg", "SÜW": "Südliche Weinstraße", "SW": "Schweinfurt", "SWA": "Bad Schwalbach", "SY": "Syke", "SZ": "Salzgitter", "SZB": "Schwarzenberg",
-  "TBB": "Tauberbischofsheim / Main-Tauber", "TE": "Tecklenburg", "TF": "Teltow-Fläming", "TG": "Torgau", "THL": "Thüringen (Behörden)", "THW": "Technisches Hilfswerk", "TIR": "Tirschenreuth", "TO": "Torgau-Oschatz", "TÖL": "Bad Tölz-Wolfratshausen", "TP": "Templin", "TR": "Trier-Saarburg", "TS": "Traunstein", "TT": "Tettnang", "TÜ": "Tübingen", "TUT": "Tuttlingen","UE": "Uelzen", "UEM": "Ueckermünde", "UFF": "Uffenheim", "UH": "Unstrut-Hainich-Kreis", "UL": "Ulm / Alb-Donau-Kreis", "UM": "Uckermark", "UN": "Unna", "USI": "Usingen","V": "Vogtlandkreis", "VAI": "Vaihingen an der Enz", "VB": "Vogelsbergkreis", "VEC": "Vechta", "VER": "Verden (Aller)", "VG": "Vorpommern-Greifswald", "VIE": "Viersen", "VIT": "Viechtach", "VK": "Völklingen", "VOH": "Vohenstrauß", "VR": "Vorpommern-Rügen", "VS": "Villingen-Schwenningen",
-  "W": "Wuppertal", "WA": "Waldeck", "WAF": "Warendorf", "WAK": "Wartburgkreis", "WAN": "Wanne-Eickel", "WAR": "Warburg", "WAT": "Wattenscheid", "WB": "Wittenberg", "WBS": "Worbis", "WDA": "Werdau", "WE": "Weimar", "WEL": "Weilburg", "WEN": "Weiden in der Oberpfalz", "WER": "Wertingen", "WES": "Wesel", "WF": "Wolfenbüttel", "WG": "Wangen", "WHV": "Wilhelmshaven", "WI": "Wiesbaden", "WIL": "Wittlich / Bernkastel-Wittlich", "WIS": "Wismar", "WIT": "Witten", "WIZ": "Witzenhausen", "WK": "Wermelskirchen", "WL": "Winsen / Landkreis Harburg", "WLG": "Wolgast", "WM": "Weilheim-Schongau", "WMS": "Wolmirstedt", "WN": "Waiblingen / Rems-Murr", "WND": "St. Wendel", "WO": "Worms", "WOB": "Wolfsburg", "WOH": "Wolfhagen", "WOL": "Wolfach", "WR": "Wernigerode", "WRN": "Waren (Müritz)", "WS": "Wasserburg", "WSF": "Weißenfels", "WST": "Westerstede / Ammerland", "WSW": "Weißwasser", "WT": "Waldshut", "WTM": "Wittmund", "WÜ": "Würzburg", "WUG": "Weißenburg-Gunzenhausen", "WUN": "Wunsiedel", "WUR": "Wurzen", "WW": "Westerwaldkreis", "WZ": "Wetzlar",
-  "X": "NATO-Streitkräfte","Y": "Bundeswehr","Z": "Zwickau", "ZE": "Zerbst", "ZEL": "Zell (Mosel)", "ZI": "Zittau", "ZIG": "Ziegenhain", "ZP": "Zschopau", "ZR": "Zeulenroda", "ZW": "Zweibrücken"
+"A":["Augsburg","Kreisfreie Stadt Augsburg","Bayern"],
+"AA":["Aalen / Ostalbkreis","Ostalbkreis","Baden-Württemberg"],
+"AB":["Aschaffenburg","Stadt & Landkreis Aschaffenburg","Bayern"],
+"ABG":["Altenburg","Altenburger Land","Thüringen"],
+"ABI":["Köthen","Anhalt-Bitterfeld","Sachsen-Anhalt"],
+"AC":["Aachen","Städteregion Aachen","Nordrhein-Westfalen"],
+"AE":["Auerbach","Vogtlandkreis","Sachsen"],
+"AH":["Ahaus","Kreis Borken","Nordrhein-Westfalen"],
+"AIB":["Bad Aibling","Landkreis Rosenheim","Bayern"],
+"AIC":["Aichach","Aichach-Friedberg","Bayern"],
+"AK":["Altenkirchen","Landkreis Altenkirchen","Rheinland-Pfalz"],
+"AL":["Altena","Märkischer Kreis","Nordrhein-Westfalen"],
+"ALF":["Alfeld (Leine)","Landkreis Hildesheim","Niedersachsen"],
+"ALS":["Alsfeld","Vogelsbergkreis","Hessen"],
+"ALZ":["Alzenau","Landkreis Aschaffenburg","Bayern"],
+"AM":["Amberg","Kreisfreie Stadt Amberg","Bayern"],
+"AN":["Ansbach","Stadt & Landkreis Ansbach","Bayern"],
+"ANA":["Annaberg-Buchholz","Erzgebirgskreis","Sachsen"],
+"ANG":["Angermünde","Landkreis Uckermark","Brandenburg"],
+"ANK":["Anklam","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"AÖ":["Altötting","Landkreis Altötting","Bayern"],
+"AP":["Apolda / Weimarer Land","Weimarer Land","Thüringen"],
+"APD":["Apolda","Weimarer Land","Thüringen"],
+"AR":["Arnsberg","Hochsauerlandkreis","Nordrhein-Westfalen"],
+"ARN":["Arnstadt","Ilm-Kreis","Thüringen"],
+"ART":["Artern","Kyffhäuserkreis","Thüringen"],
+"AS":["Amberg-Sulzbach","Landkreis Amberg-Sulzbach","Bayern"],
+"ASL":["Aschersleben","Salzlandkreis","Sachsen-Anhalt"],
+"ASZ":["Aue","Erzgebirgskreis","Sachsen"],
+"AT":["Altentreptow","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"AU":["Aue","Erzgebirgskreis","Sachsen"],
+"AUR":["Aurich","Landkreis Aurich","Niedersachsen"],
+"AW":["Bad Neuenahr-Ahrweiler","Landkreis Ahrweiler","Rheinland-Pfalz"],
+"AZ":["Alzey","Alzey-Worms","Rheinland-Pfalz"],
+"AZE":["Zerbst","Anhalt-Bitterfeld","Sachsen-Anhalt"],
+"B":["Berlin","Stadtgebiet Berlin","Berlin"],
+"BA":["Bamberg","Stadt & Landkreis Bamberg","Bayern"],
+"BAD":["Baden-Baden","Stadtkreis Baden-Baden","Baden-Württemberg"],
+"BAR":["Eberswalde","Barnim","Brandenburg"],
+"BB":["Böblingen","Landkreis Böblingen","Baden-Württemberg"],
+"BBG":["Bernburg","Salzlandkreis","Sachsen-Anhalt"],
+"BC":["Biberach an der Riß","Landkreis Biberach","Baden-Württemberg"],
+"BCH":["Buchen (Odenwald)","Neckar-Odenwald-Kreis","Baden-Württemberg"],
+"BE":["Beckum","Kreis Warendorf","Nordrhein-Westfalen"],
+"BED":["Brand-Erbisdorf","Landkreis Mittelsachsen","Sachsen"],
+"BEI":["Beilngries","Landkreis Eichstätt","Bayern"],
+"BEL":["Belzig","Landkreis Potsdam-Mittelmark","Brandenburg"],
+"BER":["Bernau","Landkreis Barnim","Brandenburg"],
+"BF":["Burgsteinfurt","Kreis Steinfurt","Nordrhein-Westfalen"],
+"BGD":["Berchtesgaden","Berchtesgadener Land","Bayern"],
+"BGL":["Bad Reichenhall","Berchtesgadener Land","Bayern"],
+"BH":["Bühl","Landkreis Rastatt","Baden-Württemberg"],
+"BI":["Bielefeld","Kreisfreie Stadt Bielefeld","Nordrhein-Westfalen"],
+"BID":["Biedenkopf","Landkreis Marburg-Biedenkopf","Hessen"],
+"BIN":["Bingen am Rhein","Landkreis Mainz-Bingen","Rheinland-Pfalz"],
+"BIR":["Birkenfeld","Landkreis Birkenfeld","Rheinland-Pfalz"],
+"BIT":["Bitburg","Eifelkreis Bitburg-Prüm","Rheinland-Pfalz"],
+"BIW":["Bischofswerda","Landkreis Bautzen","Sachsen"],
+"BK":["Backnang / Landkreis Börde","Rems-Murr-Kreis / Landkreis Börde","Baden-Württemberg / Sachsen-Anhalt"],
+"BKS":["Bernkastel-Kues","Landkreis Bernkastel-Wittlich","Rheinland-Pfalz"],
+"BL":["Balingen","Zollernalbkreis","Baden-Württemberg"],
+"BLB":["Bad Berleburg","Kreis Siegen-Wittgenstein","Nordrhein-Westfalen"],
+"BLK":["Naumburg","Burgenlandkreis","Sachsen-Anhalt"],
+"BM":["Bergheim","Rhein-Erft-Kreis","Nordrhein-Westfalen"],
+"BN":["Bonn","Kreisfreie Stadt Bonn","Nordrhein-Westfalen"],
+"BNA":["Borna","Landkreis Leipzig","Sachsen"],
+"BO":["Bochum","Kreisfreie Stadt Bochum","Nordrhein-Westfalen"],
+"BOG":["Bogen","Landkreis Straubing-Bogen","Bayern"],
+"BOH":["Bocholt","Kreis Borken","Nordrhein-Westfalen"],
+"BOR":["Borken","Kreis Borken","Nordrhein-Westfalen"],
+"BOT":["Bottrop","Kreisfreie Stadt Bottrop","Nordrhein-Westfalen"],
+"BR":["Bruchsal","Landkreis Karlsruhe","Baden-Württemberg"],
+"BRA":["Brake","Landkreis Wesermarsch","Niedersachsen"],
+"BRB":["Brandenburg an der Havel","Kreisfreie Stadt Brandenburg","Brandenburg"],
+"BRG":["Burg","Jerichower Land","Sachsen-Anhalt"],
+"BRI":["Brilon","Hochsauerlandkreis","Nordrhein-Westfalen"],
+"BRK":["Bad Brückenau","Landkreis Bad Kissingen","Bayern"],
+"BRL":["Blankenburg / Braunlage","Landkreis Harz","Sachsen-Anhalt"],
+"BRV":["Bremervörde","Landkreis Rotenburg (Wümme)","Niedersachsen"],
+"BS":["Braunschweig","Kreisfreie Stadt Braunschweig","Niedersachsen"],
+"BSB":["Bersenbrück","Landkreis Osnabrück","Niedersachsen"],
+"BSK":["Beeskow","Landkreis Oder-Spree","Brandenburg"],
+"BT":["Bayreuth","Stadt & Landkreis Bayreuth","Bayern"],
+"BTF":["Bitterfeld","Landkreis Anhalt-Bitterfeld","Sachsen-Anhalt"],
+"BÜD":["Büdingen","Wetteraukreis","Hessen"],
+"BÜR":["Büren","Kreis Paderborn","Nordrhein-Westfalen"],
+"BÜS":["Büsingen am Hochrhein","Landkreis Konstanz","Baden-Württemberg"],
+"BÜZ":["Bützow","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"BUL":["Burglengenfeld","Landkreis Schwandorf","Bayern"],
+"BZ":["Bautzen","Landkreis Bautzen","Sachsen"],
+"C":["Chemnitz","Kreisfreie Stadt Chemnitz","Sachsen"],
+"CA":["Calau","Landkreis Oberspreewald-Lausitz","Brandenburg"],
+"CAS":["Castrop-Rauxel","Kreis Recklinghausen","Nordrhein-Westfalen"],
+"CB":["Cottbus","Kreisfreie Stadt Cottbus","Brandenburg"],
+"CE":["Celle","Landkreis Celle","Niedersachsen"],
+"CHA":["Cham","Landkreis Cham","Bayern"],
+"CLP":["Cloppenburg","Landkreis Cloppenburg","Niedersachsen"],
+"CLZ":["Clausthal-Zellerfeld","Landkreis Goslar","Niedersachsen"],
+"CO":["Coburg","Stadt & Landkreis Coburg","Bayern"],
+"COC":["Cochem","Landkreis Cochem-Zell","Rheinland-Pfalz"],
+"COE":["Coesfeld","Kreis Coesfeld","Nordrhein-Westfalen"],
+"CR":["Crailsheim","Landkreis Schwäbisch Hall","Baden-Württemberg"],
+"CUX":["Cuxhaven","Landkreis Cuxhaven","Niedersachsen"],
+"CW":["Calw","Landkreis Calw","Baden-Württemberg"],
+"D":["Düsseldorf","Kreisfreie Stadt Düsseldorf","Nordrhein-Westfalen"],
+"DA":["Darmstadt","Kreisfreie Stadt & Landkreis Darmstadt-Dieburg","Hessen"],
+"DAH":["Dachau","Landkreis Dachau","Bayern"],
+"DAN":["Lüchow","Landkreis Lüchow-Dannenberg","Niedersachsen"],
+"DAU":["Daun","Landkreis Vulkaneifel","Rheinland-Pfalz"],
+"DBR":["Bad Doberan","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"DD":["Dresden","Kreisfreie Stadt Dresden","Sachsen"],
+"DE":["Dessau-Roßlau","Kreisfreie Stadt Dessau-Roßlau","Sachsen-Anhalt"],
+"DEG":["Deggendorf","Landkreis Deggendorf","Bayern"],
+"DEL":["Delmenhorst","Kreisfreie Stadt Delmenhorst","Niedersachsen"],
+"DGF":["Dingolfing","Landkreis Dingolfing-Landau","Bayern"],
+"DH":["Diepholz","Landkreis Diepholz","Niedersachsen"],
+"DI":["Dieburg","Landkreis Darmstadt-Dieburg","Hessen"],
+"DIL":["Dillenburg","Lahn-Dill-Kreis","Hessen"],
+"DIN":["Dinslaken","Kreis Wesel","Nordrhein-Westfalen"],
+"DIZ":["Diez","Rhein-Lahn-Kreis","Rheinland-Pfalz"],
+"DKB":["Dinkelsbühl","Landkreis Ansbach","Bayern"],
+"DL":["Döbeln","Landkreis Mittelsachsen","Sachsen"],
+"DLG":["Dillingen an der Donau","Landkreis Dillingen","Bayern"],
+"DM":["Demmin","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"DN":["Düren","Kreis Düren","Nordrhein-Westfalen"],
+"DO":["Dortmund","Kreisfreie Stadt Dortmund","Nordrhein-Westfalen"],
+"DON":["Donauwörth","Landkreis Donau-Ries","Bayern"],
+"DS":["Donaueschingen","Schwarzwald-Baar-Kreis","Baden-Württemberg"],
+"DT":["Detmold","Kreis Lippe","Nordrhein-Westfalen"],
+"DU":["Duisburg","Kreisfreie Stadt Duisburg","Nordrhein-Westfalen"],
+"DUD":["Duderstadt","Landkreis Göttingen","Niedersachsen"],
+"DÜW":["Bad Dürkheim","Landkreis Bad Dürkheim","Rheinland-Pfalz"],
+"DW":["Dippoldiswalde","Landkreis Sächsische Schweiz-Osterzgebirge","Sachsen"],
+"DZ":["Delitzsch","Landkreis Nordsachsen","Sachsen"],
+"E":["Essen","Kreisfreie Stadt Essen","Nordrhein-Westfalen"],
+"EA":["Eisenach","Kreisfreie Stadt Eisenach","Thüringen"],
+"EB":["Eilenburg","Landkreis Nordsachsen","Sachsen"],
+"EBE":["Ebersberg","Landkreis Ebersberg","Bayern"],
+"EBN":["Ebern","Landkreis Haßberge","Bayern"],
+"EBS":["Ebermannstadt","Landkreis Forchheim","Bayern"],
+"ECK":["Eckernförde","Kreis Rendsburg-Eckernförde","Schleswig-Holstein"],
+"ED":["Erding","Landkreis Erding","Bayern"],
+"EE":["Herzberg (Elster)","Landkreis Elbe-Elster","Brandenburg"],
+"EF":["Erfurt","Kreisfreie Stadt Erfurt","Thüringen"],
+"EG":["Eggenfelden","Landkreis Rottal-Inn","Bayern"],
+"EH":["Eisenhüttenstadt","Landkreis Oder-Spree","Brandenburg"],
+"EI":["Eichstätt","Landkreis Eichstätt","Bayern"],
+"EIC":["Heiligenstadt","Eichsfeld","Thüringen"],
+"EIL":["Eisleben","Landkreis Mansfeld-Südharz","Sachsen-Anhalt"],
+"EIN":["Einbeck","Landkreis Northeim","Niedersachsen"],
+"EIS":["Eisenberg","Saale-Holzland-Kreis","Thüringen"],
+"EL":["Meppen","Landkreis Emsland","Niedersachsen"],
+"EM":["Emmendingen","Landkreis Emmendingen","Baden-Württemberg"],
+"EMD":["Emden","Kreisfreie Stadt Emden","Niedersachsen"],
+"EMS":["Bad Ems","Rhein-Lahn-Kreis","Rheinland-Pfalz"],
+"EN":["Schwelm","Ennepe-Ruhr-Kreis","Nordrhein-Westfalen"],
+"ER":["Erlangen","Kreisfreie Stadt Erlangen","Bayern"],
+"ERB":["Erbach (Odenwald)","Odenwaldkreis","Hessen"],
+"ERH":["Herzogenaurach","Landkreis Erlangen-Höchstadt","Bayern"],
+"ERK":["Erkelenz","Kreis Heinsberg","Nordrhein-Westfalen"],
+"ERZ":["Annaberg-Buchholz","Erzgebirgskreis","Sachsen"],
+"ES":["Esslingen am Neckar","Landkreis Esslingen","Baden-Württemberg"],
+"ESB":["Eschenbach in der Oberpfalz","Landkreis Neustadt/Waldnaab","Bayern"],
+"ESW":["Eschwege","Werra-Meißner-Kreis","Hessen"],
+"EU":["Euskirchen","Kreis Euskirchen","Nordrhein-Westfalen"],
+"EUT":["Eutin","Kreis Ostholstein","Schleswig-Holstein"],
+"EW":["Eberswalde","Landkreis Barnim","Brandenburg"],
+"F":["Frankfurt am Main","Kreisfreie Stadt Frankfurt","Hessen"],
+"FAL":["Fallingbostel","Heidekreis","Niedersachsen"],
+"FB":["Friedberg","Wetteraukreis","Hessen"],
+"FD":["Fulda","Landkreis Fulda","Hessen"],
+"FDB":["Friedberg","Landkreis Aichach-Friedberg","Bayern"],
+"FDS":["Freudenstadt","Landkreis Freudenstadt","Baden-Württemberg"],
+"FEU":["Feuchtwangen","Landkreis Ansbach","Bayern"],
+"FF":["Frankfurt (Oder)","Kreisfreie Stadt Frankfurt (Oder)","Brandenburg"],
+"FFB":["Fürstenfeldbruck","Landkreis Fürstenfeldbruck","Bayern"],
+"FG":["Freiberg","Landkreis Mittelsachsen","Sachsen"],
+"FI":["Finsterwalde","Landkreis Elbe-Elster","Brandenburg"],
+"FKB":["Frankenberg (Eder)","Landkreis Waldeck-Frankenberg","Hessen"],
+"FL":["Flensburg","Kreisfreie Stadt Flensburg","Schleswig-Holstein"],
+"FLÖ":["Flöha","Landkreis Mittelsachsen","Sachsen"],
+"FN":["Friedrichshafen","Bodenseekreis","Baden-Württemberg"],
+"FO":["Forchheim","Landkreis Forchheim","Bayern"],
+"FOR":["Forst (Lausitz)","Landkreis Spree-Neiße","Brandenburg"],
+"FR":["Freiburg im Breisgau","Stadtkreis Freiburg","Baden-Württemberg"],
+"FRG":["Freyung","Landkreis Freyung-Grafenau","Bayern"],
+"FRI":["Jever","Landkreis Friesland","Niedersachsen"],
+"FRW":["Bad Freienwalde","Landkreis Märkisch-Oderland","Brandenburg"],
+"FS":["Freising","Landkreis Freising","Bayern"],
+"FT":["Frankenthal","Kreisfreie Stadt Frankenthal","Rheinland-Pfalz"],
+"FTL":["Freital","Landkreis Sächsische Schweiz-Osterzgebirge","Sachsen"],
+"FÜ":["Fürth","Kreisfreie Stadt Fürth","Bayern"],
+"FÜS":["Füssen","Landkreis Ostallgäu","Bayern"],
+"FW":["Fürstenwalde","Landkreis Oder-Spree","Brandenburg"],
+"FZ":["Fritzlar","Schwalm-Eder-Kreis","Hessen"],
+"G":["Gera","Kreisfreie Stadt Gera","Thüringen"],
+"GA":["Gardelegen","Altmarkkreis Salzwedel","Sachsen-Anhalt"],
+"GAN":["Bad Gandersheim","Landkreis Northeim","Niedersachsen"],
+"GAP":["Garmisch-Partenkirchen","Landkreis Garmisch-Partenkirchen","Bayern"],
+"GC":["Glauchau","Landkreis Zwickau","Sachsen"],
+"GD":["Schwäbisch Gmünd","Ostalbkreis","Baden-Württemberg"],
+"GDB":["Gadebusch","Landkreis Nordwestmecklenburg","Mecklenburg-Vorpommern"],
+"GE":["Gelsenkirchen","Kreisfreie Stadt Gelsenkirchen","Nordrhein-Westfalen"],
+"GEL":["Geldern","Kreis Kleve","Nordrhein-Westfalen"],
+"GEO":["Gerolzhofen","Landkreis Schweinfurt","Bayern"],
+"GER":["Germersheim","Landkreis Germersheim","Rheinland-Pfalz"],
+"GF":["Gifhorn","Landkreis Gifhorn","Niedersachsen"],
+"GG":["Groß-Gerau","Landkreis Groß-Gerau","Hessen"],
+"GHA":["Geithain","Landkreis Leipzig","Sachsen"],
+"GHC":["Gräfenhainichen","Landkreis Wittenberg","Sachsen-Anhalt"],
+"GI":["Gießen","Landkreis Gießen","Hessen"],
+"GK":["Geilenkirchen","Kreis Heinsberg","Nordrhein-Westfalen"],
+"GKN":["Gerabronn","Landkreis Schwäbisch Hall","Baden-Württemberg"],
+"GLA":["Gladbeck","Kreis Recklinghausen","Nordrhein-Westfalen"],
+"GL":["Bergisch Gladbach","Rheinisch-Bergischer Kreis","Nordrhein-Westfalen"],
+"GM":["Gummersbach","Oberbergischer Kreis","Nordrhein-Westfalen"],
+"GMN":["Grimmen","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"GN":["Gelnhausen","Main-Kinzig-Kreis","Hessen"],
+"GOA":["Sankt Goar","Rhein-Hunsrück-Kreis","Rheinland-Pfalz"],
+"GÖ":["Göttingen","Landkreis Göttingen","Niedersachsen"],
+"GOH":["St. Goarshausen","Rhein-Lahn-Kreis","Rheinland-Pfalz"],
+"GP":["Göppingen","Landkreis Göppingen","Baden-Württemberg"],
+"GR":["Görlitz","Landkreis Görlitz","Sachsen"],
+"GRA":["Grafenau","Landkreis Freyung-Grafenau","Bayern"],
+"GRH":["Großenhain","Landkreis Meißen","Sachsen"],
+"GRI":["Bad Griesbach","Landkreis Passau","Bayern"],
+"GRM":["Grimma","Landkreis Leipzig","Sachsen"],
+"GRZ":["Greiz","Landkreis Greiz","Thüringen"],
+"GS":["Goslar","Landkreis Goslar","Niedersachsen"],
+"GT":["Gütersloh","Kreis Gütersloh","Nordrhein-Westfalen"],
+"GTH":["Gotha","Landkreis Gotha","Thüringen"],
+"GUB":["Guben","Landkreis Spree-Neiße","Brandenburg"],
+"GÜ":["Güstrow","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"GUN":["Gunzenhausen","Landkreis Weißenburg-Gunzenhausen","Bayern"],
+"GV":["Grevenbroich","Rhein-Kreis Neuss","Nordrhein-Westfalen"],
+"GVM":["Grevesmühlen","Landkreis Nordwestmecklenburg","Mecklenburg-Vorpommern"],
+"GW":["Greifswald","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"GZ":["Günzburg","Landkreis Günzburg","Bayern"],
+"H":["Hannover","Region Hannover","Niedersachsen"],
+"HA":["Hagen","Kreisfreie Stadt Hagen","Nordrhein-Westfalen"],
+"HAB":["Hammelburg","Landkreis Bad Kissingen","Bayern"],
+"HAL":["Halle (Saale)","Kreisfreie Stadt Halle","Sachsen-Anhalt"],
+"HAM":["Hamm","Kreisfreie Stadt Hamm","Nordrhein-Westfalen"],
+"HAS":["Haßfurt","Landkreis Haßberge","Bayern"],
+"HB":["Bremen / Bremerhaven","Freie Hansestadt Bremen","Bremen"],
+"HBN":["Hildburghausen","Landkreis Hildburghausen","Thüringen"],
+"HBS":["Halberstadt","Landkreis Harz","Sachsen-Anhalt"],
+"HC":["Hainichen","Landkreis Mittelsachsen","Sachsen"],
+"HCH":["Hechingen","Zollernalbkreis","Baden-Württemberg"],
+"HD":["Heidelberg","Stadtkreis Heidelberg & Rhein-Neckar-Kreis","Baden-Württemberg"],
+"HDH":["Heidenheim an der Brenz","Landkreis Heidenheim","Baden-Württemberg"],
+"HDL":["Haldensleben","Landkreis Börde","Sachsen-Anhalt"],
+"HE":["Helmstedt","Landkreis Helmstedt","Niedersachsen"],
+"HEB":["Hersbruck","Landkreis Nürnberger Land","Bayern"],
+"HEF":["Bad Hersfeld","Landkreis Hersfeld-Rotenburg","Hessen"],
+"HEI":["Heide","Kreis Dithmarschen","Schleswig-Holstein"],
+"HER":["Herne","Kreisfreie Stadt Herne","Nordrhein-Westfalen"],
+"HET":["Hettstedt","Landkreis Mansfeld-Südharz","Sachsen-Anhalt"],
+"HF":["Herford","Kreis Herford","Nordrhein-Westfalen"],
+"HG":["Bad Homburg","Hochtaunuskreis","Hessen"],
+"HGN":["Hagenow","Landkreis Ludwigslust-Parchim","Mecklenburg-Vorpommern"],
+"HGW":["Hansestadt Greifswald","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"HH":["Hamburg","Freie und Hansestadt Hamburg","Hamburg"],
+"HHM":["Hohenmölsen","Burgenlandkreis","Sachsen-Anhalt"],
+"HI":["Hildesheim","Landkreis Hildesheim","Niedersachsen"],
+"HIG":["Heiligenstadt","Eichsfeld","Thüringen"],
+"HIP":["Hilpoltstein","Landkreis Roth","Bayern"],
+"HK":["Soltau","Heidekreis","Niedersachsen"],
+"HL":["Lübeck","Kreisfreie Hansestadt Lübeck","Schleswig-Holstein"],
+"HM":["Hameln","Landkreis Hameln-Pyrmont","Niedersachsen"],
+"HMÜ":["Hannoversch Münden","Landkreis Göttingen","Niedersachsen"],
+"HN":["Heilbronn","Stadt & Landkreis Heilbronn","Baden-Württemberg"],
+"HO":["Hof","Stadt & Landkreis Hof","Bayern"],
+"HOG":["Hofgeismar","Landkreis Kassel","Hessen"],
+"HOL":["Holzminden","Landkreis Holzminden","Niedersachsen"],
+"HOM":["Homburg","Saarpfalz-Kreis","Saarland"],
+"HOR":["Horb am Neckar","Landkreis Freudenstadt","Baden-Württemberg"],
+"HOT":["Hohenstein-Ernstthal","Landkreis Zwickau","Sachsen"],
+"HP":["Heppenheim","Kreis Bergstraße","Hessen"],
+"HR":["Homberg (Efze)","Schwalm-Eder-Kreis","Hessen"],
+"HRO":["Rostock","Kreisfreie Hansestadt Rostock","Mecklenburg-Vorpommern"],
+"HS":["Heinsberg","Kreis Heinsberg","Nordrhein-Westfalen"],
+"HSK":["Meschede","Hochsauerlandkreis","Nordrhein-Westfalen"],
+"HST":["Stralsund","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"HU":["Hanau","Main-Kinzig-Kreis","Hessen"],
+"HV":["Havelberg","Landkreis Stendal","Sachsen-Anhalt"],
+"HVL":["Rathenow","Landkreis Havelland","Brandenburg"],
+"HWI":["Wismar","Kreisfreie Hansestadt Wismar","Mecklenburg-Vorpommern"],
+"HX":["Höxter","Kreis Höxter","Nordrhein-Westfalen"],
+"HY":["Hoyerswerda","Landkreis Bautzen","Sachsen"],
+"HZ":["Wernigerode","Landkreis Harz","Sachsen-Anhalt"],
+"IGB":["St. Ingbert","Saarpfalz-Kreis","Saarland"],
+"IK":["Arnstadt","Ilm-Kreis","Thüringen"],
+"IL":["Ilmenau","Ilm-Kreis","Thüringen"],
+"ILL":["Illertissen","Landkreis Neu-Ulm","Bayern"],
+"IN":["Ingolstadt","Kreisfreie Stadt Ingolstadt","Bayern"],
+"IS":["Iserlohn","Märkischer Kreis","Nordrhein-Westfalen"],
+"IZ":["Itzehoe","Kreis Steinburg","Schleswig-Holstein"],
+"J":["Jena","Kreisfreie Stadt Jena","Thüringen"],
+"JE":["Jessen","Landkreis Wittenberg","Sachsen-Anhalt"],
+"JEV":["Jever","Landkreis Friesland","Niedersachsen"],
+"JL":["Burg","Landkreis Jerichower Land","Sachsen-Anhalt"],
+"JÜL":["Jülich","Kreis Düren","Nordrhein-Westfalen"],
+"K":["Köln","Kreisfreie Stadt Köln","Nordrhein-Westfalen"],
+"KA":["Karlsruhe","Kreisfreie Stadt & Landkreis Karlsruhe","Baden-Württemberg"],
+"KB":["Korbach","Landkreis Waldeck-Frankenberg","Hessen"],
+"KC":["Kronach","Landkreis Kronach","Bayern"],
+"KE":["Kempten (Allgäu)","Kreisfreie Stadt Kempten","Bayern"],
+"KEH":["Kelheim","Landkreis Kelheim","Bayern"],
+"KEL":["Kehl","Ortenaukreis","Baden-Württemberg"],
+"KEM":["Kemnath","Landkreis Tirschenreuth","Bayern"],
+"KF":["Kaufbeuren","Kreisfreie Stadt Kaufbeuren","Bayern"],
+"KG":["Bad Kissingen","Landkreis Bad Kissingen","Bayern"],
+"KH":["Bad Kreuznach","Landkreis Bad Kreuznach","Rheinland-Pfalz"],
+"KI":["Kiel","Landeshauptstadt Kiel","Schleswig-Holstein"],
+"KIB":["Kirchheimbolanden","Donnersbergkreis","Rheinland-Pfalz"],
+"KK":["Kempen-Krefeld","Kreis Viersen","Nordrhein-Westfalen"],
+"KL":["Kaiserslautern","Kreisfreie Stadt & Landkreis Kaiserslautern","Rheinland-Pfalz"],
+"KLE":["Kleve","Kreis Kleve","Nordrhein-Westfalen"],
+"KLZ":["Klötze","Altmarkkreis Salzwedel","Sachsen-Anhalt"],
+"KM":["Kamenz","Landkreis Bautzen","Sachsen"],
+"KN":["Konstanz","Landkreis Konstanz","Baden-Württemberg"],
+"KO":["Koblenz","Kreisfreie Stadt Koblenz","Rheinland-Pfalz"],
+"KÖN":["Bad Königshofen","Landkreis Rhön-Grabfeld","Bayern"],
+"KÖT":["Köthen","Landkreis Anhalt-Bitterfeld","Sachsen-Anhalt"],
+"KÖZ":["Kötzting","Landkreis Cham","Bayern"],
+"KR":["Krefeld","Kreisfreie Stadt Krefeld","Nordrhein-Westfalen"],
+"KRU":["Krumbach","Landkreis Günzburg","Bayern"],
+"KS":["Kassel","Kreisfreie Stadt & Landkreis Kassel","Hessen"],
+"KT":["Kitzingen","Landkreis Kitzingen","Bayern"],
+"KU":["Kulmbach","Landkreis Kulmbach","Bayern"],
+"KÜN":["Künzelsau","Hohenlohekreis","Baden-Württemberg"],
+"KUS":["Kusel","Landkreis Kusel","Rheinland-Pfalz"],
+"KW":["Königs Wusterhausen","Landkreis Dahme-Spreewald","Brandenburg"],
+"KY":["Kyritz","Landkreis Ostprignitz-Ruppin","Brandenburg"],
+"KYF":["Sondershausen","Kyffhäuserkreis","Thüringen"],
+"L":["Leipzig","Kreisfreie Stadt Leipzig","Sachsen"],
+"LA":["Landshut","Kreisfreie Stadt & Landkreis Landshut","Bayern"],
+"LAN":["Dingolfing-Landau","Landkreis Dingolfing-Landau","Bayern"],
+"LAU":["Lauf an der Pegnitz","Landkreis Nürnberger Land","Bayern"],
+"LB":["Ludwigsburg","Landkreis Ludwigsburg","Baden-Württemberg"],
+"LBS":["Lobenstein","Saale-Orla-Kreis","Thüringen"],
+"LC":["Luckau","Landkreis Dahme-Spreewald","Brandenburg"],
+"LD":["Landau in der Pfalz","Kreisfreie Stadt Landau","Rheinland-Pfalz"],
+"LDK":["Wetzlar","Lahn-Dill-Kreis","Hessen"],
+"LDS":["Lübben","Landkreis Dahme-Spreewald","Brandenburg"],
+"LE":["Lemgo","Kreis Lippe","Nordrhein-Westfalen"],
+"LEO":["Leonberg","Landkreis Böblingen","Baden-Württemberg"],
+"LER":["Leer (Ostfriesland)","Landkreis Leer","Niedersachsen"],
+"LEV":["Leverkusen","Kreisfreie Stadt Leverkusen","Nordrhein-Westfalen"],
+"LF":["Laufen","Landkreis Berchtesgadener Land","Bayern"],
+"LG":["Lüneburg","Landkreis Lüneburg","Niedersachsen"],
+"LH":["Lüdinghausen","Kreis Coesfeld","Nordrhein-Westfalen"],
+"LI":["Lindau (Bodensee)","Landkreis Lindau","Bayern"],
+"LIB":["Bad Liebenwerda","Landkreis Elbe-Elster","Brandenburg"],
+"LIF":["Lichtenfels","Landkreis Lichtenfels","Bayern"],
+"LIN":["Lingen (Ems)","Landkreis Emsland","Niedersachsen"],
+"LIP":["Detmold","Kreis Lippe","Nordrhein-Westfalen"],
+"LK":["Lübbecke","Kreis Minden-Lübbecke","Nordrhein-Westfalen"],
+"LL":["Landsberg am Lech","Landkreis Landsberg am Lech","Bayern"],
+"LM":["Limburg-Weilburg","Landkreis Limburg-Weilburg","Hessen"],
+"LN":["Lübben","Landkreis Dahme-Spreewald","Brandenburg"],
+"LÖ":["Lörrach","Landkreis Lörrach","Baden-Württemberg"],
+"LÖB":["Löbau","Landkreis Görlitz","Sachsen"],
+"LOS":["Beeskow","Landkreis Oder-Spree","Brandenburg"],
+"LP":["Lippstadt","Kreis Soest","Nordrhein-Westfalen"],
+"LR":["Lahr (Schwarzwald)","Ortenaukreis","Baden-Württemberg"],
+"LRO":["Rostock (Landkreis)","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"LU":["Ludwigshafen am Rhein","Kreisfreie Stadt Ludwigshafen","Rheinland-Pfalz"],
+"LÜN":["Lünen","Kreis Unna","Nordrhein-Westfalen"],
+"LUP":["Ludwigslust","Landkreis Ludwigslust-Parchim","Mecklenburg-Vorpommern"],
+"LWL":["Ludwigslust","Landkreis Ludwigslust-Parchim","Mecklenburg-Vorpommern"],
+"M":["München","Kreisfreie Landeshauptstadt München","Bayern"],
+"MA":["Mannheim","Kreisfreie Stadt Mannheim","Baden-Württemberg"],
+"MAB":["Marienberg","Erzgebirgskreis","Sachsen"],
+"MAI":["Mainburg","Landkreis Kelheim","Bayern"],
+"MAK":["Marktredwitz","Landkreis Wunsiedel","Bayern"],
+"MAL":["Mallersdorf-Pfaffenberg","Landkreis Straubing-Bogen","Bayern"],
+"MB":["Miesbach","Landkreis Miesbach","Bayern"],
+"MC":["Malchin","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"MD":["Magdeburg","Kreisfreie Landeshauptstadt Magdeburg","Sachsen-Anhalt"],
+"ME":["Mettmann","Kreis Mettmann","Nordrhein-Westfalen"],
+"MEI":["Meißen","Landkreis Meißen","Sachsen"],
+"MEK":["Marienberg","Erzgebirgskreis","Sachsen"],
+"MEL":["Melle","Landkreis Osnabrück","Niedersachsen"],
+"MEP":["Meppen","Landkreis Emsland","Niedersachsen"],
+"MER":["Merseburg","Saalekreis","Sachsen-Anhalt"],
+"MET":["Mellrichstadt","Landkreis Rhön-Grabfeld","Bayern"],
+"MG":["Mönchengladbach","Kreisfreie Stadt Mönchengladbach","Nordrhein-Westfalen"],
+"MGH":["Bad Mergentheim","Main-Tauber-Kreis","Baden-Württemberg"],
+"MGN":["Meiningen","Landkreis Schmalkalden-Meiningen","Thüringen"],
+"MH":["Mülheim an der Ruhr","Kreisfreie Stadt Mülheim","Nordrhein-Westfalen"],
+"MHL":["Mühlhausen","Unstrut-Hainich-Kreis","Thüringen"],
+"MI":["Minden","Kreis Minden-Lübbecke","Nordrhein-Westfalen"],
+"MIL":["Miltenberg","Landkreis Miltenberg","Bayern"],
+"MK":["Lüdenscheid","Märkischer Kreis","Nordrhein-Westfalen"],
+"MKK":["Main-Kinzig-Kreis","Main-Kinzig-Kreis","Hessen"],
+"ML":["Mansfelder Land","Landkreis Mansfeld-Südharz","Sachsen-Anhalt"],
+"MM":["Memmingen","Kreisfreie Stadt Memmingen","Bayern"],
+"MN":["Mindelheim","Landkreis Unterallgäu","Bayern"],
+"MO":["Moers","Kreis Wesel","Nordrhein-Westfalen"],
+"MOD":["Marktoberdorf","Landkreis Ostallgäu","Bayern"],
+"MOL":["Seelow","Landkreis Märkisch-Oderland","Brandenburg"],
+"MON":["Monschau","Städteregion Aachen","Nordrhein-Westfalen"],
+"MOS":["Mosbach","Neckar-Odenwald-Kreis","Baden-Württemberg"],
+"MR":["Marburg","Landkreis Marburg-Biedenkopf","Hessen"],
+"MS":["Münster","Kreisfreie Stadt Münster","Nordrhein-Westfalen"],
+"MSE":["Neubrandenburg","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"MSH":["Sangerhausen","Landkreis Mansfeld-Südharz","Sachsen-Anhalt"],
+"MSP":["Karlstadt am Main","Landkreis Main-Spessart","Bayern"],
+"MTK":["Hofheim am Taunus","Main-Taunus-Kreis","Hessen"],
+"MU":["München Umland","Landkreis München","Bayern"],
+"MUC":["München","Kreisfreie Stadt München","Bayern"],
+"MÜ":["Mühldorf am Inn","Landkreis Mühldorf","Bayern"],
+"MÜB":["Münchberg","Landkreis Hof","Bayern"],
+"MÜL":["Müllheim","Landkreis Breisgau-Hochschwarzwald","Baden-Württemberg"],
+"MÜR":["Müritz","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"MW":["Mittweida","Landkreis Mittelsachsen","Sachsen"],
+"MY":["Mayen","Landkreis Mayen-Koblenz","Rheinland-Pfalz"],
+"MYK":["Mayen-Koblenz","Landkreis Mayen-Koblenz","Rheinland-Pfalz"],
+"MZ":["Mainz","Kreisfreie Landeshauptstadt & Landkreis Mainz-Bingen","Rheinland-Pfalz"],
+"MZG":["Merzig","Landkreis Merzig-Wadern","Saarland"],
+"N":["Nürnberg","Kreisfreie Stadt Nürnberg","Bayern"],
+"NAB":["Nabburg","Landkreis Schwandorf","Bayern"],
+"NAI":["Naila","Landkreis Hof","Bayern"],
+"NAU":["Nauen","Landkreis Havelland","Brandenburg"],
+"NB":["Neubrandenburg","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"ND":["Neuburg an der Donau","Landkreis Neuburg-Schrobenhausen","Bayern"],
+"NDH":["Nordhausen","Landkreis Nordhausen","Thüringen"],
+"NE":["Neuss","Rhein-Kreis Neuss","Nordrhein-Westfalen"],
+"NEA":["Neustadt an der Aisch","Landkreis Neustadt a.d.Aisch-Bad Windsheim","Bayern"],
+"NEB":["Nebra (Unstrut)","Burgenlandkreis","Sachsen-Anhalt"],
+"NEC":["Neustadt bei Coburg","Landkreis Coburg","Bayern"],
+"NEN":["Neunburg vorm Wald","Landkreis Schwandorf","Bayern"],
+"NES":["Bad Neustadt an der Saale","Landkreis Rhön-Grabfeld","Bayern"],
+"NEW":["Neustadt an der Waldnaab","Landkreis Neustadt/Waldnaab","Bayern"],
+"NF":["Husum","Kreis Nordfriesland","Schleswig-Holstein"],
+"NH":["Neuhaus am Rennweg","Landkreis Sonneberg","Thüringen"],
+"NI":["Nienburg (Weser)","Landkreis Nienburg","Niedersachsen"],
+"NIL":["Niesky","Landkreis Görlitz","Sachsen"],
+"NK":["Neunkirchen","Landkreis Neunkirchen","Saarland"],
+"NM":["Neumarkt in der Oberpfalz","Landkreis Neumarkt","Bayern"],
+"NMB":["Naumburg (Saale)","Burgenlandkreis","Sachsen-Anhalt"],
+"NMS":["Neumünster","Kreisfreie Stadt Neumünster","Schleswig-Holstein"],
+"NOH":["Nordhorn","Landkreis Grafschaft Bentheim","Niedersachsen"],
+"NOL":["Niederschlesischer Oberlausitzkreis","Landkreis Görlitz","Sachsen"],
+"NOM":["Northeim","Landkreis Northeim","Niedersachsen"],
+"NOR":["Norden","Landkreis Aurich","Niedersachsen"],
+"NP":["Neuruppin","Landkreis Ostprignitz-Ruppin","Brandenburg"],
+"NR":["Neuwied","Landkreis Neuwied","Rheinland-Pfalz"],
+"NT":["Nürtingen","Landkreis Esslingen","Baden-Württemberg"],
+"NU":["Neu-Ulm","Landkreis Neu-Ulm","Bayern"],
+"NVP":["Nordvorpommern","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"NW":["Neustadt an der Weinstraße","Kreisfreie Stadt Neustadt/Weinstr.","Rheinland-Pfalz"],
+"NWM":["Wismar","Landkreis Nordwestmecklenburg","Mecklenburg-Vorpommern"],
+"NY":["Niesky","Landkreis Görlitz","Sachsen"],
+"NZ":["Neustrelitz","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"OA":["Sonthofen","Landkreis Oberallgäu","Bayern"],
+"OAL":["Marktoberdorf","Landkreis Ostallgäu","Bayern"],
+"OB":["Oberhausen","Kreisfreie Stadt Oberhausen","Nordrhein-Westfalen"],
+"OBG":["Osterburg","Landkreis Stendal","Sachsen-Anhalt"],
+"OC":["Oschersleben","Landkreis Börde","Sachsen-Anhalt"],
+"OD":["Bad Oldesloe","Kreis Stormarn","Schleswig-Holstein"],
+"OE":["Olpe","Kreis Olpe","Nordrhein-Westfalen"],
+"ÖHR":["Öhringen","Hohenlohekreis","Baden-Württemberg"],
+"OF":["Offenbach am Main","Kreisfreie Stadt & Landkreis Offenbach","Hessen"],
+"OG":["Offenburg","Ortenaukreis","Baden-Württemberg"],
+"OH":["Bad Schwartau","Kreis Ostholstein","Schleswig-Holstein"],
+"OHA":["Osterode am Harz","Landkreis Göttingen","Niedersachsen"],
+"OHV":["Oranienburg","Landkreis Oberhavel","Brandenburg"],
+"OHZ":["Osterholz-Scharmbeck","Landkreis Osterholz","Niedersachsen"],
+"OK":["Haldensleben","Landkreis Börde","Sachsen-Anhalt"],
+"OL":["Oldenburg","Kreisfreie Stadt & Landkreis Oldenburg","Niedersachsen"],
+"OLD":["Oldenburg in Holstein","Kreis Ostholstein","Schleswig-Holstein"],
+"OP":["Opladen / Rhein-Wupper-Kreis","Rheinisch-Bergischer Kreis (Leverkusen)","Nordrhein-Westfalen"],
+"OPR":["Neuruppin","Landkreis Ostprignitz-Ruppin","Brandenburg"],
+"OR":["Oranienburg","Landkreis Oberhavel","Brandenburg"],
+"OS":["Osnabrück","Kreisfreie Stadt & Landkreis Osnabrück","Niedersachsen"],
+"OSL":["Senftenberg","Landkreis Oberspreewald-Lausitz","Brandenburg"],
+"OTW":["Ottweiler","Landkreis Neunkirchen","Saarland"],
+"OVI":["Oberviechtach","Landkreis Schwandorf","Bayern"],
+"OVL":["Klingenthal","Vogtlandkreis","Sachsen"],
+"OVP":["Ostvorpommern","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"OZ":["Oschatz","Landkreis Nordsachsen","Sachsen"],
+"P":["Potsdam","Kreisfreie Landeshauptstadt Potsdam","Brandenburg"],
+"PA":["Passau","Kreisfreie Stadt & Landkreis Passau","Bayern"],
+"PAF":["Pfaffenhofen an der Ilm","Landkreis Pfaffenhofen a.d.Ilm","Bayern"],
+"PAN":["Pfarrkirchen","Landkreis Rottal-Inn","Bayern"],
+"PAR":["Parsberg","Landkreis Neumarkt","Bayern"],
+"PB":["Paderborn","Kreis Paderborn","Nordrhein-Westfalen"],
+"PCH":["Parchim","Landkreis Ludwigslust-Parchim","Mecklenburg-Vorpommern"],
+"PE":["Peine","Landkreis Peine","Niedersachsen"],
+"PEG":["Pegnitz","Landkreis Bayreuth","Bayern"],
+"PF":["Pforzheim","Kreisfreie Stadt & Enzkreis","Baden-Württemberg"],
+"PI":["Pinneberg","Kreis Pinneberg","Schleswig-Holstein"],
+"PIR":["Pirna","Landkreis Sächsische Schweiz-Osterzgebirge","Sachsen"],
+"PL":["Plauen","Vogtlandkreis","Sachsen"],
+"PLÖ":["Plön","Kreis Plön","Schleswig-Holstein"],
+"PM":["Bad Belzig","Landkreis Potsdam-Mittelmark","Brandenburg"],
+"PN":["Pößneck","Saale-Orla-Kreis","Thüringen"],
+"PR":["Perleberg","Landkreis Prignitz","Brandenburg"],
+"PRÜ":["Prüm","Eifelkreis Bitburg-Prüm","Rheinland-Pfalz"],
+"PS":["Pirmasens","Kreisfreie Stadt & Südwestpfalz","Rheinland-Pfalz"],
+"PW":["Pasewalk","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"PZ":["Prenzlau","Landkreis Uckermark","Brandenburg"],
+"QLB":["Quedlinburg","Landkreis Harz","Sachsen-Anhalt"],
+"R":["Regensburg","Kreisfreie Stadt & Landkreis Regensburg","Bayern"],
+"RA":["Rastatt","Landkreis Rastatt","Baden-Württemberg"],
+"RC":["Reichenbach im Vogtland","Vogtlandkreis","Sachsen"],
+"RD":["Rendsburg","Kreis Rendsburg-Eckernförde","Schleswig-Holstein"],
+"RDG":["Ribnitz-Damgarten","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"RE":["Recklinghausen","Kreis Recklinghausen","Nordrhein-Westfalen"],
+"REG":["Regen","Landkreis Regen","Bayern"],
+"REH":["Rehau","Landkreis Hof","Bayern"],
+"REI":["Bad Reichenhall","Landkreis Berchtesgadener Land","Bayern"],
+"RG":["Riesa","Landkreis Meißen","Sachsen"],
+"RH":["Roth","Landkreis Roth","Bayern"],
+"RI":["Rinteln","Landkreis Schaumburg","Niedersachsen"],
+"RID":["Riedenburg","Landkreis Kelheim","Bayern"],
+"RIE":["Riesa","Landkreis Meißen","Sachsen"],
+"RL":["Rochlitz","Landkreis Mittelsachsen","Sachsen"],
+"RM":["Röbel (Müritz)","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"RN":["Rathenow","Landkreis Havelland","Brandenburg"],
+"RO":["Rosenheim","Kreisfreie Stadt & Landkreis Rosenheim","Bayern"],
+"ROD":["Roding","Landkreis Cham","Bayern"],
+"ROF":["Rotenburg an der Fulda","Landkreis Hersfeld-Rotenburg","Hessen"],
+"ROK":["Rockenhausen","Donnersbergkreis","Rheinland-Pfalz"],
+"ROL":["Rottenburg an der Laaber","Landkreis Landshut","Bayern"],
+"ROS":["Rostock (Landkreis)","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"ROT":["Rothenburg ob der Tauber","Landkreis Ansbach","Bayern"],
+"ROW":["Rotenburg (Wümme)","Landkreis Rotenburg","Niedersachsen"],
+"RP":["Ludwigshafen","Rhein-Pfalz-Kreis","Rheinland-Pfalz"],
+"RS":["Remscheid","Kreisfreie Stadt Remscheid","Nordrhein-Westfalen"],
+"RT":["Reutlingen","Landkreis Reutlingen","Baden-Württemberg"],
+"RÜD":["Rüdesheim am Rhein","Rheingau-Taunus-Kreis","Hessen"],
+"RÜG":["Bergen auf Rügen","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"RV":["Ravensburg","Landkreis Ravensburg","Baden-Württemberg"],
+"RW":["Rottweil","Landkreis Rottweil","Baden-Württemberg"],
+"RY":["Rheydt","Stadt Mönchengladbach","Nordrhein-Westfalen"],
+"RZ":["Ratzeburg","Kreis Herzogtum Lauenburg","Schleswig-Holstein"],
+"S":["Stuttgart","Kreisfreie Landeshauptstadt Stuttgart","Baden-Württemberg"],
+"SAB":["Saarburg","Landkreis Trier-Saarburg","Rheinland-Pfalz"],
+"SAD":["Schwandorf","Landkreis Schwandorf","Bayern"],
+"SÄK":["Säckingen","Landkreis Waldshut","Baden-Württemberg"],
+"SAW":["Salzwedel","Altmarkkreis Salzwedel","Sachsen-Anhalt"],
+"SB":["Saarbrücken","Kreisfreie Landeshauptstadt Saarbrücken","Saarland"],
+"SBG":["Strasburg","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"SBK":["Schönebeck (Elbe)","Salzlandkreis","Sachsen-Anhalt"],
+"SC":["Schwabach","Kreisfreie Stadt Schwabach","Bayern"],
+"SCZ":["Schleiz","Saale-Orla-Kreis","Thüringen"],
+"SDH":["Sondershausen","Kyffhäuserkreis","Thüringen"],
+"SDL":["Stendal","Landkreis Stendal","Sachsen-Anhalt"],
+"SDT":["Schwedt (Oder)","Landkreis Uckermark","Brandenburg"],
+"SE":["Bad Segeberg","Kreis Segeberg","Schleswig-Holstein"],
+"SEB":["Sebnitz","Landkreis Sächsische Schweiz-Osterzgebirge","Sachsen"],
+"SEE":["Seelow","Landkreis Märkisch-Oderland","Brandenburg"],
+"SEF":["Scheinfeld","Landkreis Neustadt a.d.Aisch","Bayern"],
+"SEL":["Selb","Landkreis Wunsiedel","Bayern"],
+"SFB":["Senftenberg","Landkreis Oberspreewald-Lausitz","Brandenburg"],
+"SFT":["Staßfurt","Salzlandkreis","Sachsen-Anhalt"],
+"SG":["Solingen","Kreisfreie Stadt Solingen","Nordrhein-Westfalen"],
+"SGH":["Sangerhausen","Landkreis Mansfeld-Südharz","Sachsen-Anhalt"],
+"SHA":["Schwäbisch Hall","Landkreis Schwäbisch Hall","Baden-Württemberg"],
+"SHG":["Stadthagen","Landkreis Schaumburg","Niedersachsen"],
+"SHK":["Eisenberg","Saale-Holzland-Kreis","Thüringen"],
+"SHL":["Suhl","Kreisfreie Stadt Suhl","Thüringen"],
+"SI":["Siegen","Kreis Siegen-Wittgenstein","Nordrhein-Westfalen"],
+"SIG":["Sigmaringen","Landkreis Sigmaringen","Baden-Württemberg"],
+"SIM":["Simmern/Hunsrück","Rhein-Hunsrück-Kreis","Rheinland-Pfalz"],
+"SK":["Merseburg","Saalekreis","Sachsen-Anhalt"],
+"SL":["Schleswig","Kreis Schleswig-Flensburg","Schleswig-Holstein"],
+"SLE":["Schleiden","Kreis Euskirchen","Nordrhein-Westfalen"],
+"SLF":["Saalfeld","Landkreis Saalfeld-Rudolstadt","Thüringen"],
+"SLG":["Saulgau","Landkreis Sigmaringen","Baden-Württemberg"],
+"SLK":["Bernburg","Salzlandkreis","Sachsen-Anhalt"],
+"SLN":["Schmölln","Altenburger Land","Thüringen"],
+"SLS":["Saarlouis","Landkreis Saarlouis","Saarland"],
+"SLÜ":["Schlüchtern","Main-Kinzig-Kreis","Hessen"],
+"SLZ":["Bad Salzungen","Wartburgkreis","Thüringen"],
+"SM":["Schmalkalden-Meiningen","Landkreis Schmalkalden-Meiningen","Thüringen"],
+"SMÜ":["Schwabmünchen","Landkreis Augsburg","Bayern"],
+"SN":["Schwerin","Kreisfreie Landeshauptstadt Schwerin","Mecklenburg-Vorpommern"],
+"SO":["Soest","Kreis Soest","Nordrhein-Westfalen"],
+"SOB":["Schrobenhausen","Landkreis Neuburg-Schrobenhausen","Bayern"],
+"SÖM":["Sömmerda","Landkreis Sömmerda","Thüringen"],
+"SOG":["Schongau","Landkreis Weilheim-Schongau","Bayern"],
+"SOK":["Schleiz","Saale-Orla-Kreis","Thüringen"],
+"SON":["Sonneberg","Landkreis Sonneberg","Thüringen"],
+"SP":["Speyer","Kreisfreie Stadt Speyer","Rheinland-Pfalz"],
+"SPB":["Spremberg","Landkreis Spree-Neiße","Brandenburg"],
+"SPN":["Forst (Lausitz)","Landkreis Spree-Neiße","Brandenburg"],
+"SR":["Straubing","Kreisfreie Stadt & Landkreis Straubing-Bogen","Bayern"],
+"SRB":["Strausberg","Landkreis Märkisch-Oderland","Brandenburg"],
+"SRO":["Stadtroda","Saale-Holzland-Kreis","Thüringen"],
+"ST":["Steinfurt","Kreis Steinfurt","Nordrhein-Westfalen"],
+"STA":["Starnberg","Landkreis Starnberg","Bayern"],
+"STB":["Sternberg","Landkreis Ludwigslust-Parchim","Mecklenburg-Vorpommern"],
+"STD":["Stade","Landkreis Stade","Niedersachsen"],
+"STE":["Staffelstein","Landkreis Lichtenfels","Bayern"],
+"STL":["Stollberg","Erzgebirgskreis","Sachsen"],
+"STO":["Stockach","Landkreis Konstanz","Baden-Württemberg"],
+"SU":["Siegburg","Rhein-Sieg-Kreis","Nordrhein-Westfalen"],
+"SUL":["Sulzbach-Rosenberg","Landkreis Amberg-Sulzbach","Bayern"],
+"SÜW":["Landau","Landkreis Südliche Weinstraße","Rheinland-Pfalz"],
+"SW":["Schweinfurt","Kreisfreie Stadt & Landkreis Schweinfurt","Bayern"],
+"SWA":["Bad Schwalbach","Rheingau-Taunus-Kreis","Hessen"],
+"SY":["Syke","Landkreis Diepholz","Niedersachsen"],
+"SZ":["Salzgitter","Kreisfreie Stadt Salzgitter","Niedersachsen"],
+"SZB":["Schwarzenberg","Erzgebirgskreis","Sachsen"],
+"TBB":["Tauberbischofsheim","Main-Tauber-Kreis","Baden-Württemberg"],
+"TE":["Tecklenburg","Kreis Steinfurt","Nordrhein-Westfalen"],
+"TET":["Teterow","Landkreis Rostock","Mecklenburg-Vorpommern"],
+"TF":["Luckenwalde","Landkreis Teltow-Fläming","Brandenburg"],
+"TG":["Torgau","Landkreis Nordsachsen","Sachsen"],
+"TIR":["Tirschenreuth","Landkreis Tirschenreuth","Bayern"],
+"TO":["Torgau-Oschatz","Landkreis Nordsachsen","Sachsen"],
+"TÖL":["Bad Tölz","Landkreis Bad Tölz-Wolfratshausen","Bayern"],
+"TP":["Templin","Landkreis Uckermark","Brandenburg"],
+"TR":["Trier","Kreisfreie Stadt Trier & Landkreis Trier-Saarburg","Rheinland-Pfalz"],
+"TS":["Traunstein","Landkreis Traunstein","Bayern"],
+"TT":["Tettnang","Bodenseekreis","Baden-Württemberg"],
+"TÜ":["Tübingen","Landkreis Tübingen","Baden-Württemberg"],
+"TUT":["Tuttlingen","Landkreis Tuttlingen","Baden-Württemberg"],
+"UE":["Uelzen","Landkreis Uelzen","Niedersachsen"],
+"UEM":["Ueckermünde","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"ÜB":["Überlingen","Bodenseekreis","Baden-Württemberg"],
+"UER":["Pasewalk","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"UFF":["Uffenheim","Landkreis Neustadt a.d.Aisch","Bayern"],
+"UH":["Bad Langensalza","Unstrut-Hainich-Kreis","Thüringen"],
+"UL":["Ulm","Kreisfreie Stadt & Alb-Donau-Kreis","Baden-Württemberg"],
+"UM":["Prenzlau","Landkreis Uckermark","Brandenburg"],
+"UN":["Unna","Kreis Unna","Nordrhein-Westfalen"],
+"USI":["Usingen","Hochtaunuskreis","Hessen"],
+"V":["Plauen","Vogtlandkreis","Sachsen"],
+"VAI":["Vaihingen an der Enz","Landkreis Ludwigsburg","Baden-Württemberg"],
+"VB":["Vogelsbergkreis","Vogelsbergkreis","Hessen"],
+"VEC":["Vechta","Landkreis Vechta","Niedersachsen"],
+"VER":["Verden (Aller)","Landkreis Verden","Niedersachsen"],
+"VG":["Greifswald","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"VIB":["Vilsbiburg","Landkreis Landshut","Bayern"],
+"VIE":["Viersen","Kreis Viersen","Nordrhein-Westfalen"],
+"VIT":["Viechtach","Landkreis Regen","Bayern"],
+"VK":["Völklingen","Stadtverband Saarbrücken","Saarland"],
+"VOH":["Vohenstrauß","Landkreis Neustadt/Waldnaab","Bayern"],
+"VR":["Bergen auf Rügen","Landkreis Vorpommern-Rügen","Mecklenburg-Vorpommern"],
+"VS":["Villingen-Schwenningen","Schwarzwald-Baar-Kreis","Baden-Württemberg"],
+"W":["Wuppertal","Kreisfreie Stadt Wuppertal","Nordrhein-Westfalen"],
+"WA":["Korbach","Landkreis Waldeck-Frankenberg","Hessen"],
+"WAF":["Warendorf","Kreis Warendorf","Nordrhein-Westfalen"],
+"WAK":["Bad Salzungen","Wartburgkreis","Thüringen"],
+"WAN":["Wanne-Eickel","Kreisfreie Stadt Herne","Nordrhein-Westfalen"],
+"WAR":["Warburg","Kreis Höxter","Nordrhein-Westfalen"],
+"WAT":["Wattenscheid","Kreisfreie Stadt Bochum","Nordrhein-Westfalen"],
+"WB":["Lutherstadt Wittenberg","Landkreis Wittenberg","Sachsen-Anhalt"],
+"WBG":["Wolfsburg","Kreisfreie Stadt Wolfsburg","Niedersachsen"],
+"WBS":["Worbis","Eichsfeld","Thüringen"],
+"WDA":["Werdau","Landkreis Zwickau","Sachsen"],
+"WE":["Weimar","Kreisfreie Stadt Weimar","Thüringen"],
+"WEL":["Weilburg","Landkreis Limburg-Weilburg","Hessen"],
+"WEN":["Weiden in der Oberpfalz","Kreisfreie Stadt Weiden","Bayern"],
+"WER":["Wertingen","Landkreis Dillingen a.d.Donau","Bayern"],
+"WES":["Wesel","Kreis Wesel","Nordrhein-Westfalen"],
+"WF":["Wolfenbüttel","Landkreis Wolfenbüttel","Niedersachsen"],
+"WG":["Wangen im Allgäu","Landkreis Ravensburg","Baden-Württemberg"],
+"WHV":["Wilhelmshaven","Kreisfreie Stadt Wilhelmshaven","Niedersachsen"],
+"WI":["Wiesbaden","Kreisfreie Landeshauptstadt Wiesbaden","Hessen"],
+"WIL":["Wittlich","Landkreis Bernkastel-Wittlich","Rheinland-Pfalz"],
+"WIS":["Wismar","Kreisfreie Hansestadt Wismar","Mecklenburg-Vorpommern"],
+"WIT":["Witten","Ennepe-Ruhr-Kreis","Nordrhein-Westfalen"],
+"WIZ":["Witzenhausen","Werra-Meißner-Kreis","Hessen"],
+"WK":["Wittstock","Landkreis Ostprignitz-Ruppin","Brandenburg"],
+"WL":["Winsen (Luhe)","Landkreis Harburg","Niedersachsen"],
+"WLG":["Wolgast","Landkreis Vorpommern-Greifswald","Mecklenburg-Vorpommern"],
+"WM":["Weilheim","Landkreis Weilheim-Schongau","Bayern"],
+"WMS":["Wolmirstedt","Landkreis Börde","Sachsen-Anhalt"],
+"WN":["Waiblingen","Rems-Murr-Kreis","Baden-Württemberg"],
+"WND":["St. Wendel","Landkreis St. Wendel","Saarland"],
+"WO":["Worms","Kreisfreie Stadt Worms","Rheinland-Pfalz"],
+"WOB":["Wolfsburg","Kreisfreie Stadt Wolfsburg","Niedersachsen"],
+"WOH":["Wolfhagen","Landkreis Kassel","Hessen"],
+"WOL":["Wolfach","Ortenaukreis","Baden-Württemberg"],
+"WOR":["Wolfratshausen","Landkreis Bad Tölz-Wolfratshausen","Bayern"],
+"WR":["Wernigerode","Landkreis Harz","Sachsen-Anhalt"],
+"WRN":["Waren (Müritz)","Landkreis Mecklenburgische Seenplatte","Mecklenburg-Vorpommern"],
+"WS":["Wasserburg am Inn","Landkreis Rosenheim","Bayern"],
+"WSF":["Weißenfels","Burgenlandkreis","Sachsen-Anhalt"],
+"WST":["Westerstede","Landkreis Ammerland","Niedersachsen"],
+"WSW":["Weißwasser","Landkreis Görlitz","Sachsen"],
+"WT":["Waldshut-Tiengen","Landkreis Waldshut","Baden-Württemberg"],
+"WTM":["Wittmund","Landkreis Wittmund","Niedersachsen"],
+"WÜ":["Würzburg","Kreisfreie Stadt & Landkreis Würzburg","Bayern"],
+"WÜM":["Waldmünchen","Landkreis Cham","Bayern"],
+"WUG":["Weißenburg in Bayern","Landkreis Weißenburg-Gunzenhausen","Bayern"],
+"WUN":["Wunsiedel","Landkreis Wunsiedel im Fichtelgebirge","Bayern"],
+"WUR":["Wurzen","Landkreis Leipzig","Sachsen"],
+"WW":["Montabaur","Westerwaldkreis","Rheinland-Pfalz"],
+"WZ":["Wetzlar","Lahn-Dill-Kreis","Hessen"],
+"WZL":["Wanzleben","Landkreis Börde","Sachsen-Anhalt"],
+"X":["NATO-Streitkräfte","—","—"],
+"Y":["Bundeswehr","—","—"],
+"Z":["Zwickau","Landkreis Zwickau","Sachsen"],
+"ZE":["Zerbst (Anhalt)","Landkreis Anhalt-Bitterfeld","Sachsen-Anhalt"],
+"ZEL":["Zell (Mosel)","Landkreis Cochem-Zell","Rheinland-Pfalz"],
+"ZI":["Löbau-Zittau","Landkreis Görlitz","Sachsen"],
+"ZIG":["Ziegenhain","Schwalm-Eder-Kreis","Hessen"],
+"ZP":["Zschopau","Erzgebirgskreis","Sachsen"],
+"ZR":["Zeulenroda","Landkreis Greiz","Thüringen"],
+"ZS":["Zossen","Landkreis Teltow-Fläming","Brandenburg"],
+"ZW":["Zweibrücken","Kreisfreie Stadt Zweibrücken","Rheinland-Pfalz"],
+"ZZ":["Zeitz","Burgenlandkreis","Sachsen-Anhalt"]
 };
 
+// ============================================================
+// PLAYER STORAGE
+// ============================================================
+const STORAGE_KEY = 'roadtrip_players_v1';
 
+function loadAllKnownPlayers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+function saveKnownPlayer(name) {
+  try {
+    const list = loadAllKnownPlayers();
+    if (!list.includes(name)) { list.push(name); localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+  } catch(e) {}
+}
+function removeKnownPlayer(name) {
+  try {
+    const list = loadAllKnownPlayers().filter(n => n !== name);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch(e) {}
+}
 
-  // --- APP STATE & ELEMENTS ---
-  let players = [];
-  let currentMode = 'slogans'; 
-  let activePool = [];
-  let currentIdx = 0;
-  let currentPlayerIdx = 0;
-  let teamScore = 0;
-  let targetScore = 0;
+// ============================================================
+// STATE
+// ============================================================
+let players = []; // { name, score, active } – active = selected for this game
+let currentMode = 'plates';
+let activePool = [];
+let currentIdx = 0;
+let currentPlayerIdx = 0;
+let teamScore = 0;
+let targetScore = 0;
 
-  const els = {
-    setup: document.getElementById('setup'),
-    gameSlogans: document.getElementById('game-slogans'),
-    gamePlates: document.getElementById('game-plates'),
-    gameQuotes: document.getElementById('game-quotes'),
-    end: document.getElementById('end'),
-    topbarTitle: document.getElementById('topbarTitle'),
-    roundCounter: document.getElementById('roundCounter'),
-    gameSelect: document.getElementById('gameSelect'),
-    rulesBox: document.getElementById('rulesBox'),
-    playerForm: document.getElementById('playerForm'),
-    playerNameInput: document.getElementById('playerNameInput'),
-    playerList: document.getElementById('playerList'),
-    settingLabel: document.getElementById('settingLabel'),
-    settingSelect: document.getElementById('settingSelect'),
-    startBtn: document.getElementById('startBtn'),
-    
-    // Shared
-    endTotal: document.getElementById('endTotal'),
-    endSummary: document.getElementById('endSummary'),
-    endPlayerRows: document.getElementById('endPlayerRows'),
-    playAgainBtn: document.getElementById('playAgainBtn'),
-    backToSetupBtn: document.getElementById('backToSetupBtn')
-  };
+// ============================================================
+// ELEMENTS
+// ============================================================
+const els = {
+  setup: document.getElementById('setup'),
+  gameSlogans: document.getElementById('game-slogans'),
+  gamePlates: document.getElementById('game-plates'),
+  gameQuotes: document.getElementById('game-quotes'),
+  end: document.getElementById('end'),
+  topbarTitle: document.getElementById('topbarTitle'),
+  roundCounter: document.getElementById('roundCounter'),
+  rulesBox: document.getElementById('rulesBox'),
 
-  const GAMES = {
-    slogans: {
-      title: "📺 Werbepause",
-      rules: "<h2>Wer kennt die Marke?</h2><ol><li>Handy geht reihum.</li><li>Spruch vorlesen, Marke raten.</li><li>Auf 'Marke zeigen' tippen und kontrollieren.</li></ol>",
-      settingLabel: "Fragen pro Runde:",
-      settings: [
-        { v: '30', t: '30 Fragen' }, { v: '50', t: '50 Fragen' }, { v: 'all', t: 'Alle Fragen' }
-      ]
-    },
-    plates: {
-      title: "🚗 Kennzeichen-Jäger",
-      rules: "<h2>Wer sieht's zuerst?</h2><ol><li>Der Beifahrer hält das Handy bereit.</li><li>Kennzeichen auf der Autobahn gesehen? Abtippen & suchen!</li><li>Wer wusste zuerst, woher es kommt? Punkt verteilen!</li></ol>",
-      settingLabel: "Spielen bis:",
-      settings: [
-        { v: '5', t: '5 Punkte' }, { v: '10', t: '10 Punkte' }, { v: '15', t: '15 Punkte' }
-      ]
-    },
-    quotes: {
-      title: "⚽ Fußball-Mythen",
-      rules: "<h2>Wer hat's gesagt?</h2><ol><li>Handy geht reihum.</li><li>Legendäres Fußball-Zitat vorlesen.</li><li>Eine der 4 Antworten antippen und Punkte sammeln.</li></ol>",
-      settingLabel: "Fragen pro Runde:",
-      settings: [
-        { v: '10', t: '10 Fragen' }, { v: 'all', t: 'Alle Fragen' }
-      ]
-    }
-  };
+  settingLabel: document.getElementById('settingLabel'),
+  settingSelect: document.getElementById('settingSelect'),
+  startBtn: document.getElementById('startBtn'),
+  endTotal: document.getElementById('endTotal'),
+  endSummary: document.getElementById('endSummary'),
+  endPlayerRows: document.getElementById('endPlayerRows'),
+  playAgainBtn: document.getElementById('playAgainBtn'),
+  backToSetupBtn: document.getElementById('backToSetupBtn'),
+};
 
-  // --- UTILS ---
-  function shuffle(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+// ============================================================
+// GAME CONFIG
+// ============================================================
+const GAMES = {
+  slogans: {
+    title:"📺 Werbepause",
+    rules:`<h2>Wer kennt die Marke?</h2><ol><li>Handy geht reihum.</li><li>Werbespruch vorlesen – Marke verschwiegen!</li><li>Die nächste Person rät. Auf «Marke zeigen" tippen, vergleichen.</li><li>✅ oder ❌ tippen, Handy weitergeben.</li></ol><p class="hint">Spieler eingetragen = Strichliste läuft automatisch.</p>`,
+    settingLabel:"Fragen pro Runde:",
+    settings:[{v:'30',t:'30 Fragen'},{v:'50',t:'50 Fragen'},{v:'all',t:'Alle (150)'}],
+    noPlayersOk: true
+  },
+  plates: {
+    title:"🚗 Kennzeichen-Jäger",
+    rules:`<h2>Wer sieht's zuerst?</h2><ol><li>Beifahrer hält das Handy bereit.</li><li>Kennzeichen tippen → Ort, Landkreis &amp; Bundesland erscheinen.</li><li>Wer wusste als Erstes, woher es kommt? Punkt vergeben!</li></ol><p class="hint">Ohne Spieler = Info-Modus: Kein Punktestand, einfach nachschlagen.</p>`,
+    settingLabel:"Spielen bis:",
+    settings:[{v:'5',t:'5 Punkte'},{v:'10',t:'10 Punkte'},{v:'15',t:'15 Punkte'},{v:'0',t:'Kein Limit (Info)'}],
+    noPlayersOk: true
+  },
+  quotes: {
+    title:"⚽ Fußball-Mythen",
+    rules:`<h2>Wer hat's gesagt?</h2><ol><li>Handy reihum.</li><li>Legendäres Fußball-Zitat vorlesen.</li><li>Eine der vier Antworten antippen.</li></ol><p class="hint">Spieler eingetragen = Strichliste läuft automatisch.</p>`,
+    settingLabel:"Fragen pro Runde:",
+    settings:[{v:'10',t:'10 Fragen'},{v:'all',t:'Alle Fragen'}],
+    noPlayersOk: true
   }
-  function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  function cleanSlogan(slogan, brand) {
-    const re = new RegExp(escapeRegex(brand), 'gi');
-    return slogan.replace(re, '___');
-  }
+};
 
-  // --- SETUP LOGIC ---
-  function updateSetupUI() {
-    currentMode = els.gameSelect.value;
-    const info = GAMES[currentMode];
-    els.topbarTitle.textContent = info.title;
-    els.rulesBox.innerHTML = info.rules;
-    els.settingLabel.textContent = info.settingLabel;
-    
-    els.settingSelect.innerHTML = '';
-    info.settings.forEach(opt => {
-      const o = document.createElement('option');
-      o.value = opt.v; o.textContent = opt.t;
-      els.settingSelect.appendChild(o);
-    });
-  }
-  els.gameSelect.addEventListener('change', updateSetupUI);
-  updateSetupUI(); // Init
+// ============================================================
+// UTILS
+// ============================================================
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function cleanSlogan(slogan, brand) { return slogan.replace(new RegExp(escapeRegex(brand),'gi'),'___'); }
+function activePlayers() { return players.filter(p=>p.active); }
 
-  function renderPlayerList() {
-    els.playerList.innerHTML = '';
-    players.forEach((p, i) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span>${p.name}</span> <button aria-label="Entfernen">×</button>`;
-      li.querySelector('button').onclick = () => { players.splice(i, 1); renderPlayerList(); };
-      els.playerList.appendChild(li);
-    });
-  }
-  els.playerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = els.playerNameInput.value.trim();
-    if (name) { players.push({ name, score: 0 }); els.playerNameInput.value = ''; renderPlayerList(); }
+// ============================================================
+// TABS
+// ============================================================
+document.querySelectorAll('.game-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    currentMode = tab.dataset.mode;
+    updateSetupUI();
   });
+});
 
-  document.querySelectorAll('.restart-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (confirm('Aktuelle Runde abbrechen und ins Menü?')) showSetup();
-    });
+function updateSetupUI() {
+  const info = GAMES[currentMode];
+  els.topbarTitle.textContent = info.title;
+  els.rulesBox.innerHTML = info.rules;
+  els.settingLabel.textContent = info.settingLabel;
+  els.settingSelect.innerHTML = '';
+  info.settings.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt.v; o.textContent = opt.t;
+    els.settingSelect.appendChild(o);
   });
+}
+updateSetupUI();
 
-  // --- SCOREBOARD RENDERER ---
-  function renderTally(n) {
-    const full = Math.floor(n / 5);
-    const rem = n % 5;
-    let html = '<span class="tally">';
-    for (let i = 0; i < full; i++) html += '<span class="tally-group"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="strike"></span></span>';
-    for (let i = 0; i < rem; i++) html += '<span class="bar"></span>';
-    html += '<span class="tally-num">' + n + '</span></span>';
-    return html;
+// ============================================================
+// PLAYER MANAGEMENT
+// ============================================================
+// ---- PLAYER MODAL LOGIC ----
+function updatePlayerBadge() {
+  const ap = activePlayers();
+  const badge = document.getElementById('playerBadge');
+  if (!badge) return;
+  badge.textContent = ap.length > 0 ? ap.map(p=>p.name).join(', ') : 'Niemand';
+}
+
+function renderModalList() {
+  const ul = document.getElementById('modalPlayerList');
+  if (!ul) return;
+  ul.innerHTML = '';
+  const known = loadAllKnownPlayers();
+  known.forEach(name => {
+    const p = players.find(pp=>pp.name===name);
+    const isActive = p && p.active;
+    const li = document.createElement('li');
+    if (isActive) li.classList.add('selected');
+    li.innerHTML = `<span class="check">${isActive ? '✓' : ''}</span><span style="flex:1">${name}</span><button class="del-btn" aria-label="Löschen">×</button>`;
+    li.addEventListener('click', (e) => {
+      if (e.target.classList.contains('del-btn')) return;
+      const ex = players.find(pp=>pp.name===name);
+      if (ex) ex.active = !ex.active;
+      else players.push({name, score:0, active:true});
+      renderModalList();
+      updatePlayerBadge();
+    });
+    li.querySelector('.del-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      players = players.filter(pp=>pp.name!==name);
+      removeKnownPlayer(name);
+      renderModalList();
+      updatePlayerBadge();
+    });
+    ul.appendChild(li);
+  });
+}
+
+function openModal() {
+  renderModalList();
+  document.getElementById('playerModal').classList.remove('hidden');
+  document.getElementById('modalPlayerInput').value = '';
+}
+function closeModal() {
+  document.getElementById('playerModal').classList.add('hidden');
+  updatePlayerBadge();
+}
+
+document.getElementById('openPlayerModalBtn').addEventListener('click', openModal);
+document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+document.getElementById('modalDoneBtn').addEventListener('click', closeModal);
+document.getElementById('playerModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('playerModal')) closeModal();
+});
+
+document.getElementById('modalPlayerForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('modalPlayerInput').value.trim();
+  if (!name) return;
+  if (!players.find(p=>p.name===name)) players.push({name, score:0, active:true});
+  else players.find(p=>p.name===name).active = true;
+  saveKnownPlayer(name);
+  document.getElementById('modalPlayerInput').value = '';
+  renderModalList();
+  updatePlayerBadge();
+});
+
+// Init: bekannte Spieler laden (alle inaktiv bis ausgewählt)
+// ABER: Selektion aus localStorage laden falls vorhanden
+const ACTIVE_KEY = 'roadtrip_active_players_v1';
+function loadActiveSelection() {
+  try {
+    const raw = localStorage.getItem(ACTIVE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+function saveActiveSelection() {
+  try {
+    const names = activePlayers().map(p=>p.name);
+    localStorage.setItem(ACTIVE_KEY, JSON.stringify(names));
+  } catch(e) {}
+}
+
+const knownNames = loadAllKnownPlayers();
+const activeNames = loadActiveSelection();
+knownNames.forEach(name => {
+  if (!players.find(p=>p.name===name)) {
+    players.push({name, score:0, active: activeNames.includes(name)});
   }
-  function renderScoreboard(containerId, isTurnBased = false, maxPoints = null) {
-    const container = document.getElementById(containerId);
-    let html = '';
-    
-    if (currentMode !== 'plates') {
-      html += `<div class="team-total"><div class="big-number">${teamScore} / ${activePool.length}</div><div class="label">zusammen gelöst</div></div>`;
-    } else {
-      html += `<div class="team-total"><div class="label" style="margin-top:0;">Gespielt wird bis ${targetScore} Punkte</div></div>`;
-    }
+});
+updatePlayerBadge();
 
-    if (players.length > 0) {
-      html += '<div class="player-rows">';
-      players.forEach((p, i) => {
-        const active = (isTurnBased && i === currentPlayerIdx) ? ' active' : '';
-        html += `<div class="player-row${active}"><span class="player-name">${p.name}</span>${renderTally(p.score)}</div>`;
+// Aktive Spieler beim Start-Button speichern
+document.getElementById('startBtn').addEventListener('click', saveActiveSelection, {capture:true});
+
+// ============================================================
+// SCOREBOARD
+// ============================================================
+function renderTally(n) {
+  const full = Math.floor(n/5), rem = n%5;
+  let h = '<span class="tally">';
+  for(let i=0;i<full;i++) h+='<span class="tally-group"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="strike"></span></span>';
+  for(let i=0;i<rem;i++) h+='<span class="bar"></span>';
+  return h+'<span class="tally-num">'+n+'</span></span>';
+}
+function renderScoreboard(containerId, isTurnBased=false) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  const ap = activePlayers();
+  if (currentMode !== 'plates') {
+    html += `<div class="team-total"><div class="big-number">${teamScore}/${activePool.length}</div><div class="label">zusammen gelöst</div></div>`;
+  } else if (targetScore > 0) {
+    html += `<div class="team-total"><div class="label">Bis ${targetScore} Punkte</div></div>`;
+  }
+  if (ap.length > 0) {
+    html += '<div class="player-rows">';
+    ap.forEach((p,i) => {
+      const active = (isTurnBased && i===currentPlayerIdx)?' active':'';
+      html += `<div class="player-row${active}"><span class="player-name">${p.name}</span>${renderTally(p.score)}</div>`;
+    });
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// RESTART BUTTONS
+// ============================================================
+document.querySelectorAll('.restart-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (confirm('Aktuelle Runde abbrechen und ins Menü?')) showSetup();
+  });
+});
+
+// ============================================================
+// GAME 1: SLOGANS
+// ============================================================
+const elFrontQ = document.getElementById('frontQuote');
+const elBackB  = document.getElementById('backBrand');
+const elBackQ  = document.getElementById('backQuote');
+const elTagCard = document.getElementById('tagCard');
+const elRevActions = document.getElementById('revealActions');
+const elJudgeActions = document.getElementById('judgeActions');
+const turnIndSlogans = document.getElementById('turnIndicatorSlogans');
+
+function startSlogans() {
+  activePool = shuffle(SLOGANS);
+  const s = els.settingSelect.value;
+  if (s !== 'all') activePool = activePool.slice(0, parseInt(s,10));
+  currentIdx = 0; currentPlayerIdx = 0; teamScore = 0;
+  activePlayers().forEach(p=>p.score=0);
+  els.setup.classList.add('hidden');
+  els.gameSlogans.classList.remove('hidden');
+  loadSlogan();
+}
+function loadSlogan() {
+  if (currentIdx >= activePool.length) return showEnd();
+  const item = activePool[currentIdx];
+  elFrontQ.textContent = '«' + cleanSlogan(item.slogan, item.brand) + '"';
+  elBackB.textContent = item.brand;
+  elBackQ.textContent = '«' + item.slogan + '"';
+  elTagCard.classList.remove('flipped');
+  elRevActions.classList.remove('hidden');
+  elJudgeActions.classList.add('hidden');
+  els.roundCounter.textContent = 'Frage ' + (currentIdx+1) + ' / ' + activePool.length;
+  const ap = activePlayers();
+  turnIndSlogans.textContent = ap.length>0 ? `🎯 ${ap[currentPlayerIdx%ap.length].name} rät:` : '🎯 Nächste Person ist dran:';
+  renderScoreboard('scoreboardSlogans', true);
+}
+document.getElementById('revealBtn').onclick = () => {
+  elTagCard.classList.add('flipped');
+  elRevActions.classList.add('hidden');
+  elJudgeActions.classList.remove('hidden');
+};
+function judgeSlogan(correct) {
+  const ap = activePlayers();
+  if (correct) { teamScore++; if(ap.length>0) ap[currentPlayerIdx%ap.length].score++; }
+  if (ap.length>0) currentPlayerIdx = (currentPlayerIdx+1) % ap.length;
+  currentIdx++;
+  elTagCard.classList.add('no-transition');
+  elTagCard.classList.remove('flipped');
+  void elTagCard.offsetHeight;
+  loadSlogan();
+  requestAnimationFrame(()=>elTagCard.classList.remove('no-transition'));
+}
+document.getElementById('correctBtn').onclick = ()=>judgeSlogan(true);
+document.getElementById('wrongBtn').onclick   = ()=>judgeSlogan(false);
+
+// ============================================================
+// GAME 2: PLATES
+// ============================================================
+const elPlateInput   = document.getElementById('plateInput');
+const elPlateResArea = document.getElementById('plateResultArea');
+const elPlateKZ      = document.getElementById('plateKZ');
+const elPlateCity    = document.getElementById('plateCity');
+const elPlateDist    = document.getElementById('plateDistrict');
+const elPlateState   = document.getElementById('plateState');
+const elAwardGrid    = document.getElementById('awardGrid');
+
+function startPlates() {
+  targetScore = parseInt(els.settingSelect.value, 10); // 0 = no limit / info mode
+  activePlayers().forEach(p=>p.score=0);
+  els.roundCounter.textContent = targetScore > 0 ? 'Bis ' + targetScore + ' Punkte' : 'Info-Modus';
+  els.setup.classList.add('hidden');
+  els.gamePlates.classList.remove('hidden');
+  // Show/hide points section depending on mode
+  document.getElementById('awardPointsBox').style.display = (activePlayers().length === 0 || targetScore === 0) ? 'none' : '';
+  resetPlateSearch();
+  renderScoreboard('scoreboardPlates');
+}
+function resetPlateSearch() {
+  elPlateInput.value = '';
+  elPlateResArea.classList.add('hidden');
+  elPlateInput.focus();
+}
+document.getElementById('plateForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const query = elPlateInput.value.trim().toUpperCase();
+  if (!query) return;
+  const result = PLATES[query];
+  if (result) {
+    elPlateKZ.textContent = 'Kennzeichen: ' + query;
+    elPlateCity.textContent = result[0];
+    elPlateDist.textContent = result[1];
+    elPlateState.textContent = result[2];
+    // Award buttons
+    const ap = activePlayers();
+    elAwardGrid.innerHTML = '';
+    if (ap.length > 0 && targetScore > 0) {
+      ap.forEach((p,i) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary';
+        btn.textContent = p.name;
+        btn.onclick = () => awardPlatePoint(i);
+        elAwardGrid.appendChild(btn);
       });
-      html += '</div>';
-    } else if (currentMode !== 'plates') {
-      html += '<p class="hint">Ohne Spieler eingetragen zählt nur der Gesamt-Score.</p>';
+      document.getElementById('awardPointsBox').style.display = '';
     } else {
-      html += '<p class="hint" style="color:var(--red);">Achtung: Ohne eingetragene Spieler macht dieses Spiel wenig Sinn, geht nochmal zurück!</p>';
+      document.getElementById('awardPointsBox').style.display = 'none';
     }
-    container.innerHTML = html;
-  }
-
-  // --- GAME 1: SLOGANS LOGIC ---
-  const elFrontQ = document.getElementById('frontQuote');
-  const elBackB = document.getElementById('backBrand');
-  const elBackQ = document.getElementById('backQuote');
-  const elTagCard = document.getElementById('tagCard');
-  const elRevActions = document.getElementById('revealActions');
-  const elJudgeActions = document.getElementById('judgeActions');
-  const turnIndSlogans = document.getElementById('turnIndicatorSlogans');
-
-  function startSlogans() {
-    activePool = shuffle(SLOGANS);
-    const setting = els.settingSelect.value;
-    if (setting !== 'all') activePool = activePool.slice(0, parseInt(setting, 10));
-    currentIdx = 0; currentPlayerIdx = 0; teamScore = 0;
-    players.forEach(p => p.score = 0);
-    els.setup.classList.add('hidden');
-    els.gameSlogans.classList.remove('hidden');
-    loadSlogan();
-  }
-
-  function loadSlogan() {
-    if (currentIdx >= activePool.length) return showEnd();
-    const item = activePool[currentIdx];
-    elFrontQ.textContent = '„' + cleanSlogan(item.slogan, item.brand) + '“';
-    elBackB.textContent = item.brand;
-    elBackQ.textContent = '„' + item.slogan + '“';
-    elTagCard.classList.remove('flipped');
-    elRevActions.classList.remove('hidden');
-    elJudgeActions.classList.add('hidden');
-    els.roundCounter.textContent = 'Frage ' + (currentIdx + 1) + ' / ' + activePool.length;
-    turnIndSlogans.textContent = players.length > 0 ? `🎯 ${players[currentPlayerIdx].name} rät die Marke:` : '🎯 Nächste Person ist dran:';
-    renderScoreboard('scoreboardSlogans', true);
-  }
-
-  document.getElementById('revealBtn').onclick = () => {
-    elTagCard.classList.add('flipped');
-    elRevActions.classList.add('hidden');
-    elJudgeActions.classList.remove('hidden');
-  };
-
-  function judgeSlogan(correct) {
-    if (correct) { teamScore++; if (players.length > 0) players[currentPlayerIdx].score++; }
-    if (players.length > 0) currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-    currentIdx++;
-    elTagCard.classList.add('no-transition'); elTagCard.classList.remove('flipped');
-    void elTagCard.offsetHeight; 
-    loadSlogan();
-    requestAnimationFrame(() => elTagCard.classList.remove('no-transition'));
-  }
-  document.getElementById('correctBtn').onclick = () => judgeSlogan(true);
-  document.getElementById('wrongBtn').onclick = () => judgeSlogan(false);
-
-  // --- GAME 2: PLATES LOGIC ---
-  const elPlateForm = document.getElementById('plateForm');
-  const elPlateInput = document.getElementById('plateInput');
-  const elPlateResArea = document.getElementById('plateResultArea');
-  const elPlateCity = document.getElementById('plateCity');
-  const elPlateDistrict = document.getElementById('plateDistrict');
-  const elAwardGrid = document.getElementById('awardGrid');
-
-  function startPlates() {
-    targetScore = parseInt(els.settingSelect.value, 10);
-    players.forEach(p => p.score = 0);
-    els.roundCounter.textContent = 'Ziel: ' + targetScore;
-    els.setup.classList.add('hidden');
-    els.gamePlates.classList.remove('hidden');
-    resetPlateSearch();
-    renderScoreboard('scoreboardPlates', false, targetScore);
-  }
-
-  function resetPlateSearch() {
+    elPlateResArea.classList.remove('hidden');
+    elPlateInput.blur();
+  } else {
+    alert('Kennzeichen «' + query + '" nicht gefunden.');
     elPlateInput.value = '';
-    elPlateResArea.classList.add('hidden');
-    elPlateInput.focus();
   }
+});
+function awardPlatePoint(idx) {
+  const ap = activePlayers();
+  ap[idx].score++;
+  renderScoreboard('scoreboardPlates');
+  if (targetScore > 0 && ap[idx].score >= targetScore) {
+    showEnd(ap[idx].name + ' hat gewonnen! 🏁');
+  } else {
+    resetPlateSearch();
+  }
+}
+document.getElementById('nobodyBtn').onclick = resetPlateSearch;
 
-  elPlateForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const query = elPlateInput.value.trim().toUpperCase();
-    if (!query) return;
-    
-    const result = PLATES[query];
-    if (result) {
-      elPlateCity.textContent = result;
-      elPlateDistrict.textContent = "Kennzeichen: " + query;
-      
-      elAwardGrid.innerHTML = '';
-      if (players.length > 0) {
-        players.forEach((p, i) => {
-          const btn = document.createElement('button');
-          btn.className = 'btn btn-primary';
-          btn.style.padding = '10px';
-          btn.textContent = p.name;
-          btn.onclick = () => awardPlatePoint(i);
-          elAwardGrid.appendChild(btn);
-        });
-        document.getElementById('awardPointsBox').classList.remove('hidden');
-      } else {
-        document.getElementById('awardPointsBox').classList.add('hidden');
-      }
-      
-      elPlateResArea.classList.remove('hidden');
-      elPlateInput.blur();
-    } else {
-      alert("Kennzeichen nicht gefunden!");
-      elPlateInput.value = '';
-    }
+// ============================================================
+// GAME 3: QUOTES
+// ============================================================
+const elQuoteText   = document.getElementById('quoteText');
+const elMcGrid      = document.getElementById('mcGrid');
+const elNextQuoteBtn= document.getElementById('nextQuoteBtn');
+const turnIndQuotes = document.getElementById('turnIndicatorQuotes');
+
+function startQuotes() {
+  activePool = shuffle(QUOTES);
+  const s = els.settingSelect.value;
+  if (s !== 'all') activePool = activePool.slice(0, parseInt(s,10));
+  currentIdx = 0; currentPlayerIdx = 0; teamScore = 0;
+  activePlayers().forEach(p=>p.score=0);
+  els.setup.classList.add('hidden');
+  els.gameQuotes.classList.remove('hidden');
+  loadQuote();
+}
+function loadQuote() {
+  if (currentIdx >= activePool.length) return showEnd();
+  const item = activePool[currentIdx];
+  elQuoteText.textContent = '«' + item.q + '"';
+  const opts = shuffle([item.a, ...item.w]);
+  elMcGrid.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-btn';
+    btn.textContent = opt;
+    btn.onclick = () => handleQuoteAnswer(btn, opt===item.a, item.a);
+    elMcGrid.appendChild(btn);
   });
-
-  function awardPlatePoint(playerIdx) {
-    players[playerIdx].score++;
-    renderScoreboard('scoreboardPlates', false, targetScore);
-    if (players[playerIdx].score >= targetScore) {
-      showEnd(players[playerIdx].name + " hat gewonnen! 🏁");
-    } else {
-      resetPlateSearch();
-    }
-  }
-  document.getElementById('nobodyBtn').onclick = resetPlateSearch;
-
-  // --- GAME 3: QUOTES LOGIC ---
-  const elQuoteText = document.getElementById('quoteText');
-  const elMcGrid = document.getElementById('mcGrid');
-  const elNextQuoteBtn = document.getElementById('nextQuoteBtn');
-  const turnIndQuotes = document.getElementById('turnIndicatorQuotes');
-
-  function startQuotes() {
-    activePool = shuffle(QUOTES);
-    const setting = els.settingSelect.value;
-    if (setting !== 'all') activePool = activePool.slice(0, parseInt(setting, 10));
-    currentIdx = 0; currentPlayerIdx = 0; teamScore = 0;
-    players.forEach(p => p.score = 0);
-    els.setup.classList.add('hidden');
-    els.gameQuotes.classList.remove('hidden');
-    loadQuote();
-  }
-
-  function loadQuote() {
-    if (currentIdx >= activePool.length) return showEnd();
-    const item = activePool[currentIdx];
-    elQuoteText.textContent = '„' + item.q + '“';
-    
-    // Mische richtige und falsche Antworten
-    const opts = shuffle([item.a, ...item.w]);
-    
-    elMcGrid.innerHTML = '';
-    opts.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.className = 'mc-btn';
-      btn.textContent = opt;
-      btn.onclick = () => handleQuoteAnswer(btn, opt === item.a, item.a);
-      elMcGrid.appendChild(btn);
-    });
-
-    elNextQuoteBtn.classList.add('hidden');
-    els.roundCounter.textContent = 'Frage ' + (currentIdx + 1) + ' / ' + activePool.length;
-    turnIndQuotes.textContent = players.length > 0 ? `🎯 ${players[currentPlayerIdx].name} ist dran:` : '🎯 Wer hat es gesagt?';
-    renderScoreboard('scoreboardQuotes', true);
-  }
-
-  function handleQuoteAnswer(clickedBtn, isCorrect, correctAnswer) {
-    const allBtns = elMcGrid.querySelectorAll('.mc-btn');
-    allBtns.forEach(b => {
-      b.disabled = true;
-      if (b.textContent === correctAnswer) b.classList.add('correct');
-    });
-
-    if (isCorrect) {
-      teamScore++;
-      if (players.length > 0) players[currentPlayerIdx].score++;
-    } else {
-      clickedBtn.classList.add('wrong');
-    }
-
-    renderScoreboard('scoreboardQuotes', true);
-    elNextQuoteBtn.classList.remove('hidden');
-  }
-
-  elNextQuoteBtn.onclick = () => {
-    if (players.length > 0) currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-    currentIdx++;
-    loadQuote();
-  };
-
-
-  // --- GLOBAL LOGIC ---
-  els.startBtn.addEventListener('click', () => {
-    if (currentMode === 'slogans') startSlogans();
-    else if (currentMode === 'plates') startPlates();
-    else if (currentMode === 'quotes') startQuotes();
+  elNextQuoteBtn.classList.add('hidden');
+  els.roundCounter.textContent = 'Frage ' + (currentIdx+1) + ' / ' + activePool.length;
+  const ap = activePlayers();
+  turnIndQuotes.textContent = ap.length>0 ? `🎯 ${ap[currentPlayerIdx%ap.length].name} ist dran:` : '🎯 Wer hat es gesagt?';
+  renderScoreboard('scoreboardQuotes', true);
+}
+function handleQuoteAnswer(clickedBtn, isCorrect, correctAnswer) {
+  elMcGrid.querySelectorAll('.mc-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correctAnswer) b.classList.add('correct');
   });
+  const ap = activePlayers();
+  if (isCorrect) { teamScore++; if(ap.length>0) ap[currentPlayerIdx%ap.length].score++; }
+  else { clickedBtn.classList.add('wrong'); }
+  renderScoreboard('scoreboardQuotes', true);
+  elNextQuoteBtn.classList.remove('hidden');
+}
+elNextQuoteBtn.onclick = () => {
+  const ap = activePlayers();
+  if (ap.length>0) currentPlayerIdx = (currentPlayerIdx+1) % ap.length;
+  currentIdx++;
+  loadQuote();
+};
 
-  function showSetup() {
-    els.gameSlogans.classList.add('hidden');
-    els.gamePlates.classList.add('hidden');
-    els.gameQuotes.classList.add('hidden');
-    els.end.classList.add('hidden');
-    els.setup.classList.remove('hidden');
-    els.roundCounter.textContent = '';
+// ============================================================
+// GLOBAL
+// ============================================================
+els.startBtn.addEventListener('click', () => {
+  // Reset scores for active players
+  activePlayers().forEach(p=>p.score=0);
+  if (currentMode==='slogans') startSlogans();
+  else if (currentMode==='plates') startPlates();
+  else startQuotes();
+});
+
+function showSetup() {
+  [els.gameSlogans,els.gamePlates,els.gameQuotes,els.end].forEach(s=>s.classList.add('hidden'));
+  els.setup.classList.remove('hidden');
+  els.roundCounter.textContent = '';
+}
+function showEnd(customMsg=null) {
+  [els.gameSlogans,els.gamePlates,els.gameQuotes].forEach(s=>s.classList.add('hidden'));
+  els.end.classList.remove('hidden');
+  els.roundCounter.textContent = '';
+  const ap = activePlayers();
+  if (currentMode==='plates') {
+    els.endTotal.innerHTML = `<div class="label" style="font-size:18px;color:var(--mustard)">${customMsg||'Spiel beendet'}</div>`;
+    els.endSummary.textContent = '';
+  } else {
+    els.endTotal.innerHTML = `<div class="big-number">${teamScore}/${activePool.length}</div><div class="label">Gesamt gelöst</div>`;
+    const pct = Math.round((teamScore/activePool.length)*100);
+    els.endSummary.textContent = pct>=85?'Wahnsinn – Legendenstatus! 🏆':pct>=50?'Stark, Respekt! 🔥':'Da ist noch Luft nach oben 😂';
   }
-
-  function showEnd(customMsg = null) {
-    els.gameSlogans.classList.add('hidden');
-    els.gamePlates.classList.add('hidden');
-    els.gameQuotes.classList.add('hidden');
-    els.end.classList.remove('hidden');
-    els.roundCounter.textContent = '';
-
-    if (currentMode === 'plates') {
-      els.endTotal.innerHTML = `<div class="label" style="font-size:16px;">${customMsg || "Spiel beendet"}</div>`;
-      els.endSummary.textContent = "";
-    } else {
-      els.endTotal.innerHTML = `<div class="big-number">${teamScore} / ${activePool.length}</div><div class="label">Gesamt gelöst</div>`;
-      const pct = Math.round((teamScore / activePool.length) * 100);
-      let msg;
-      if (pct >= 85) msg = 'Wahnsinn – Legendenstatus! 🏆';
-      else if (pct >= 50) msg = 'Starke Leistung, Respekt! 🔥';
-      else msg = 'Da ist noch Luft nach oben! 😂';
-      els.endSummary.textContent = msg;
-    }
-
-    els.endPlayerRows.innerHTML = '';
-    if (players.length > 0) {
-      const sorted = players.slice().sort((a, b) => b.score - a.score);
-      sorted.forEach((p, i) => {
-        const crown = (i === 0 && p.score > 0) ? ' 👑' : '';
-        const row = document.createElement('div');
-        row.className = 'player-row';
-        row.innerHTML = `<span class="player-name">${p.name}${crown}</span>${renderTally(p.score)}`;
-        els.endPlayerRows.appendChild(row);
-      });
-    }
+  els.endPlayerRows.innerHTML = '';
+  if (ap.length>0) {
+    ap.slice().sort((a,b)=>b.score-a.score).forEach((p,i) => {
+      const crown=(i===0&&p.score>0)?' 👑':'';
+      const row=document.createElement('div'); row.className='player-row';
+      row.innerHTML=`<span class="player-name">${p.name}${crown}</span>${renderTally(p.score)}`;
+      els.endPlayerRows.appendChild(row);
+    });
   }
-
-  els.playAgainBtn.onclick = () => {
-    if (currentMode === 'slogans') startSlogans();
-    else if (currentMode === 'plates') startPlates();
-    else if (currentMode === 'quotes') startQuotes();
-  };
-  els.backToSetupBtn.onclick = showSetup;
-
+}
+els.playAgainBtn.onclick = () => {
+  if (currentMode==='slogans') startSlogans();
+  else if (currentMode==='plates') startPlates();
+  else startQuotes();
+};
+els.backToSetupBtn.onclick = showSetup;
 </script>
 </body>
 </html>
