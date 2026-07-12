@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Roadtrip Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -203,6 +203,163 @@
   .modal-player-list li .check { color: var(--mustard); font-size: 18px; width: 24px; text-align: center; }
   .modal-player-list li .del-btn { background: none; border: none; color: var(--red); font-size: 18px; cursor: pointer; padding: 4px 6px; }
 
+
+  /* ======================================================
+     SUDOKU – RoadTrip Style
+     ====================================================== */
+  #sdk-wrap {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 0 0 16px; min-height: 100vh;
+  }
+  #sdk-topbar {
+    background: var(--ink-soft); border-radius: 0 0 14px 14px;
+    padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .sdk-stat-row {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 6px;
+  }
+  .sdk-stat {
+    background: var(--ink); border-radius: 8px; padding: 6px 4px;
+    text-align: center; display: flex; flex-direction: column; gap: 2px;
+  }
+  .sdk-stat span { font-size: 10px; color: rgba(251,243,230,0.55); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .sdk-stat strong { font-size: 14px; font-family: 'Space Mono', monospace; color: var(--mustard); }
+  .sdk-level-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .sdk-level-row label { font-size: 12px; font-weight: 600; color: rgba(251,243,230,0.7); flex-shrink: 0; }
+  .sdk-level-row select {
+    flex: 1; min-width: 0; background: var(--ink); color: var(--cream); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 7px 8px; font-family: 'Inter', sans-serif; font-size: 13px;
+    -webkit-appearance: none; appearance: none;
+  }
+  .sdk-level-row .btn { flex-shrink: 0; padding: 8px 12px; font-size: 13px; border-radius: 9px; width: auto; }
+
+  /* Board */
+  #sdk-board-wrap {
+    padding: 0 12px;
+    /* iOS: prevent tap highlight flicker */
+    -webkit-user-select: none; user-select: none;
+  }
+  #sdk-board {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0,1fr));
+    grid-template-rows: repeat(9, minmax(0,1fr));
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border: 3px solid var(--cream);
+    background: var(--cream);
+    border-radius: 6px;
+    overflow: hidden;
+    /* iOS tap fix */
+    touch-action: manipulation;
+  }
+  .sdk-cell {
+    position: relative;
+    background: #F5EDD8;
+    border-right: 1px solid #C8BAA0;
+    border-bottom: 1px solid #C8BAA0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    /* iOS: no zoom, no callout */
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    padding: 0; margin: 0;
+    overflow: hidden;
+    /* NO min-height or min-width – let aspect-ratio do the work */
+    min-width: 0; min-height: 0;
+  }
+  /* thick borders */
+  .sdk-cell:nth-child(3n):not(:nth-child(9n)) { border-right: 2.5px solid #3a3a3a; }
+  .sdk-cell:nth-child(9n) { border-right: none; }
+  .sdk-cell:nth-child(n+19):nth-child(-n+27),
+  .sdk-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2.5px solid #3a3a3a; }
+  .sdk-cell:nth-child(n+73) { border-bottom: none; }
+  /* states */
+  .sdk-cell.peer { background: #E8DFC8; }
+  .sdk-cell.same { background: #C8E8C8; }
+  .sdk-cell.selected { background: #A8CCE8 !important; }
+  .sdk-cell.conflict { background: #F0C0BC; }
+  .sdk-cell.hint-cell { box-shadow: inset 0 0 0 3px var(--mustard); }
+  /* value */
+  .sdk-val {
+    font-size: clamp(1rem, 5.5vw, 2rem);
+    font-weight: 700; line-height: 1; pointer-events: none;
+    color: #1a2a3a;
+  }
+  .sdk-cell.given .sdk-val { font-weight: 900; color: #111; }
+  .sdk-cell.user-val .sdk-val { color: #174664; }
+  .sdk-cell.conflict .sdk-val { color: #b42318; }
+  /* notes grid */
+  .sdk-notes {
+    position: absolute; inset: 1px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-rows: repeat(3, minmax(0,1fr));
+    pointer-events: none;
+  }
+  .sdk-note {
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(0.42rem, 2vw, 0.7rem);
+    font-weight: 700; color: #334; line-height: 1;
+    min-width: 0; min-height: 0;
+  }
+  .sdk-note.same-note {
+    background: #FFD700; border-radius: 50%; color: #111;
+    font-weight: 900;
+  }
+  .sdk-note.cut { color: #b42318; text-decoration: line-through; }
+
+  /* Numbar */
+  #sdk-numbar {
+    display: grid; grid-template-columns: repeat(9, minmax(0,1fr));
+    gap: 4px; padding: 0 12px;
+  }
+  .sdk-num {
+    aspect-ratio: 1; padding: 0; border: none; border-radius: 8px;
+    background: var(--ink-soft); color: var(--cream);
+    font-size: clamp(1rem, 4.5vw, 1.5rem); font-weight: 800;
+    cursor: pointer; touch-action: manipulation;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 0; min-height: 0;
+  }
+  .sdk-num.done { opacity: 0.3; }
+  .sdk-num:disabled { opacity: 0.25; }
+
+  /* Actions */
+  #sdk-actions {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 7px; padding: 0 12px;
+  }
+  .sdk-action-btn { border-radius: 10px; font-size: 13px; padding: 10px 6px; }
+  .sdk-action-btn.on { background: #7047a3; color: #fff; }
+
+  /* Hint area */
+  #sdk-hint-area { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+  .sdk-hint-btns { display: flex; gap: 8px; }
+  .sdk-hint-btns .btn { flex: 1; font-size: 13px; padding: 10px 8px; border-radius: 10px; }
+  .sdk-method {
+    border-left: 4px solid var(--ink-soft); background: var(--ink-soft);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .sdk-method span { display: block; font-size: 11px; color: rgba(251,243,230,0.55); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+  .sdk-method strong { font-size: 14px; color: var(--cream); }
+  .sdk-method.done { border-left-color: var(--green); }
+  .sdk-method.error { border-left-color: var(--red); }
+  .sdk-method.ok { border-left-color: var(--green); }
+  .sdk-hint-card {
+    background: var(--ink-soft); border-radius: 12px; padding: 12px 14px;
+    min-height: 80px; display: none; flex-direction: column; gap: 4px;
+  }
+  .sdk-hint-card.visible { display: flex; }
+  .sdk-tag { display: inline-block; background: var(--mustard); color: var(--ink); padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 800; margin-bottom: 4px; align-self: flex-start; }
+  #sdk-hint-title { font-size: 14px; font-weight: 700; color: var(--cream); margin: 0; }
+  #sdk-hint-text { font-size: 13px; color: rgba(251,243,230,0.85); margin: 2px 0 0; line-height: 1.45; }
+  .sdk-status { padding: 0 12px; font-size: 12px; color: rgba(251,243,230,0.6); font-family: 'Space Mono', monospace; min-height: 20px; }
+  .sdk-status.ok { color: var(--green); }
+  .sdk-status.error { color: var(--red); font-weight: 700; }
+
 </style>
 </head>
 <body>
@@ -217,7 +374,8 @@
     <div class="game-tabs">
       <button class="game-tab active" data-mode="plates"><span class="tab-emoji">🚗</span>Kennzeichen</button>
       <button class="game-tab" data-mode="slogans"><span class="tab-emoji">📺</span>Werbepause</button>
-      <button class="game-tab" data-mode="quotes"><span class="tab-emoji">⚽</span>Fußball-Mythen</button>
+      <button class="game-tab" data-mode="quotes"><span class="tab-emoji">⚽</span>Fußball</button>
+      <button class="game-tab" data-mode="sudoku"><span class="tab-emoji">🔢</span>Sudoku</button>
     </div>
 
     <div class="rules" id="rulesBox"></div>
@@ -318,6 +476,73 @@
     <div class="player-rows" id="endPlayerRows"></div>
     <button id="playAgainBtn" class="btn btn-primary">🔁 Nochmal spielen</button>
     <button id="backToSetupBtn" class="btn btn-secondary">⚙️ Hauptmenü</button>
+  </section>
+
+  <!-- GAME 4: Sudoku -->
+  <section id="game-sudoku" class="screen hidden" style="padding:0;gap:0;">
+    <!-- Sudoku hat eigenes kompaktes Layout -->
+    <div id="sdk-wrap">
+      <div id="sdk-topbar">
+        <div class="sdk-stat-row">
+          <div class="sdk-stat"><span>Stufe</span><strong id="sdk-level">–</strong></div>
+          <div class="sdk-stat"><span>Zeit</span><strong id="sdk-time">00:00</strong></div>
+          <div class="sdk-stat"><span>Fehler</span><strong id="sdk-errors">0</strong></div>
+          <div class="sdk-stat"><span>Modus</span><strong id="sdk-mode">Eingabe</strong></div>
+        </div>
+        <div class="sdk-level-row">
+          <label for="sdk-level-sel">Schwierigkeit:</label>
+          <select id="sdk-level-sel">
+            <option value="1">1 – sehr leicht</option>
+            <option value="2">2 – leicht</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5 – mittel</option>
+            <option value="6">6</option>
+            <option value="7">7 – schwer</option>
+            <option value="8">8</option>
+            <option value="9">9 – sehr schwer</option>
+            <option value="10">10 – extrem</option>
+          </select>
+          <button class="btn btn-primary" id="sdk-new">Neu</button>
+          <button class="btn btn-secondary" id="sdk-custom">Eigenes</button>
+        </div>
+      </div>
+
+      <div id="sdk-board-wrap">
+        <div id="sdk-board"></div>
+      </div>
+
+      <div id="sdk-numbar"></div>
+
+      <div id="sdk-actions">
+        <button class="btn btn-secondary sdk-action-btn" id="sdk-notes-btn">✎ Notizen</button>
+        <button class="btn btn-secondary sdk-action-btn" id="sdk-erase-btn">⌫ Löschen</button>
+        <button class="btn btn-secondary sdk-action-btn" id="sdk-undo-btn">↶ Zurück</button>
+      </div>
+
+      <div id="sdk-hint-area">
+        <div class="sdk-hint-btns">
+          <button class="btn btn-primary" id="sdk-hint-btn">🔍 Nächsten Schritt zeigen</button>
+          <button class="btn btn-secondary" id="sdk-apply-btn" disabled>✓ Schritt anwenden</button>
+        </div>
+        <div class="sdk-hint-btns" id="sdk-custom-start-row" style="display:none;">
+          <button class="btn btn-primary" id="sdk-start-btn" style="width:100%;">▶ Eigene Eingabe starten</button>
+        </div>
+        <div id="sdk-method-box" class="sdk-method unknown">
+          <span id="sdk-method-label">Nächste Lösungsmethode</span>
+          <strong id="sdk-method-value">–</strong>
+        </div>
+        <div id="sdk-hint-card" class="sdk-hint-card">
+          <p id="sdk-hint-tag" class="sdk-tag"></p>
+          <h3 id="sdk-hint-title"></h3>
+          <p id="sdk-hint-text"></p>
+          <p id="sdk-hint-small" class="hint"></p>
+        </div>
+      </div>
+
+      <p id="sdk-status" class="sdk-status"></p>
+      <button class="btn btn-text restart-btn" style="margin-top:8px;">🔄 Zurück zum Menü</button>
+    </div>
   </section>
 
   <!-- PLAYER MODAL -->
@@ -1444,6 +1669,22 @@ document.querySelectorAll('.game-tab').forEach(tab => {
 });
 
 function updateSetupUI() {
+  if (currentMode === 'sudoku') {
+    els.topbarTitle.textContent = '🔢 Sudoku';
+    els.rulesBox.innerHTML = `<h2>Wie geht's?</h2><ol>
+      <li>„Neu" erzeugt ein Rätsel in der gewählten Stufe.</li>
+      <li>„Eigenes" zum Eingeben aus einem Heft.</li>
+      <li>Mit 🔍 erklärt die App den nächsten Lösungsschritt.</li>
+      <li>Notizen-Modus für eigene Kandidaten-Markierungen.</li>
+    </ol><p class="hint">Sudoku läuft auch alleine – kein Spieler nötig.</p>`;
+    document.getElementById('openPlayerModalBtn').style.display = 'none';
+    document.getElementById('settingLabel').parentElement.style.display = 'none';
+    els.startBtn.textContent = '🔢 Sudoku öffnen';
+    return;
+  }
+  document.getElementById('openPlayerModalBtn').style.display = '';
+  document.getElementById('settingLabel').parentElement.style.display = '';
+  els.startBtn.textContent = 'Spiel starten';
   const info = GAMES[currentMode];
   els.topbarTitle.textContent = info.title;
   els.rulesBox.innerHTML = info.rules;
@@ -1778,7 +2019,12 @@ elNextQuoteBtn.onclick = () => {
 // GLOBAL
 // ============================================================
 els.startBtn.addEventListener('click', () => {
-  // Reset scores for active players
+  if (currentMode==='sudoku') {
+    els.setup.classList.add('hidden');
+    document.getElementById('game-sudoku').classList.remove('hidden');
+    if (window.sdkOnShow) window.sdkOnShow();
+    return;
+  }
   activePlayers().forEach(p=>p.score=0);
   if (currentMode==='slogans') startSlogans();
   else if (currentMode==='plates') startPlates();
@@ -1786,9 +2032,11 @@ els.startBtn.addEventListener('click', () => {
 });
 
 function showSetup() {
-  [els.gameSlogans,els.gamePlates,els.gameQuotes,els.end].forEach(s=>s.classList.add('hidden'));
+  [els.gameSlogans,els.gamePlates,els.gameQuotes,els.end,
+   document.getElementById('game-sudoku')].forEach(s=>s&&s.classList.add('hidden'));
   els.setup.classList.remove('hidden');
   els.roundCounter.textContent = '';
+  if (window.sdkOnHide) window.sdkOnHide();
 }
 function showEnd(customMsg=null) {
   [els.gameSlogans,els.gamePlates,els.gameQuotes].forEach(s=>s.classList.add('hidden'));
@@ -1819,6 +2067,853 @@ els.playAgainBtn.onclick = () => {
   else startQuotes();
 };
 els.backToSetupBtn.onclick = showSetup;
+
+// ============================================================
+// ============================================================
+// SUDOKU ENGINE – in RoadTrip integriert
+// iOS-safe, vollständiger Solver mit Lernhilfe
+// ============================================================
+(function() {
+'use strict';
+
+// ---- Konstanten & Hilfsfunktionen ----
+const F = 511; // alle 9 Bits gesetzt
+const bit = n => 1 << (n - 1);
+const digits = m => { const a = []; for (let n = 1; n <= 9; n++) if (m & bit(n)) a.push(n); return a; };
+const pc = m => { let c = 0; let x = m; while (x) { x &= x - 1; c++; } return c; };
+const rc = i => [Math.floor(i / 9), i % 9];
+const cellName = i => { const [r, c] = rc(i); return `R${r+1}S${c+1}`; };
+const longName = i => { const [r, c] = rc(i); return `Reihe ${r+1}, Spalte ${c+1}`; };
+const uname = u => u < 9 ? `Reihe ${u+1}` : u < 18 ? `Spalte ${u-8}` : `Block ${u-17}`;
+
+// ---- Unit-Strukturen aufbauen ----
+const units = [];
+for (let r = 0; r < 9; r++) units.push(Array.from({length:9}, (_,c) => r*9+c));
+for (let c = 0; c < 9; c++) units.push(Array.from({length:9}, (_,r) => r*9+c));
+for (let br = 0; br < 3; br++)
+  for (let bc = 0; bc < 3; bc++) {
+    const u = [];
+    for (let dr = 0; dr < 3; dr++)
+      for (let dc = 0; dc < 3; dc++)
+        u.push((br*3+dr)*9 + bc*3+dc);
+    units.push(u);
+  }
+const cellUnits = Array.from({length:81}, () => []);
+units.forEach((u,k) => u.forEach(i => cellUnits[i].push(k)));
+const peers = Array.from({length:81}, () => new Set());
+for (let i = 0; i < 81; i++)
+  cellUnits[i].forEach(u => units[u].forEach(j => j !== i && peers[i].add(j)));
+
+// ---- Kandidaten-Arithmetik ----
+function baseCand(board, i) {
+  if (board[i]) return 0;
+  let used = 0;
+  peers[i].forEach(p => board[p] && (used |= bit(board[p])));
+  return F & ~used;
+}
+function cand(board, elim, i) { return baseCand(board, i) & ~(elim[i] || 0); }
+function conflict(board, i) {
+  const v = board[i]; if (!v) return false;
+  for (const p of peers[i]) if (board[p] === v) return true;
+  return false;
+}
+function valid(board) { return !board.some((v,i) => v && conflict(board,i)); }
+
+// ---- Solver ----
+function combos(a, k) {
+  const out = [];
+  function rec(s, x) {
+    if (x.length === k) return out.push(x.slice());
+    for (let i = s; i <= a.length - (k - x.length); i++) { x.push(a[i]); rec(i+1, x); x.pop(); }
+  }
+  rec(0, []);
+  return out;
+}
+
+function nakedSingle(board, elim) {
+  for (let i = 0; i < 81; i++) if (!board[i]) {
+    const m = cand(board, elim, i);
+    if (pc(m) === 1) {
+      const d = digits(m)[0];
+      return { type:'place', tech:'Einzelkandidat', score:1, cells:[i], place:{cell:i,digit:d},
+        title:`${longName(i)} = ${d}`,
+        text:`Nur die ${d} ist hier möglich. Alle anderen Zahlen werden durch Reihe, Spalte oder Block ausgeschlossen.` };
+    }
+  }
+  return null;
+}
+
+function hiddenSingle(board, elim) {
+  for (let u = 0; u < 27; u++)
+    for (let d = 1; d <= 9; d++) {
+      if (units[u].some(i => board[i] === d)) continue;
+      const p = units[u].filter(i => !board[i] && (cand(board,elim,i) & bit(d)));
+      if (p.length === 1)
+        return { type:'place', tech:'Versteckter Einzelkandidat', score:3, cells:units[u], place:{cell:p[0],digit:d},
+          title:`${longName(p[0])} = ${d}`,
+          text:`Im ${uname(u)} kann die ${d} nur in dieses eine Feld. Alle anderen Positionen sind durch Reihe, Spalte oder Block belegt.` };
+    }
+  return null;
+}
+
+function locked(board, elim) {
+  for (let u = 18; u < 27; u++)
+    for (let d = 1; d <= 9; d++) {
+      const p = units[u].filter(i => !board[i] && (cand(board,elim,i) & bit(d)));
+      if (p.length < 2) continue;
+      const rows = [...new Set(p.map(i => rc(i)[0]))];
+      const cols = [...new Set(p.map(i => rc(i)[1]))];
+      if (rows.length === 1) {
+        const cut = units[rows[0]].filter(i => !units[u].includes(i) && !board[i] && (cand(board,elim,i) & bit(d))).map(cell => ({cell, digit:d}));
+        if (cut.length) return { type:'cut', tech:'Block–Reihen-Ausschluss', score:4, cells:p, cuts:cut,
+          title:`${d} ist in ${uname(u)} an Reihe ${rows[0]+1} gebunden`,
+          text:`Im Block kann die ${d} nur in Reihe ${rows[0]+1} stehen. Außerhalb des Blocks darf sie in dieser Reihe gestrichen werden.` };
+      }
+      if (cols.length === 1) {
+        const cut = units[9+cols[0]].filter(i => !units[u].includes(i) && !board[i] && (cand(board,elim,i) & bit(d))).map(cell => ({cell, digit:d}));
+        if (cut.length) return { type:'cut', tech:'Block–Spalten-Ausschluss', score:4, cells:p, cuts:cut,
+          title:`${d} ist in ${uname(u)} an Spalte ${cols[0]+1} gebunden`,
+          text:`Im Block kann die ${d} nur in Spalte ${cols[0]+1} stehen. Außerhalb des Blocks darf sie dort gestrichen werden.` };
+      }
+    }
+  return null;
+}
+
+function nakedSet(board, elim, size) {
+  for (let u = 0; u < 27; u++) {
+    const e = units[u].filter(i => !board[i] && pc(cand(board,elim,i)) >= 2 && pc(cand(board,elim,i)) <= size);
+    for (const cells of combos(e, size)) {
+      let union = 0;
+      cells.forEach(i => union |= cand(board,elim,i));
+      if (pc(union) !== size) continue;
+      const cut = [];
+      units[u].forEach(i => {
+        if (board[i] || cells.includes(i)) return;
+        digits(cand(board,elim,i) & union).forEach(digit => cut.push({cell:i, digit}));
+      });
+      if (cut.length) {
+        const ds = digits(union);
+        const name = size===2?'Nacktes Paar':size===3?'Nackter Drilling':'Nacktes Quadrupel';
+        return { type:'cut', tech:name, score:size===2?5:size===3?7:7, cells, cuts:cut,
+          title:`${name}: ${ds.join(', ')} in ${uname(u)}`,
+          text:`Die Zahlen ${ds.join(', ')} können in ${uname(u)} nur in genau ${size} Felder. Daher können sie in allen anderen Feldern dieser Einheit gestrichen werden.` };
+      }
+    }
+  }
+  return null;
+}
+
+function hiddenSet(board, elim, size) {
+  const all = [1,2,3,4,5,6,7,8,9];
+  for (let u = 0; u < 27; u++) {
+    const open = units[u].filter(i => !board[i]);
+    for (const ds of combos(all, size)) {
+      const cells = new Set(); let ok = true;
+      for (const d of ds) {
+        const p = open.filter(i => cand(board,elim,i) & bit(d));
+        if (!p.length) { ok = false; break; }
+        p.forEach(i => cells.add(i));
+      }
+      if (!ok || cells.size !== size) continue;
+      const keep = ds.reduce((m,d) => m | bit(d), 0);
+      const cut = [];
+      cells.forEach(i => digits(cand(board,elim,i) & ~keep).forEach(digit => cut.push({cell:i,digit})));
+      if (cut.length) {
+        const name = size===2?'Verstecktes Paar':size===3?'Versteckter Drilling':'Verstecktes Quadrupel';
+        return { type:'cut', tech:name, score:size===2?6:size===3?8:8, cells:[...cells], cuts:cut,
+          title:`${name}: ${ds.join(', ')} in ${uname(u)}`,
+          text:`In ${uname(u)} können die Zahlen ${ds.join(', ')} nur in genau ${size} Felder. Alle anderen Kandidaten in diesen Feldern dürfen gestrichen werden.` };
+      }
+    }
+  }
+  return null;
+}
+
+function xWing(board, elim) {
+  for (let d = 1; d <= 9; d++) {
+    // Reihen-basierter X-Wing
+    const rows = [];
+    for (let r = 0; r < 9; r++) {
+      const cols = [];
+      for (let c = 0; c < 9; c++) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cols.push(c); }
+      if (cols.length === 2) rows.push({r, cols});
+    }
+    for (const [a, b] of combos(rows, 2)) {
+      if (a.cols[0] !== b.cols[0] || a.cols[1] !== b.cols[1]) continue;
+      const cuts = [];
+      for (let r = 0; r < 9; r++) if (r !== a.r && r !== b.r)
+        for (const c of a.cols) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cuts.push({cell:i,digit:d}); }
+      if (cuts.length) {
+        const cells = [a.r*9+a.cols[0], a.r*9+a.cols[1], b.r*9+b.cols[0], b.r*9+b.cols[1]];
+        return { type:'cut', tech:'X-Wing', score:9, cells, cuts,
+          title:`X-Wing mit der ${d} (Reihen ${a.r+1} & ${b.r+1})`,
+          text:`In Reihe ${a.r+1} und ${b.r+1} erscheint die ${d} jeweils nur in Spalte ${a.cols[0]+1} und ${a.cols[1]+1}. Damit ist die ${d} in diesen Spalten auf diese zwei Reihen fixiert – in allen anderen Reihen dieser Spalten kann die ${d} gestrichen werden.` };
+      }
+    }
+    // Spalten-basierter X-Wing
+    const cols = [];
+    for (let c = 0; c < 9; c++) {
+      const rowsList = [];
+      for (let r = 0; r < 9; r++) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) rowsList.push(r); }
+      if (rowsList.length === 2) cols.push({c, rows:rowsList});
+    }
+    for (const [a, b] of combos(cols, 2)) {
+      if (a.rows[0] !== b.rows[0] || a.rows[1] !== b.rows[1]) continue;
+      const cuts = [];
+      for (let c = 0; c < 9; c++) if (c !== a.c && c !== b.c)
+        for (const r of a.rows) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cuts.push({cell:i,digit:d}); }
+      if (cuts.length) {
+        const cells = [a.rows[0]*9+a.c, a.rows[1]*9+a.c, b.rows[0]*9+b.c, b.rows[1]*9+b.c];
+        return { type:'cut', tech:'X-Wing', score:9, cells, cuts,
+          title:`X-Wing mit der ${d} (Spalten ${a.c+1} & ${b.c+1})`,
+          text:`In Spalte ${a.c+1} und ${b.c+1} erscheint die ${d} jeweils nur in Reihe ${a.rows[0]+1} und ${a.rows[1]+1}. Damit kann die ${d} in allen anderen Spalten dieser Reihen gestrichen werden.` };
+      }
+    }
+  }
+  return null;
+}
+
+function yWing(board, elim) {
+  // Y-Wing (XY-Wing): Pivot hat genau 2 Kandidaten {A,B}, zwei Pincers mit {A,C} und {B,C}
+  for (let pivot = 0; pivot < 81; pivot++) {
+    if (board[pivot]) continue;
+    const pm = cand(board, elim, pivot);
+    if (pc(pm) !== 2) continue;
+    const [dA, dB] = digits(pm);
+    // Finde Pincers: Felder die zum Pivot sehen, 2 Kandidaten, einen davon teilen
+    const pincerA = [], pincerB = [];
+    for (const p of peers[pivot]) {
+      if (board[p]) continue;
+      const pm2 = cand(board, elim, p);
+      if (pc(pm2) !== 2) continue;
+      if ((pm2 & bit(dA)) && !(pm2 & bit(dB))) pincerA.push(p); // hat A, nicht B
+      if ((pm2 & bit(dB)) && !(pm2 & bit(dA))) pincerB.push(p); // hat B, nicht A
+    }
+    for (const pA of pincerA) {
+      const mA = cand(board, elim, pA);
+      const dC_A = digits(mA & ~bit(dA))[0]; // dritte Ziffer in PincerA
+      for (const pB of pincerB) {
+        const mB = cand(board, elim, pB);
+        if (!(mB & bit(dC_A))) continue; // PincerB muss dC haben
+        if (pc(mB) !== 2) continue;
+        // Beide Pincers teilen dC – Felder die beide Pincers sehen, können dC verlieren
+        const cuts = [];
+        for (let i = 0; i < 81; i++) {
+          if (board[i] || i === pivot || i === pA || i === pB) continue;
+          if (peers[pA].has(i) && peers[pB].has(i) && (cand(board,elim,i) & bit(dC_A)))
+            cuts.push({cell:i, digit:dC_A});
+        }
+        if (cuts.length) {
+          return { type:'cut', tech:'Y-Wing', score:8, cells:[pivot,pA,pB], cuts,
+            title:`Y-Wing: ${dA}/${dB} im Pivot, ${dC_A} eliminieren`,
+            text:`${cellName(pivot)} hat nur {${dA},${dB}}. ${cellName(pA)} hat {${dA},${dC_A}} und ${cellName(pB)} hat {${dB},${dC_A}}. Egal ob im Pivot ${dA} oder ${dB} steht – einer der Pincers muss ${dC_A} aufnehmen. Alle Felder, die beide Pincers sehen, können daher ${dC_A} streichen.` };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function propagateSingles(board, elim, maxSteps = 40) {
+  const b = board.slice();
+  const steps = [];
+  for (let loop = 0; loop < maxSteps; loop++) {
+    let placed = false;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = cand(b, elim, i);
+      if (!m) return {contradiction:true, steps, reason:`${cellName(i)} hat keinen möglichen Kandidaten.`};
+      if (pc(m) === 1) { const d = digits(m)[0]; b[i] = d; steps.push({cell:i,digit:d}); placed=true; break; }
+    }
+    if (placed) continue;
+    let found = false;
+    for (let u = 0; u < 27 && !found; u++)
+      for (let d = 1; d <= 9; d++) {
+        if (units[u].some(i => b[i] === d)) continue;
+        const p = units[u].filter(i => !b[i] && (cand(b,elim,i) & bit(d)));
+        if (!p.length) return {contradiction:true, steps, reason:`Die ${d} hat in ${uname(u)} keinen Platz mehr.`};
+        if (p.length === 1) { b[p[0]] = d; steps.push({cell:p[0],digit:d}); found=true; break; }
+      }
+    if (!found) return {contradiction:false, steps};
+  }
+  return {contradiction:false, steps};
+}
+
+function contradictionChain(board, elim) {
+  const cells = Array.from({length:81}, (_,i) => i)
+    .filter(i => !board[i])
+    .sort((a,b) => pc(cand(board,elim,a)) - pc(cand(board,elim,b)));
+  for (const i of cells) {
+    const ds = digits(cand(board, elim, i));
+    if (ds.length < 2 || ds.length > 4) continue;
+    for (const d of ds) {
+      const test = board.slice(); test[i] = d;
+      const r = propagateSingles(test, elim);
+      if (r.contradiction) {
+        const chain = r.steps.slice(0,6).map(x => `${cellName(x.cell)}=${x.digit}`).join(' → ');
+        const more = r.steps.length > 6 ? ' → …' : '';
+        return { type:'cut', tech:'Widerspruchskette', score:10, cells:[i,...r.steps.map(x=>x.cell)], cuts:[{cell:i,digit:d}],
+          title:`${d} aus ${cellName(i)} streichen`,
+          text:`Wenn ${cellName(i)} die ${d} wäre, folgen: ${chain||'Zwangsschritte'}${more}. Das führt zu einem Widerspruch (${r.reason}). Also kann ${cellName(i)} nicht ${d} sein.` };
+      }
+    }
+  }
+  return null;
+}
+
+function nextHint(board, elim) {
+  return nakedSingle(board,elim)
+    || hiddenSingle(board,elim)
+    || locked(board,elim)
+    || nakedSet(board,elim,2)
+    || hiddenSet(board,elim,2)
+    || nakedSet(board,elim,3)
+    || hiddenSet(board,elim,3)
+    || nakedSet(board,elim,4)
+    || hiddenSet(board,elim,4)
+    || xWing(board,elim)
+    || yWing(board,elim)
+    || contradictionChain(board,elim);
+}
+
+// ---- Generator ----
+function sdkShuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function solvedGrid() {
+  const b = Array(81).fill(0);
+  function go() {
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
+      if (!c) return false;
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
+    }
+    if (idx < 0) return true;
+    for (const d of sdkShuffle(digits(mask))) { b[idx] = d; if (go()) return true; b[idx] = 0; }
+    return false;
+  }
+  go();
+  return b;
+}
+
+function solveOne(board) {
+  const b = board.slice();
+  function go() {
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
+      if (!c) return false;
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
+    }
+    if (idx < 0) return true;
+    for (const d of digits(mask)) { b[idx] = d; if (go()) return true; b[idx] = 0; }
+    return false;
+  }
+  return go() ? b : null;
+}
+
+function countSolutions(board, limit = 4) {
+  let count = 0;
+  function go(b) {
+    if (count >= limit) return;
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
+      if (!c) return;
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
+    }
+    if (idx < 0) { count++; return; }
+    for (const d of digits(mask)) { b[idx] = d; go(b); b[idx] = 0; if (count >= limit) return; }
+  }
+  go(board.slice());
+  return count;
+}
+
+function generatePuzzle(target) {
+  const clueTarget = [46,43,39,36,33,31,29,27,25,23][target - 1];
+  const solution = solvedGrid();
+  const p = solution.slice();
+  for (const i of sdkShuffle(Array.from({length:41}, (_,i) => i))) {
+    const j = 80 - i;
+    const n = i === j ? 1 : 2;
+    if (p.filter(Boolean).length - n < clueTarget) continue;
+    const a = p[i], b = p[j];
+    p[i] = p[j] = 0;
+    if (countSolutions(p.slice(), 2) !== 1) { p[i] = a; p[j] = b; }
+    if (p.filter(Boolean).length <= clueTarget) break;
+  }
+  return {puzzle: p, solution};
+}
+
+// ---- UI State ----
+const SDK = {
+  phase: 'entry',
+  source: 'custom',
+  board: Array(81).fill(0),
+  givens: Array(81).fill(false),
+  notes: Array(81).fill(0),
+  elim: Array(81).fill(0),
+  sel: 0,
+  notesMode: false,
+  history: [],
+  solution: null,
+  hint: null,
+  level: null,
+  startTime: null,
+  elapsed: 0,
+  timer: null,
+  errors: 0,
+  gameOver: false
+};
+
+// ---- DOM-Refs ----
+const sdkBoard    = document.getElementById('sdk-board');
+const sdkNumbar   = document.getElementById('sdk-numbar');
+const sdkStatus   = document.getElementById('sdk-status');
+const sdkTime     = document.getElementById('sdk-time');
+const sdkLevelEl  = document.getElementById('sdk-level');
+const sdkErrors   = document.getElementById('sdk-errors');
+const sdkModeEl   = document.getElementById('sdk-mode');
+const sdkMethodBox= document.getElementById('sdk-method-box');
+const sdkMethodLbl= document.getElementById('sdk-method-label');
+const sdkMethodVal= document.getElementById('sdk-method-value');
+const sdkHintCard = document.getElementById('sdk-hint-card');
+const sdkHintTag  = document.getElementById('sdk-hint-tag');
+const sdkHintTitle= document.getElementById('sdk-hint-title');
+const sdkHintText = document.getElementById('sdk-hint-text');
+const sdkHintSmall= document.getElementById('sdk-hint-small');
+const sdkApplyBtn = document.getElementById('sdk-apply-btn');
+const sdkNotesBtn = document.getElementById('sdk-notes-btn');
+
+// ---- Board aufbauen ----
+for (let i = 0; i < 81; i++) {
+  const cell = document.createElement('div');
+  cell.className = 'sdk-cell';
+  cell.dataset.i = i;
+  // iOS-sicheres Touch-Event statt click
+  let touchMoved = false;
+  cell.addEventListener('touchstart', () => { touchMoved = false; }, {passive:true});
+  cell.addEventListener('touchmove', () => { touchMoved = true; }, {passive:true});
+  cell.addEventListener('touchend', (e) => {
+    if (!touchMoved) { e.preventDefault(); sdkSelect(i); }
+  });
+  cell.addEventListener('click', () => sdkSelect(i));
+  sdkBoard.appendChild(cell);
+}
+
+for (let n = 1; n <= 9; n++) {
+  const btn = document.createElement('button');
+  btn.className = 'sdk-num';
+  btn.textContent = n;
+  btn.addEventListener('click', () => sdkInput(n));
+  sdkNumbar.appendChild(btn);
+}
+
+// ---- Tastatur ----
+document.addEventListener('keydown', e => {
+  // Nur wenn Sudoku sichtbar
+  if (document.getElementById('game-sudoku').classList.contains('hidden')) return;
+  if (e.key >= '1' && e.key <= '9') sdkInput(+e.key);
+  else if (e.key === 'Backspace' || e.key === 'Delete') sdkErase();
+  else if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); sdkUndo(); }
+  else if (e.key.toLowerCase() === 'n') sdkNotesBtn.click();
+  // Arrow keys
+  else if (e.key === 'ArrowRight') sdkSelect((SDK.sel + 1) % 81);
+  else if (e.key === 'ArrowLeft')  sdkSelect((SDK.sel + 80) % 81);
+  else if (e.key === 'ArrowDown')  sdkSelect((SDK.sel + 9) % 81);
+  else if (e.key === 'ArrowUp')    sdkSelect((SDK.sel + 72) % 81);
+});
+
+// ---- Hilfsfunktionen ----
+function sdkElapsed() { return (SDK.elapsed||0) + (SDK.startTime ? Math.floor((Date.now()-SDK.startTime)/1000) : 0); }
+function sdkFmt(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function sdkUpdateTime() { sdkTime.textContent = sdkFmt(sdkElapsed()); }
+function sdkStartTimer() {
+  sdkStopTimer();
+  SDK.startTime = Date.now();
+  SDK.timer = setInterval(sdkUpdateTime, 1000);
+}
+function sdkStopTimer() {
+  if (SDK.timer) clearInterval(SDK.timer);
+  SDK.timer = null;
+  if (SDK.startTime) { SDK.elapsed = sdkElapsed(); SDK.startTime = null; }
+  sdkUpdateTime();
+}
+function sdkSnap() {
+  return {
+    board: SDK.board.slice(), givens: SDK.givens.slice(),
+    notes: SDK.notes.slice(), elim: SDK.elim.slice(),
+    sel: SDK.sel, phase: SDK.phase,
+    solution: SDK.solution ? SDK.solution.slice() : null,
+    level: SDK.level, elapsed: sdkElapsed(), source: SDK.source, gameOver: SDK.gameOver
+  };
+}
+function sdkPush() { SDK.history.push(sdkSnap()); if (SDK.history.length > 200) SDK.history.shift(); }
+function sdkRestore(x) {
+  SDK.board = x.board; SDK.givens = x.givens; SDK.notes = x.notes; SDK.elim = x.elim;
+  SDK.sel = x.sel; SDK.phase = x.phase; SDK.solution = x.solution; SDK.level = x.level;
+  SDK.elapsed = x.elapsed||0; SDK.source = x.source||'custom'; SDK.gameOver = !!x.gameOver;
+  SDK.startTime = SDK.phase === 'solving' && !SDK.gameOver ? Date.now() : null;
+  sdkClearHint(); sdkSetMethod('Noch nicht geprüft'); sdkRender();
+}
+
+function sdkSetStatus(t, k='') {
+  sdkStatus.textContent = t;
+  sdkStatus.className = 'sdk-status' + (k ? ' '+k : '');
+}
+function sdkSetMethod(value, label='Nächste Lösungsmethode', kind='') {
+  sdkMethodLbl.textContent = label;
+  sdkMethodVal.textContent = value;
+  sdkMethodBox.className = 'sdk-method ' + kind;
+}
+function sdkSetHint(tag, title, text, small='') {
+  sdkHintTag.textContent = tag;
+  sdkHintTitle.textContent = title;
+  sdkHintText.textContent = text;
+  sdkHintSmall.textContent = small;
+  sdkHintCard.classList.add('visible');
+}
+function sdkClearHint(resetMethod=true) {
+  SDK.hint = null;
+  sdkApplyBtn.disabled = true;
+  sdkHintCard.classList.remove('visible');
+  if (resetMethod) sdkSetMethod(SDK.phase==='entry' ? 'Nach dem Start verfügbar' : 'Noch nicht geprüft');
+}
+function sdkShownNotes(i) { return SDK.board[i] ? 0 : SDK.notes[i]; }
+
+function sdkRender() {
+  const [rr, cc] = rc(SDK.sel);
+  const sv = SDK.board[SDK.sel] || 0;
+  const hcells = new Set(SDK.hint?.cells || []);
+  const cuts = new Map();
+  (SDK.hint?.cuts || []).forEach(x => cuts.set(x.cell, (cuts.get(x.cell)||0) | bit(x.digit)));
+
+  [...sdkBoard.children].forEach((el, i) => {
+    const [r, c] = rc(i);
+    const sameBlock = Math.floor(r/3) === Math.floor(rr/3) && Math.floor(c/3) === Math.floor(cc/3);
+    let cls = 'sdk-cell';
+    if (i !== SDK.sel && (r === rr || c === cc || sameBlock)) cls += ' peer';
+    if (sv && SDK.board[i] === sv && i !== SDK.sel) cls += ' same';
+    if (i === SDK.sel) cls += ' selected';
+    if (hcells.has(i)) cls += ' hint-cell';
+    if (SDK.givens[i]) cls += ' given';
+    else if (SDK.board[i]) cls += ' user-val';
+    if (conflict(SDK.board, i)) cls += ' conflict';
+    el.className = cls;
+
+    if (SDK.board[i]) {
+      el.innerHTML = `<span class="sdk-val">${SDK.board[i]}</span>`;
+    } else {
+      const m = sdkShownNotes(i);
+      const cut = cuts.get(i) || 0;
+      if (m || cut) {
+        let h = '<div class="sdk-notes">';
+        for (let n = 1; n <= 9; n++) {
+          const sameNote = sv && n === sv && (m & bit(n));
+          const isCut = cut & bit(n);
+          h += `<span class="sdk-note${sameNote?' same-note':''}${isCut?' cut':''}">${(m&bit(n))||isCut?n:''}</span>`;
+        }
+        el.innerHTML = h + '</div>';
+      } else {
+        el.innerHTML = '';
+      }
+    }
+  });
+
+  // Numbar
+  [...sdkNumbar.children].forEach((el, i) => {
+    el.classList.toggle('done', SDK.board.filter(v => v === i+1).length >= 9);
+    el.disabled = SDK.gameOver || SDK.phase !== 'solving';
+  });
+
+  sdkNotesBtn.classList.toggle('on', SDK.notesMode);
+  sdkNotesBtn.textContent = SDK.notesMode ? '✎ Notizen an' : '✎ Notizen';
+
+  // Stats
+  sdkLevelEl.textContent = SDK.source === 'generated' && SDK.level ? `Stufe ${SDK.level}` : 'Eigenes';
+  sdkErrors.textContent = SDK.errors;
+  sdkModeEl.textContent = SDK.phase === 'entry' ? 'Eingabe' : SDK.source === 'generated' ? 'Spiel' : 'Lernen';
+
+  document.getElementById('sdk-hint-btn').disabled = SDK.phase !== 'solving' || SDK.gameOver;
+  sdkApplyBtn.disabled = sdkApplyBtn.disabled || SDK.phase !== 'solving' || SDK.gameOver;
+  // "Eigene Eingabe starten" nur im Entry-Modus
+  const customStartRow = document.getElementById('sdk-custom-start-row');
+  if (customStartRow) customStartRow.style.display = (SDK.phase === 'entry' && SDK.board.some(Boolean)) ? '' : 'none';
+
+  sdkUpdateTime();
+}
+
+function sdkSelect(i) {
+  SDK.sel = i;
+  sdkClearHint();
+  sdkRender();
+}
+
+function sdkInput(n) {
+  const i = SDK.sel;
+  if (SDK.gameOver || SDK.phase === 'complete') return sdkSetStatus('Spiel ist beendet.', 'error');
+
+  if (SDK.phase === 'entry') {
+    if (SDK.notesMode) {
+      if (SDK.board[i]) return sdkSetStatus('In einem Vorgabe-Feld keine Notizen möglich.', 'error');
+      sdkPush(); SDK.notes[i] ^= bit(n); sdkClearHint(); sdkRender(); sdkSave(); return;
+    }
+    sdkPush(); SDK.board[i] = n; SDK.givens[i] = true; SDK.notes[i] = SDK.elim[i] = 0;
+    sdkClearHint(); sdkRender(); sdkSave();
+    return conflict(SDK.board, i) ? sdkSetStatus('Doppelte Vorgabe!', 'error') : sdkSetStatus('Vorgabe gesetzt.');
+  }
+
+  if (SDK.givens[i]) return sdkSetStatus('Diese Vorgabe ist fest.', 'error');
+  if (SDK.notesMode) {
+    if (SDK.board[i]) return;
+    if (!(baseCand(SDK.board, i) & bit(n))) return sdkSetStatus(`${n} passt hier nicht.`, 'error');
+    sdkPush(); SDK.notes[i] ^= bit(n); sdkClearHint(); sdkRender(); sdkSave(); return;
+  }
+  if (SDK.board[i] === n) return;
+  if (SDK.solution && SDK.solution[i] !== n) {
+    SDK.errors++;
+    sdkSetStatus(`Fehler! Die ${n} gehört nicht in ${longName(i)}.`, 'error');
+    sdkRender(); sdkSave(); return;
+  }
+  sdkPush(); SDK.board[i] = n; SDK.notes[i] = SDK.elim[i] = 0;
+  peers[i].forEach(p => SDK.notes[p] &= ~bit(n));
+  sdkClearHint(); sdkRender(); sdkSave();
+  sdkSetStatus(`${n} in ${longName(i)}.`, 'ok');
+  sdkComplete();
+}
+
+function sdkErase() {
+  const i = SDK.sel;
+  if (SDK.gameOver || SDK.phase === 'complete') return;
+  if (SDK.phase !== 'entry' && SDK.givens[i]) return sdkSetStatus('Vorgaben sind fest.', 'error');
+  if (!SDK.board[i] && !SDK.notes[i] && !SDK.elim[i]) return;
+  sdkPush();
+  SDK.board[i] = SDK.notes[i] = SDK.elim[i] = 0;
+  if (SDK.phase === 'entry') SDK.givens[i] = false;
+  sdkClearHint(); sdkRender(); sdkSave();
+}
+
+function sdkUndo() {
+  const x = SDK.history.pop();
+  if (!x) return sdkSetStatus('Kein Schritt rückgängig zu machen.');
+  sdkRestore(x);
+  sdkSetStatus('Schritt zurückgenommen.');
+}
+
+function sdkShowHint() {
+  if (SDK.phase !== 'solving') return sdkSetStatus('Zuerst ein Sudoku starten.', 'error');
+  if (SDK.gameOver) return sdkSetStatus('Spiel ist beendet.', 'error');
+  if (!valid(SDK.board)) return sdkSetStatus('Erst Konflikte beheben.', 'error');
+  if (SDK.solution) {
+    const wrong = SDK.board.findIndex((v,i) => v && v !== SDK.solution[i]);
+    if (wrong >= 0) {
+      SDK.sel = wrong; SDK.hint = {cells:[wrong]};
+      sdkApplyBtn.disabled = true;
+      sdkSetMethod('Fehler gefunden', 'Eingabe prüfen', 'error');
+      sdkSetHint('Fehler', 'Eingabe prüfen', `${longName(wrong)} stimmt nicht mit der Lösung überein.`);
+      sdkSetStatus('Bitte erst den Fehler korrigieren.', 'error');
+      return sdkRender();
+    }
+  }
+  const h = nextHint(SDK.board, SDK.elim);
+  if (!h) {
+    SDK.hint = null; sdkApplyBtn.disabled = true;
+    sdkSetMethod('Nicht gefunden', 'Nächste Methode', 'error');
+    sdkSetHint('Kein Schritt', 'Nicht erkannt', 'Die eingebauten Techniken reichen hier nicht aus.', 'Geprüft: Einzelkandidaten, Paare, Drillinge, Quadrupel, Blockausschlüsse, versteckte Gruppen, X-Wing, Y-Wing, Widerspruchsketten.');
+    return sdkSetStatus('Keine Methode gefunden.', 'error');
+  }
+  SDK.hint = h;
+  sdkApplyBtn.disabled = false;
+  if (h.place) SDK.sel = h.place.cell;
+  sdkSetMethod(h.tech, 'Nächste Lösungsmethode', 'ok');
+  sdkSetHint(h.tech, h.title, h.text, h.cuts ? `${h.cuts.length} Kandidat${h.cuts.length===1?'':'en'} kann/können gestrichen werden.` : '');
+  sdkSetStatus(`Methode: ${h.tech}`, 'ok');
+  sdkRender();
+}
+
+function sdkApplyHint() {
+  const h = SDK.hint;
+  if (!h) return;
+  sdkPush();
+  if (h.place) {
+    const {cell, digit} = h.place;
+    SDK.board[cell] = digit;
+    SDK.notes[cell] = SDK.elim[cell] = 0;
+    peers[cell].forEach(p => SDK.notes[p] &= ~bit(digit));
+    SDK.sel = cell;
+  }
+  if (h.cuts) h.cuts.forEach(x => { SDK.elim[x.cell] |= bit(x.digit); SDK.notes[x.cell] &= ~bit(x.digit); });
+  const tech = h.tech;
+  sdkClearHint(false);
+  sdkSetMethod(tech, 'Zuletzt angewendet', 'done');
+  sdkSetHint('Angewendet', tech, 'Der Schritt wurde auf das Brett übertragen.');
+  sdkRender(); sdkSave();
+  sdkSetStatus(`„${tech}" angewendet.`, 'ok');
+  sdkComplete();
+}
+
+function sdkComplete() {
+  if (SDK.board.some(v => !v)) return;
+  if (SDK.solution && SDK.board.every((v,i) => v === SDK.solution[i])) {
+    sdkStopTimer();
+    SDK.phase = 'complete';
+    sdkClearHint();
+    sdkSetStatus(`🎉 Geschafft! Zeit: ${sdkFmt(sdkElapsed())}, Fehler: ${SDK.errors}.`, 'ok');
+    sdkSetHint('🏆', 'Sudoku gelöst!', 'Alle 81 Felder sind korrekt ausgefüllt. Gut gemacht!');
+    sdkSetMethod('Gelöst', 'Status', 'done');
+    sdkRender(); sdkSave();
+  }
+}
+
+function sdkStartCustom() {
+  if (!valid(SDK.board)) return sdkSetStatus('Doppelte Zahl – Eingabe prüfen.', 'error');
+  if (SDK.board.filter(Boolean).length < 10) return sdkSetStatus('Zu wenige Vorgaben.', 'error');
+  sdkSetStatus('Eindeutigkeit wird geprüft …');
+  setTimeout(() => {
+    const c = countSolutions(SDK.board.slice(), 4);
+    if (!c) return sdkSetStatus('Keine gültige Lösung gefunden.', 'error');
+    if (c > 1) {
+      sdkSetHint('⚠️', 'Nicht eindeutig', `Das Raster hat ${c < 4 ? c : 'mindestens 4'} Lösungen. Vermutlich fehlt eine Vorgabe.`);
+      return sdkSetStatus(`${c<4?c:'Mehrere'} Lösungen – Vorgabe fehlt?`, 'error');
+    }
+    sdkPush();
+    SDK.phase = 'solving'; SDK.source = 'custom';
+    SDK.givens = SDK.board.map(Boolean);
+    SDK.solution = solveOne(SDK.board.slice());
+    SDK.notes = SDK.notes.map((m,i) => SDK.board[i] ? 0 : m & baseCand(SDK.board,i));
+    SDK.elim.fill(0); SDK.level = null; SDK.errors = 0; SDK.gameOver = false; SDK.notesMode = false;
+    SDK.elapsed = 0;
+    sdkStartTimer(); sdkClearHint(); sdkSetMethod('Noch nicht geprüft'); sdkRender(); sdkSave();
+    sdkSetStatus('Eigenes Sudoku gestartet – Lernhilfe bereit.', 'ok');
+    sdkSetHint('Start', 'Eigenes Sudoku', 'Das Rätsel hat genau eine Lösung. Mit „Nächsten Schritt zeigen" erklärt die App jede Technik.', 'Falsche Zahlen werden nicht eingetragen, sondern als Fehler gezählt.');
+  }, 20);
+}
+
+function sdkResetCustom() {
+  sdkStopTimer();
+  SDK.source = 'custom'; SDK.phase = 'entry';
+  SDK.board = Array(81).fill(0); SDK.givens = Array(81).fill(false);
+  SDK.notes = Array(81).fill(0); SDK.elim = Array(81).fill(0);
+  SDK.sel = 0; SDK.notesMode = false; SDK.history = []; SDK.solution = null;
+  SDK.hint = null; SDK.level = null; SDK.startTime = null; SDK.elapsed = 0;
+  SDK.errors = 0; SDK.gameOver = false;
+  sdkApplyBtn.disabled = true;
+  sdkSetMethod('Nach dem Start verfügbar');
+  sdkHintCard.classList.remove('visible');
+  sdkRender(); sdkSave();
+  sdkSetStatus('Vorgabezahlen eintragen, dann „Start" tippen.');
+}
+
+// ---- Button-Events ----
+document.getElementById('sdk-new').addEventListener('click', () => {
+  const target = +document.getElementById('sdk-level-sel').value;
+  const busy = () => sdkSetStatus('Erstelle Sudoku …');
+  busy();
+  setTimeout(() => {
+    try {
+      const g = generatePuzzle(target);
+      sdkStopTimer();
+      SDK.source = 'generated'; SDK.phase = 'solving';
+      SDK.board = g.puzzle; SDK.givens = g.puzzle.map(Boolean);
+      SDK.notes = Array(81).fill(0); SDK.elim = Array(81).fill(0);
+      SDK.sel = SDK.board.findIndex(v => !v);
+      SDK.notesMode = false; SDK.history = []; SDK.solution = g.solution;
+      SDK.level = target; SDK.elapsed = 0; SDK.errors = 0; SDK.gameOver = false;
+      sdkStartTimer(); sdkClearHint(); sdkSetMethod('Noch nicht geprüft'); sdkRender(); sdkSave();
+      sdkSetStatus(`Sudoku Stufe ${target} erstellt.`, 'ok');
+    } catch(e) {
+      sdkSetStatus('Fehler beim Erstellen. Nochmal versuchen.', 'error');
+    }
+  }, 30);
+});
+
+document.getElementById('sdk-custom').addEventListener('click', () => {
+  if (SDK.board.some(Boolean) && !confirm('Aktuelles Sudoku verwerfen?')) return;
+  sdkResetCustom();
+});
+
+// Start-Button (nur im Entry-Modus sichtbar via sdk-start-btn, unten per Status erklärt)
+// Wir lösen das über den Apply-Btn-Bereich – eigener "Start"-Button hinzufügen
+const sdkStartBtn = document.getElementById('sdk-start-btn');
+if (sdkStartBtn) sdkStartBtn.addEventListener('click', sdkStartCustom);
+
+document.getElementById('sdk-hint-btn').addEventListener('click', sdkShowHint);
+sdkApplyBtn.addEventListener('click', sdkApplyHint);
+sdkNotesBtn.addEventListener('click', () => {
+  if (SDK.gameOver || SDK.phase === 'complete') return;
+  SDK.notesMode = !SDK.notesMode;
+  sdkClearHint(); sdkRender(); sdkSave();
+});
+document.getElementById('sdk-erase-btn').addEventListener('click', sdkErase);
+document.getElementById('sdk-undo-btn').addEventListener('click', sdkUndo);
+
+// ---- Persistenz ----
+const SDK_STORE = 'roadtrip_sudoku_v1';
+function sdkSave() {
+  try {
+    localStorage.setItem(SDK_STORE, JSON.stringify({
+      source: SDK.source, phase: SDK.phase, board: SDK.board, givens: SDK.givens,
+      notes: SDK.notes, elim: SDK.elim, sel: SDK.sel, solution: SDK.solution,
+      level: SDK.level, elapsed: sdkElapsed(), errors: SDK.errors, gameOver: SDK.gameOver, notesMode: SDK.notesMode
+    }));
+  } catch(e) {}
+}
+function sdkLoad() {
+  try {
+    const raw = localStorage.getItem(SDK_STORE) || localStorage.getItem('sudokuSpielLernhilfeV4');
+    const d = JSON.parse(raw);
+    if (!d || !Array.isArray(d.board) || d.board.length !== 81) return false;
+    Object.assign(SDK, {
+      source: d.source||'custom', phase: d.phase||'entry',
+      board: d.board, givens: d.givens||d.board.map(Boolean),
+      notes: d.notes||Array(81).fill(0), elim: d.elim||Array(81).fill(0),
+      sel: Number.isInteger(d.sel)?d.sel:0, solution: d.solution||null,
+      level: d.level||null, elapsed: d.elapsed||0,
+      errors: d.errors||0, gameOver: !!d.gameOver, notesMode: !!d.notesMode
+    });
+    SDK.startTime = SDK.phase==='solving'&&!SDK.gameOver ? Date.now() : null;
+    if (SDK.startTime) SDK.timer = setInterval(sdkUpdateTime, 1000);
+    return true;
+  } catch { return false; }
+}
+
+// ---- Init ----
+if (sdkLoad()) {
+  sdkSetMethod(SDK.phase==='entry'?'Nach dem Start verfügbar':SDK.phase==='complete'?'Gelöst':'Noch nicht geprüft',
+    SDK.phase==='complete'?'Status':'Nächste Lösungsmethode', SDK.phase==='complete'?'done':'');
+  sdkRender();
+  sdkSetStatus('Letzter Spielstand wiederhergestellt.');
+} else {
+  sdkResetCustom();
+}
+
+// ---- Sudoku im Tab-System verankern ----
+// Das showSetup/showGame-System muss Sudoku kennen
+window.sdkOnShow = function() {
+  // Wenn Sudoku-Tab geöffnet wird: Timer weiter
+  if (SDK.phase==='solving'&&!SDK.gameOver&&!SDK.startTime) {
+    SDK.startTime = Date.now();
+    SDK.timer = setInterval(sdkUpdateTime, 1000);
+  }
+  sdkRender();
+};
+window.sdkOnHide = function() {
+  // Timer pausieren wenn Tab gewechselt
+  if (SDK.startTime) { SDK.elapsed = sdkElapsed(); SDK.startTime = null; }
+  if (SDK.timer) { clearInterval(SDK.timer); SDK.timer = null; }
+};
+
+})(); // Ende IIFE
+
 </script>
 </body>
 </html>
