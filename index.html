@@ -208,7 +208,7 @@
      SUDOKU – RoadTrip Style
      ====================================================== */
   #sdk-wrap {
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: clamp(6px, 1.5vh, 10px);
     padding: 0 0 16px; min-height: 100vh;
   }
   #sdk-topbar {
@@ -222,22 +222,22 @@
     background: var(--ink); border-radius: 8px; padding: 6px 4px;
     text-align: center; display: flex; flex-direction: column; gap: 2px;
   }
-  .sdk-stat span { font-size: 10px; color: rgba(251,243,230,0.55); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
-  .sdk-stat strong { font-size: 14px; font-family: 'Space Mono', monospace; color: var(--mustard); }
+  .sdk-stat span { font-size: clamp(8px, 2vw, 10px); color: rgba(251,243,230,0.55); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .sdk-stat strong { font-size: clamp(11px, 3vw, 14px); font-family: 'Space Mono', monospace; color: var(--mustard); }
   .sdk-level-row {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .sdk-level-row label { font-size: 12px; font-weight: 600; color: rgba(251,243,230,0.7); flex-shrink: 0; }
   .sdk-level-row select {
     flex: 1; min-width: 0; background: var(--ink); color: var(--cream); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px; padding: 7px 8px; font-family: 'Inter', sans-serif; font-size: 13px;
+    border-radius: 8px; padding: 6px 8px; font-family: 'Inter', sans-serif; font-size: clamp(11px, 3vw, 13px);
     -webkit-appearance: none; appearance: none;
   }
   .sdk-level-row .btn { flex-shrink: 0; padding: 8px 12px; font-size: 13px; border-radius: 9px; width: auto; }
 
   /* Board */
   #sdk-board-wrap {
-    padding: 0 12px;
+    padding: 0 clamp(6px, 2.5vw, 12px);
     /* iOS: prevent tap highlight flicker */
     -webkit-user-select: none; user-select: none;
   }
@@ -280,10 +280,11 @@
   .sdk-cell.same { background: #C8E8C8; }
   .sdk-cell.selected { background: #A8CCE8 !important; }
   .sdk-cell.conflict { background: #F0C0BC; }
+  .sdk-cell.wrong-selected { background: #F5C0BC !important; }
   .sdk-cell.hint-cell { box-shadow: inset 0 0 0 3px var(--mustard); }
   /* value */
   .sdk-val {
-    font-size: clamp(1rem, 5.5vw, 2rem);
+    font-size: clamp(0.85rem, 5vw, 1.7rem);
     font-weight: 700; line-height: 1; pointer-events: none;
     color: #1a2a3a;
   }
@@ -300,7 +301,7 @@
   }
   .sdk-note {
     display: flex; align-items: center; justify-content: center;
-    font-size: clamp(0.42rem, 2vw, 0.7rem);
+    font-size: clamp(0.38rem, 1.8vw, 0.65rem);
     font-weight: 700; color: #334; line-height: 1;
     min-width: 0; min-height: 0;
   }
@@ -318,7 +319,7 @@
   .sdk-num {
     aspect-ratio: 1; padding: 0; border: none; border-radius: 8px;
     background: var(--ink-soft); color: var(--cream);
-    font-size: clamp(1rem, 4.5vw, 1.5rem); font-weight: 800;
+    font-size: clamp(0.9rem, 4vw, 1.3rem); font-weight: 800;
     cursor: pointer; touch-action: manipulation;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
@@ -332,13 +333,13 @@
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 7px; padding: 0 12px;
   }
-  .sdk-action-btn { border-radius: 10px; font-size: 13px; padding: 10px 6px; }
+  .sdk-action-btn { border-radius: 10px; font-size: clamp(11px, 3vw, 13px); padding: 8px 4px; }
   .sdk-action-btn.on { background: #7047a3; color: #fff; }
 
   /* Hint area */
   #sdk-hint-area { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
   .sdk-hint-btns { display: flex; gap: 8px; }
-  .sdk-hint-btns .btn { flex: 1; font-size: 13px; padding: 10px 8px; border-radius: 10px; }
+  .sdk-hint-btns .btn { flex: 1; font-size: clamp(11px, 3vw, 13px); padding: 8px 6px; border-radius: 10px; }
   .sdk-method {
     border-left: 4px solid var(--ink-soft); background: var(--ink-soft);
     border-radius: 10px; padding: 10px 12px;
@@ -359,6 +360,33 @@
   .sdk-status { padding: 0 12px; font-size: 12px; color: rgba(251,243,230,0.6); font-family: 'Space Mono', monospace; min-height: 20px; }
   .sdk-status.ok { color: var(--green); }
   .sdk-status.error { color: var(--red); font-weight: 700; }
+
+
+  /* Sudoku Gewinn-Popup */
+  #sdk-win-popup {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75); align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  #sdk-win-popup.show { display: flex; }
+  .sdk-win-box {
+    background: var(--ink-soft); border-radius: 20px; padding: 28px 24px;
+    max-width: 360px; width: 100%; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: sdk-pop-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes sdk-pop-in {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .sdk-win-trophy { font-size: 60px; line-height: 1; margin-bottom: 12px; }
+  .sdk-win-title { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--mustard); margin-bottom: 8px; }
+  .sdk-win-msg { font-size: 15px; color: rgba(251,243,230,0.85); line-height: 1.5; margin-bottom: 20px; }
+  .sdk-win-stats { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; }
+  .sdk-win-stat { text-align: center; }
+  .sdk-win-stat span { display: block; font-size: 11px; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; color: rgba(251,243,230,0.5); }
+  .sdk-win-stat strong { font-size: 22px; font-family: 'Space Mono', monospace; color: var(--mustard); }
+  .sdk-win-btns { display: flex; flex-direction: column; gap: 8px; }
 
 </style>
 </head>
@@ -498,10 +526,10 @@
             <option value="4">4</option>
             <option value="5" selected>5 – mittel</option>
             <option value="6">6</option>
-            <option value="7">7 – Madeleine</option>
+            <option value="7">7 – schwer</option>
             <option value="8">8</option>
-            <option value="9">9 – sehr schwer</option>
-            <option value="10">10 – extrem</option>
+            <option value="9">9 – sehr schwer (Ketten)</option>
+            <option value="10">10 – extrem (Ketten)</option>
           </select>
           <button class="btn btn-primary" id="sdk-new">Neu</button>
           <button class="btn btn-secondary" id="sdk-custom">Eigenes</button>
@@ -526,7 +554,7 @@
           <button class="btn btn-secondary" id="sdk-apply-btn" disabled>✓ Schritt anwenden</button>
         </div>
         <div class="sdk-hint-btns" id="sdk-custom-start-row" style="display:none;">
-          <button class="btn btn-primary" id="sdk-start-btn" style="width:100%;">▶ Eigene Eingabe starten</button>
+          <button class="btn btn-primary" id="sdk-start-btn" style="width:100%;">▶ Eigene Eingabe starten &amp; Lernhilfe aktivieren</button>
         </div>
         <div id="sdk-method-box" class="sdk-method unknown">
           <span id="sdk-method-label">Nächste Lösungsmethode</span>
@@ -544,6 +572,24 @@
       <button class="btn btn-text restart-btn" style="margin-top:8px;">🔄 Zurück zum Menü</button>
     </div>
   </section>
+
+  <!-- Sudoku Gewinn-Popup -->
+  <div id="sdk-win-popup">
+    <div class="sdk-win-box">
+      <div class="sdk-win-trophy">🏆</div>
+      <div class="sdk-win-title">Herzlichen Glückwunsch!</div>
+      <p class="sdk-win-msg" id="sdk-win-msg">Du hast das Sudoku gelöst!</p>
+      <div class="sdk-win-stats">
+        <div class="sdk-win-stat"><span>Zeit</span><strong id="sdk-win-time">–</strong></div>
+        <div class="sdk-win-stat"><span>Fehler</span><strong id="sdk-win-errors">–</strong></div>
+        <div class="sdk-win-stat"><span>Stufe</span><strong id="sdk-win-level">–</strong></div>
+      </div>
+      <div class="sdk-win-btns">
+        <button class="btn btn-primary" id="sdk-win-new">🔢 Neues Sudoku</button>
+        <button class="btn btn-secondary" id="sdk-win-close">Weiter schauen</button>
+      </div>
+    </div>
+  </div>
 
   <!-- PLAYER MODAL -->
   <div id="playerModal" class="modal-overlay hidden">
@@ -2360,7 +2406,7 @@ function contradictionChain(board, elim) {
   return null;
 }
 
-function nextHint(board, elim) {
+function nextHint(board, elim, allowChain=false) {
   return nakedSingle(board,elim)
     || hiddenSingle(board,elim)
     || locked(board,elim)
@@ -2372,7 +2418,7 @@ function nextHint(board, elim) {
     || hiddenSet(board,elim,4)
     || xWing(board,elim)
     || yWing(board,elim)
-    || contradictionChain(board,elim);
+    || (allowChain ? contradictionChain(board,elim) : null);
 }
 
 // ---- Generator ----
@@ -2436,7 +2482,8 @@ function countSolutions(board, limit = 4) {
 }
 
 function generatePuzzle(target) {
-  const clueTarget = [46,43,39,36,33,31,29,27,25,23][target - 1];
+  // Vorgaben je Level: mehr Vorgaben = leichter lösbar ohne Widerspruchskette
+  const clueTarget = [40,37,34,32,30,28,27,26,25,23][target - 1];
   const solution = solvedGrid();
   const p = solution.slice();
   for (const i of sdkShuffle(Array.from({length:41}, (_,i) => i))) {
@@ -2459,6 +2506,7 @@ const SDK = {
   givens: Array(81).fill(false),
   notes: Array(81).fill(0),
   elim: Array(81).fill(0),
+  wrongCells: {},   // {cellIndex: wrongDigit} – rot angezeigte Fehler
   sel: 0,
   notesMode: false,
   history: [],
@@ -2469,6 +2517,7 @@ const SDK = {
   elapsed: 0,
   timer: null,
   errors: 0,
+  errorLimit: 5,    // 0 = unbegrenzt
   gameOver: false
 };
 
@@ -2552,6 +2601,7 @@ function sdkSnap() {
   return {
     board: SDK.board.slice(), givens: SDK.givens.slice(),
     notes: SDK.notes.slice(), elim: SDK.elim.slice(),
+    wrongCells: Object.assign({}, SDK.wrongCells || {}),
     sel: SDK.sel, phase: SDK.phase,
     solution: SDK.solution ? SDK.solution.slice() : null,
     level: SDK.level, elapsed: sdkElapsed(), source: SDK.source, gameOver: SDK.gameOver
@@ -2560,6 +2610,7 @@ function sdkSnap() {
 function sdkPush() { SDK.history.push(sdkSnap()); if (SDK.history.length > 200) SDK.history.shift(); }
 function sdkRestore(x) {
   SDK.board = x.board; SDK.givens = x.givens; SDK.notes = x.notes; SDK.elim = x.elim;
+  SDK.wrongCells = x.wrongCells ? Object.assign({}, x.wrongCells) : {};
   SDK.sel = x.sel; SDK.phase = x.phase; SDK.solution = x.solution; SDK.level = x.level;
   SDK.elapsed = x.elapsed||0; SDK.source = x.source||'custom'; SDK.gameOver = !!x.gameOver;
   SDK.startTime = SDK.phase === 'solving' && !SDK.gameOver ? Date.now() : null;
@@ -2601,16 +2652,20 @@ function sdkRender() {
     const [r, c] = rc(i);
     const sameBlock = Math.floor(r/3) === Math.floor(rr/3) && Math.floor(c/3) === Math.floor(cc/3);
     let cls = 'sdk-cell';
+    const isWrong = SDK.wrongCells && SDK.wrongCells[i] !== undefined;
     if (i !== SDK.sel && (r === rr || c === cc || sameBlock)) cls += ' peer';
     if (sv && SDK.board[i] === sv && i !== SDK.sel) cls += ' same';
-    if (i === SDK.sel) cls += ' selected';
+    if (i === SDK.sel) cls += isWrong ? ' wrong-selected' : ' selected';
     if (hcells.has(i)) cls += ' hint-cell';
     if (SDK.givens[i]) cls += ' given';
     else if (SDK.board[i]) cls += ' user-val';
     if (conflict(SDK.board, i)) cls += ' conflict';
     el.className = cls;
 
-    if (SDK.board[i]) {
+    if (SDK.wrongCells && SDK.wrongCells[i] !== undefined) {
+      // Falsch eingetragene Zahl – rot anzeigen, bleibt stehen
+      el.innerHTML = `<span class="sdk-val" style="color:#c0392b;font-weight:900;">${SDK.wrongCells[i]}</span>`;
+    } else if (SDK.board[i]) {
       el.innerHTML = `<span class="sdk-val">${SDK.board[i]}</span>`;
     } else {
       const m = sdkShownNotes(i);
@@ -2632,7 +2687,7 @@ function sdkRender() {
   // Numbar
   [...sdkNumbar.children].forEach((el, i) => {
     el.classList.toggle('done', SDK.board.filter(v => v === i+1).length >= 9);
-    el.disabled = SDK.gameOver || SDK.phase !== 'solving';
+    el.disabled = SDK.gameOver || SDK.phase === 'complete';
   });
 
   sdkNotesBtn.classList.toggle('on', SDK.notesMode);
@@ -2640,7 +2695,7 @@ function sdkRender() {
 
   // Stats
   sdkLevelEl.textContent = SDK.source === 'generated' && SDK.level ? `Stufe ${SDK.level}` : 'Eigenes';
-  sdkErrors.textContent = SDK.errors;
+  sdkErrors.textContent = SDK.errorLimit > 0 ? `${SDK.errors}/${SDK.errorLimit}` : `${SDK.errors}`;
   sdkModeEl.textContent = SDK.phase === 'entry' ? 'Eingabe' : SDK.source === 'generated' ? 'Spiel' : 'Lernen';
 
   document.getElementById('sdk-hint-btn').disabled = SDK.phase !== 'solving' || SDK.gameOver;
@@ -2653,6 +2708,7 @@ function sdkRender() {
 }
 
 function sdkSelect(i) {
+  if (SDK.phase === 'complete') return; // Fertig – kein Auswählen mehr
   SDK.sel = i;
   sdkClearHint();
   sdkRender();
@@ -2679,9 +2735,22 @@ function sdkInput(n) {
     sdkPush(); SDK.notes[i] ^= bit(n); sdkClearHint(); sdkRender(); sdkSave(); return;
   }
   if (SDK.board[i] === n) return;
+  // Falsche vorherige rote Zahl im selben Feld zuerst löschen
+  if (SDK.wrongCells && SDK.wrongCells[i] !== undefined) delete SDK.wrongCells[i];
   if (SDK.solution && SDK.solution[i] !== n) {
     SDK.errors++;
-    sdkSetStatus(`Fehler! Die ${n} gehört nicht in ${longName(i)}.`, 'error');
+    if (!SDK.wrongCells) SDK.wrongCells = {};
+    SDK.wrongCells[i] = n; // Rot anzeigen, nicht ins board eintragen
+    const lim = SDK.errorLimit;
+    if (lim > 0 && SDK.errors >= lim) {
+      SDK.gameOver = true;
+      sdkStopTimer();
+      sdkClearHint();
+      sdkSetStatus(`Fehlerlimit von ${lim} erreicht! Spiel beendet.`, 'error');
+      sdkSetHint('💀', 'Fehlerlimit erreicht', `Du hast ${lim} falsche Zahlen eingetragen. Starte ein neues Sudoku oder tippe „Zurück zum Menü".`);
+      sdkRender(); sdkSave(); return;
+    }
+    sdkSetStatus(`Fehler ${SDK.errors}/${lim>0?lim:'∞'}: Die ${n} gehört nicht in ${longName(i)}. Bitte selbst löschen.`, 'error');
     sdkRender(); sdkSave(); return;
   }
   sdkPush(); SDK.board[i] = n; SDK.notes[i] = SDK.elim[i] = 0;
@@ -2698,6 +2767,7 @@ function sdkErase() {
   if (!SDK.board[i] && !SDK.notes[i] && !SDK.elim[i]) return;
   sdkPush();
   SDK.board[i] = SDK.notes[i] = SDK.elim[i] = 0;
+  if (SDK.wrongCells) delete SDK.wrongCells[i];
   if (SDK.phase === 'entry') SDK.givens[i] = false;
   sdkClearHint(); sdkRender(); sdkSave();
 }
@@ -2724,7 +2794,8 @@ function sdkShowHint() {
       return sdkRender();
     }
   }
-  const h = nextHint(SDK.board, SDK.elim);
+  const allowChain = (SDK.level || 0) > 8;
+  const h = nextHint(SDK.board, SDK.elim, allowChain);
   if (!h) {
     SDK.hint = null; sdkApplyBtn.disabled = true;
     sdkSetMethod('Nicht gefunden', 'Nächste Methode', 'error');
@@ -2767,17 +2838,31 @@ function sdkComplete() {
     sdkStopTimer();
     SDK.phase = 'complete';
     sdkClearHint();
-    sdkSetStatus(`🎉 Geschafft! Zeit: ${sdkFmt(sdkElapsed())}, Fehler: ${SDK.errors}.`, 'ok');
-    sdkSetHint('🏆', 'Sudoku gelöst!', 'Alle 81 Felder sind korrekt ausgefüllt. Gut gemacht!');
+    const timeStr = sdkFmt(sdkElapsed());
+    const lim = SDK.errorLimit;
+    sdkSetStatus(`🎉 Gelöst in ${timeStr}!`, 'ok');
+    sdkSetHint('🏆', 'Sudoku gelöst!', 'Alle 81 Felder sind korrekt ausgefüllt.');
     sdkSetMethod('Gelöst', 'Status', 'done');
     sdkRender(); sdkSave();
+    // Popup anzeigen
+    const msgs = [
+      'Weiter so! Du wirst von Mal zu Mal besser.',
+      'Stark gespielt! Das war ein sauberes Ergebnis.',
+      'Ausgezeichnet! Sudoku-Profi am Werk.',
+      'Super Leistung! Vielleicht eine Stufe höher?'
+    ];
+    document.getElementById('sdk-win-time').textContent = timeStr;
+    document.getElementById('sdk-win-errors').textContent = lim > 0 ? `${SDK.errors}/${lim}` : String(SDK.errors);
+    document.getElementById('sdk-win-level').textContent = SDK.source === 'generated' && SDK.level ? `${SDK.level}` : 'Eigenes';
+    document.getElementById('sdk-win-msg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+    document.getElementById('sdk-win-popup').classList.add('show');
   }
 }
 
 function sdkStartCustom() {
   if (!valid(SDK.board)) return sdkSetStatus('Doppelte Zahl – Eingabe prüfen.', 'error');
   if (SDK.board.filter(Boolean).length < 10) return sdkSetStatus('Zu wenige Vorgaben.', 'error');
-  sdkSetStatus('Eindeutigkeit wird geprüft …');
+  sdkSetStatus('Eindeutigkeit wird geprüft … ⏳');
   setTimeout(() => {
     const c = countSolutions(SDK.board.slice(), 4);
     if (!c) return sdkSetStatus('Keine gültige Lösung gefunden.', 'error');
@@ -2803,7 +2888,7 @@ function sdkResetCustom() {
   SDK.source = 'custom'; SDK.phase = 'entry';
   SDK.board = Array(81).fill(0); SDK.givens = Array(81).fill(false);
   SDK.notes = Array(81).fill(0); SDK.elim = Array(81).fill(0);
-  SDK.sel = 0; SDK.notesMode = false; SDK.history = []; SDK.solution = null;
+  SDK.wrongCells = {}; SDK.sel = 0; SDK.notesMode = false; SDK.history = []; SDK.solution = null;
   SDK.hint = null; SDK.level = null; SDK.startTime = null; SDK.elapsed = 0;
   SDK.errors = 0; SDK.gameOver = false;
   sdkApplyBtn.disabled = true;
@@ -2814,13 +2899,136 @@ function sdkResetCustom() {
 }
 
 // ---- Button-Events ----
+// ---- Inline Web Worker für Generator ----
+function sdkRunWorker(target, onDone, onError) {
+  try {
+    const code = `
+'use strict';
+// Minimale Sudoku-Helpers für den Worker
+const F = 511;
+const bit = n => 1 << (n - 1);
+const digits = m => { const a = []; for (let n = 1; n <= 9; n++) if (m & bit(n)) a.push(n); return a; };
+const pc = m => { let c = 0, x = m; while (x) { x &= x - 1; c++; } return c; };
+
+const units = [];
+for (let r = 0; r < 9; r++) units.push(Array.from({length:9}, (_,c) => r*9+c));
+for (let c = 0; c < 9; c++) units.push(Array.from({length:9}, (_,r) => r*9+c));
+for (let br = 0; br < 3; br++)
+  for (let bc = 0; bc < 3; bc++) {
+    const u = [];
+    for (let dr = 0; dr < 3; dr++)
+      for (let dc = 0; dc < 3; dc++) u.push((br*3+dr)*9+bc*3+dc);
+    units.push(u);
+  }
+const peers = Array.from({length:81}, () => new Set());
+const cellUnits = Array.from({length:81}, () => []);
+units.forEach((u,k) => u.forEach(i => cellUnits[i].push(k)));
+for (let i = 0; i < 81; i++)
+  cellUnits[i].forEach(uk => units[uk].forEach(j => j !== i && peers[i].add(j)));
+
+function baseCand(b, i) {
+  if (b[i]) return 0;
+  let used = 0;
+  peers[i].forEach(p => b[p] && (used |= bit(b[p])));
+  return F & ~used;
+}
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function solvedGrid() {
+  const b = Array(81).fill(0);
+  function go() {
+    let idx=-1, mask=0, best=10;
+    for (let i=0;i<81;i++) if (!b[i]) {
+      const m=baseCand(b,i), c=pc(m);
+      if (!c) return false;
+      if (c<best){best=c;idx=i;mask=m;if(c===1)break;}
+    }
+    if (idx<0) return true;
+    for (const d of shuffle(digits(mask))) { b[idx]=d; if(go()) return true; b[idx]=0; }
+    return false;
+  }
+  go(); return b;
+}
+function countSolutions(board, limit=4) {
+  let count=0;
+  function go(b) {
+    if (count>=limit) return;
+    let idx=-1,mask=0,best=10;
+    for(let i=0;i<81;i++) if(!b[i]){
+      const m=baseCand(b,i),c=pc(m);
+      if(!c) return;
+      if(c<best){best=c;idx=i;mask=m;if(c===1)break;}
+    }
+    if(idx<0){count++;return;}
+    for(const d of digits(mask)){b[idx]=d;go(b);b[idx]=0;if(count>=limit)return;}
+  }
+  go(board.slice()); return count;
+}
+function generatePuzzle(target) {
+  const clueTarget=[40,37,34,32,30,28,27,26,25,23][target-1];
+  const solution=solvedGrid();
+  const p=solution.slice();
+  for (const i of shuffle(Array.from({length:41},(_,i)=>i))) {
+    const j=80-i, n=i===j?1:2;
+    if(p.filter(Boolean).length-n<clueTarget) continue;
+    const a=p[i],b=p[j]; p[i]=p[j]=0;
+    if(countSolutions(p.slice(),2)!==1){p[i]=a;p[j]=b;}
+    if(p.filter(Boolean).length<=clueTarget) break;
+  }
+  return {puzzle:p,solution};
+}
+self.onmessage = e => {
+  if (e.data.type === 'generate') {
+    try {
+      const result = generatePuzzle(e.data.target);
+      self.postMessage({type:'done', ...result});
+    } catch(err) {
+      self.postMessage({type:'error', msg: String(err)});
+    }
+  }
+};
+`;
+    const blob = new Blob([code], {type: 'application/javascript'});
+    const url  = URL.createObjectURL(blob);
+    const w    = new Worker(url);
+    w.onmessage = e => {
+      URL.revokeObjectURL(url);
+      w.terminate();
+      if (e.data.type === 'done') onDone(e.data);
+      else onError(e.data.msg || 'Fehler');
+    };
+    w.onerror = err => {
+      URL.revokeObjectURL(url);
+      w.terminate();
+      // Worker fehlgeschlagen (z.B. iOS Blob-Worker verboten) → Fallback synchron
+      try { onDone(generatePuzzle(target)); } catch(ex) { onError(String(ex)); }
+    };
+    w.postMessage({type:'generate', target});
+  } catch(e) {
+    // Kein Worker-Support → synchron mit kurzer Statusanzeige
+    setTimeout(() => {
+      try { onDone(generatePuzzle(target)); } catch(ex) { onError(String(ex)); }
+    }, 20);
+  }
+}
+
+document.getElementById('sdk-level-sel').addEventListener('change', () => { sdkSave(); });
+
 document.getElementById('sdk-new').addEventListener('click', () => {
   const target = +document.getElementById('sdk-level-sel').value;
-  const busy = () => sdkSetStatus('Erstelle Sudoku …');
-  busy();
-  setTimeout(() => {
-    try {
-      const g = generatePuzzle(target);
+  const newBtn = document.getElementById('sdk-new');
+  newBtn.disabled = true;
+  sdkSetStatus('Erstelle Sudoku … ⏳', '');
+  sdkRunWorker(
+    target,
+    g => {
+      newBtn.disabled = false;
       sdkStopTimer();
       SDK.source = 'generated'; SDK.phase = 'solving';
       SDK.board = g.puzzle; SDK.givens = g.puzzle.map(Boolean);
@@ -2830,10 +3038,13 @@ document.getElementById('sdk-new').addEventListener('click', () => {
       SDK.level = target; SDK.elapsed = 0; SDK.errors = 0; SDK.gameOver = false;
       sdkStartTimer(); sdkClearHint(); sdkSetMethod('Noch nicht geprüft'); sdkRender(); sdkSave();
       sdkSetStatus(`Sudoku Stufe ${target} erstellt.`, 'ok');
-    } catch(e) {
+    },
+    msg => {
+      newBtn.disabled = false;
       sdkSetStatus('Fehler beim Erstellen. Nochmal versuchen.', 'error');
+      console.error('Generator:', msg);
     }
-  }, 30);
+  );
 });
 
 document.getElementById('sdk-custom').addEventListener('click', () => {
@@ -2863,7 +3074,9 @@ function sdkSave() {
     localStorage.setItem(SDK_STORE, JSON.stringify({
       source: SDK.source, phase: SDK.phase, board: SDK.board, givens: SDK.givens,
       notes: SDK.notes, elim: SDK.elim, sel: SDK.sel, solution: SDK.solution,
-      level: SDK.level, elapsed: sdkElapsed(), errors: SDK.errors, gameOver: SDK.gameOver, notesMode: SDK.notesMode
+      wrongCells: SDK.wrongCells || {}, errorLimit: SDK.errorLimit,
+      level: SDK.level, elapsed: sdkElapsed(), errors: SDK.errors, gameOver: SDK.gameOver,
+      notesMode: SDK.notesMode, lastLevel: +document.getElementById('sdk-level-sel').value
     }));
   } catch(e) {}
 }
@@ -2876,12 +3089,19 @@ function sdkLoad() {
       source: d.source||'custom', phase: d.phase||'entry',
       board: d.board, givens: d.givens||d.board.map(Boolean),
       notes: d.notes||Array(81).fill(0), elim: d.elim||Array(81).fill(0),
+      wrongCells: d.wrongCells ? Object.assign({}, d.wrongCells) : {},
       sel: Number.isInteger(d.sel)?d.sel:0, solution: d.solution||null,
       level: d.level||null, elapsed: d.elapsed||0,
-      errors: d.errors||0, gameOver: !!d.gameOver, notesMode: !!d.notesMode
+      errors: d.errors||0, errorLimit: d.errorLimit||5, gameOver: !!d.gameOver, notesMode: !!d.notesMode
     });
+    SDK.wrongCells = d.wrongCells ? Object.assign({}, d.wrongCells) : {};
     SDK.startTime = SDK.phase==='solving'&&!SDK.gameOver ? Date.now() : null;
     if (SDK.startTime) SDK.timer = setInterval(sdkUpdateTime, 1000);
+    // Letzte Schwierigkeitsstufe im Select wiederherstellen
+    if (d.lastLevel) {
+      const sel = document.getElementById('sdk-level-sel');
+      if (sel) sel.value = String(d.lastLevel);
+    }
     return true;
   } catch { return false; }
 }
@@ -2899,6 +3119,17 @@ if (sdkLoad()) {
 // ---- Sudoku im Tab-System verankern ----
 // Das showSetup/showGame-System muss Sudoku kennen
 window.sdkOnShow = function() {
+  // Level-Select mit gespeicherter Stufe synchronisieren
+  try {
+    const raw = localStorage.getItem(SDK_STORE);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d.lastLevel) {
+        const sel = document.getElementById('sdk-level-sel');
+        if (sel) sel.value = String(d.lastLevel);
+      }
+    }
+  } catch(e) {}
   // Wenn Sudoku-Tab geöffnet wird: Timer weiter
   if (SDK.phase==='solving'&&!SDK.gameOver&&!SDK.startTime) {
     SDK.startTime = Date.now();
@@ -2911,6 +3142,15 @@ window.sdkOnHide = function() {
   if (SDK.startTime) { SDK.elapsed = sdkElapsed(); SDK.startTime = null; }
   if (SDK.timer) { clearInterval(SDK.timer); SDK.timer = null; }
 };
+
+// ---- Win-Popup Buttons ----
+document.getElementById('sdk-win-new').addEventListener('click', () => {
+  document.getElementById('sdk-win-popup').classList.remove('show');
+  document.getElementById('sdk-new').click();
+});
+document.getElementById('sdk-win-close').addEventListener('click', () => {
+  document.getElementById('sdk-win-popup').classList.remove('show');
+});
 
 })(); // Ende IIFE
 
