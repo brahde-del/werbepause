@@ -225,15 +225,16 @@
   .sdk-stat span { font-size: clamp(8px, 2vw, 10px); color: rgba(251,243,230,0.55); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
   .sdk-stat strong { font-size: clamp(11px, 3vw, 14px); font-family: 'Space Mono', monospace; color: var(--mustard); }
   .sdk-level-row {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 8px;
   }
-  .sdk-level-row label { font-size: 12px; font-weight: 600; color: rgba(251,243,230,0.7); flex-shrink: 0; }
+  .sdk-level-row label { font-size: clamp(12px, 3.4vw, 14px); font-weight: 600; color: rgba(251,243,230,0.7); flex-shrink: 0; }
   .sdk-level-row select {
-    flex: 1; min-width: 0; background: var(--ink); color: var(--cream); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px; padding: 6px 8px; font-family: 'Inter', sans-serif; font-size: clamp(11px, 3vw, 13px);
+    flex-shrink: 0; width: 56px; text-align: center; text-align-last: center;
+    background: var(--ink); color: var(--cream); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 7px 6px; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px;
     -webkit-appearance: none; appearance: none;
   }
-  .sdk-level-row .btn { flex-shrink: 0; padding: 8px 12px; font-size: 13px; border-radius: 9px; width: auto; }
+  .sdk-level-row .btn { flex: 1; padding: 8px 6px; font-size: clamp(12px, 3.4vw, 14px); border-radius: 9px; width: auto; }
 
   /* Board */
   #sdk-board-wrap {
@@ -357,6 +358,13 @@
   .sdk-tag { display: inline-block; background: var(--mustard); color: var(--ink); padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 800; margin-bottom: 4px; align-self: flex-start; }
   #sdk-hint-title { font-size: 14px; font-weight: 700; color: var(--cream); margin: 0; }
   #sdk-hint-text { font-size: 13px; color: rgba(251,243,230,0.85); margin: 2px 0 0; line-height: 1.45; }
+  .sdk-autonotes-row {
+    display: flex; align-items: center; gap: 8px; padding: 0 12px;
+    font-size: 13px; color: rgba(251,243,230,0.8); cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sdk-autonotes-row input { width: 18px; height: 18px; accent-color: var(--mustard); }
+  .sdk-note.auto { color: #889; font-weight: 500; }
   .sdk-status { padding: 0 12px; font-size: 12px; color: rgba(251,243,230,0.6); font-family: 'Space Mono', monospace; min-height: 20px; }
   .sdk-status.ok { color: var(--green); }
   .sdk-status.error { color: var(--red); font-weight: 700; }
@@ -520,16 +528,16 @@
         <div class="sdk-level-row">
           <label for="sdk-level-sel">Schwierigkeit:</label>
           <select id="sdk-level-sel">
-            <option value="1">1 – sehr leicht</option>
-            <option value="2">2 – leicht</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
-            <option value="5" selected>5 – mittel</option>
+            <option value="5" selected>5</option>
             <option value="6">6</option>
-            <option value="7">7 – schwer</option>
+            <option value="7">7</option>
             <option value="8">8</option>
-            <option value="9">9 – sehr schwer (Ketten)</option>
-            <option value="10">10 – extrem (Ketten)</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
           <button class="btn btn-primary" id="sdk-new">Neu</button>
           <button class="btn btn-secondary" id="sdk-custom">Eigenes</button>
@@ -568,6 +576,10 @@
         </div>
       </div>
 
+      <label class="sdk-autonotes-row">
+        <input type="checkbox" id="sdk-autonotes"> Alle Kandidaten automatisch anzeigen
+      </label>
+      <p class="hint" id="sdk-autonotes-hint" style="padding:0 12px;display:none;">Im Notizen-Modus eine graue Zahl antippen streicht sie (zählt für den Solver). Nochmal antippen aktiviert sie wieder.</p>
       <p id="sdk-status" class="sdk-status"></p>
       <button class="btn btn-text restart-btn" style="margin-top:8px;">🔄 Zurück zum Menü</button>
     </div>
@@ -2181,9 +2193,21 @@ function nakedSingle(board, elim) {
     const m = cand(board, elim, i);
     if (pc(m) === 1) {
       const d = digits(m)[0];
+      // Begründung aufbauen: welche Zahl wird wodurch ausgeschlossen?
+      const [r, c] = rc(i);
+      const inRow = new Set(), inCol = new Set(), inBlock = new Set();
+      units[r].forEach(j => board[j] && inRow.add(board[j]));
+      units[9+c].forEach(j => board[j] && inCol.add(board[j]));
+      const bIdx = 18 + Math.floor(r/3)*3 + Math.floor(c/3);
+      units[bIdx].forEach(j => board[j] && inBlock.add(board[j]));
+      const parts = [];
+      const rowD = [...inRow].sort();  if (rowD.length) parts.push(`Reihe ${r+1} hat schon ${rowD.join(', ')}`);
+      const colD = [...inCol].filter(x=>!inRow.has(x)).sort(); if (colD.length) parts.push(`Spalte ${c+1} hat ${colD.join(', ')}`);
+      const blkD = [...inBlock].filter(x=>!inRow.has(x)&&!inCol.has(x)).sort(); if (blkD.length) parts.push(`der Block hat ${blkD.join(', ')}`);
+      const elimD = digits(elim[i]||0); if (elimD.length) parts.push(`gestrichen wurde ${elimD.join(', ')}`);
       return { type:'place', tech:'Einzelkandidat', score:1, cells:[i], place:{cell:i,digit:d},
         title:`${longName(i)} = ${d}`,
-        text:`Nur die ${d} ist hier möglich. Alle anderen Zahlen werden durch Reihe, Spalte oder Block ausgeschlossen.` };
+        text:`Nur die ${d} bleibt übrig: ${parts.join('; ')}. Damit sind alle Zahlen außer der ${d} ausgeschlossen.` };
     }
   }
   return null;
@@ -2481,9 +2505,49 @@ function countSolutions(board, limit = 4) {
   return count;
 }
 
-function generatePuzzle(target) {
-  // Vorgaben je Level: mehr Vorgaben = leichter lösbar ohne Widerspruchskette
-  const clueTarget = [40,37,34,32,30,28,27,26,25,23][target - 1];
+// Technik → Schwierigkeitswert (Grade)
+const TECH_LEVEL = {
+  'Einzelkandidat': 1, 'Versteckter Einzelkandidat': 2,
+  'Block–Reihen-Ausschluss': 3, 'Block–Spalten-Ausschluss': 3,
+  'Nacktes Paar': 4, 'Verstecktes Paar': 5, 'Nackter Drilling': 5,
+  'Versteckter Drilling': 6, 'Nacktes Quadrupel': 6, 'Verstecktes Quadrupel': 7,
+  'X-Wing': 7, 'Y-Wing': 8, 'Widerspruchskette': 9
+};
+
+// gradePuzzle: löst das Rätsel Schritt für Schritt und gibt den höchsten
+// benötigten Technik-Grad zurück (1–9), oder null wenn unlösbar.
+function gradePuzzle(puzzle) {
+  const board = puzzle.slice();
+  const elim = Array(81).fill(0);
+  let hardest = 1, steps = 0;
+  while (board.some(v => !v) && steps < 500) {
+    const h = nextHint(board, elim, true);
+    if (!h) return null;
+    const lvl = TECH_LEVEL[h.tech] || 1;
+    if (lvl > hardest) hardest = lvl;
+    if (h.place) { board[h.place.cell] = h.place.digit; elim[h.place.cell] = 0; }
+    if (h.cuts) h.cuts.forEach(x => elim[x.cell] |= bit(x.digit));
+    steps++;
+  }
+  return board.every(Boolean) ? hardest : null;
+}
+
+// Nutzer-Level 1–10 → {Vorgaben-Ziel, erlaubter Grad-Bereich}
+const LEVEL_BANDS = {
+  1:  {clue:44, min:1, max:1},
+  2:  {clue:40, min:1, max:2},
+  3:  {clue:36, min:2, max:3},
+  4:  {clue:33, min:2, max:4},
+  5:  {clue:31, min:3, max:5},
+  6:  {clue:29, min:3, max:6},
+  7:  {clue:28, min:4, max:7},
+  8:  {clue:27, min:5, max:8},
+  9:  {clue:25, min:7, max:9},
+  10: {clue:24, min:8, max:9}
+};
+
+// Roh-Generator: bohrt Löcher bis clueTarget, hält Eindeutigkeit ein.
+function genRawPuzzle(clueTarget) {
   const solution = solvedGrid();
   const p = solution.slice();
   for (const i of sdkShuffle(Array.from({length:41}, (_,i) => i))) {
@@ -2496,6 +2560,22 @@ function generatePuzzle(target) {
     if (p.filter(Boolean).length <= clueTarget) break;
   }
   return {puzzle: p, solution};
+}
+
+// generatePuzzle: erzeugt so lange, bis der Technik-Grad ins Level-Band passt.
+function generatePuzzle(target) {
+  const band = LEVEL_BANDS[target] || LEVEL_BANDS[5];
+  let best = null, bestDist = 1e9;
+  for (let t = 0; t < 150; t++) {
+    const cand = genRawPuzzle(band.clue);
+    const g = gradePuzzle(cand.puzzle);
+    if (g === null) continue;
+    cand.grade = g;
+    if (g >= band.min && g <= band.max) return cand;
+    const dist = g < band.min ? band.min - g : g - band.max;
+    if (dist < bestDist) { best = cand; bestDist = dist; }
+  }
+  return best || genRawPuzzle(band.clue);
 }
 
 // ---- UI State ----
@@ -2518,6 +2598,7 @@ const SDK = {
   timer: null,
   errors: 0,
   errorLimit: 5,    // 0 = unbegrenzt
+  autoNotes: false, // alle Kandidaten automatisch anzeigen
   gameOver: false
 };
 
@@ -2668,14 +2749,17 @@ function sdkRender() {
     } else if (SDK.board[i]) {
       el.innerHTML = `<span class="sdk-val">${SDK.board[i]}</span>`;
     } else {
-      const m = sdkShownNotes(i);
+      const userM = sdkShownNotes(i);
+      const autoM = SDK.autoNotes && SDK.phase === 'solving' ? (cand(SDK.board, SDK.elim, i) & ~userM) : 0;
+      const m = userM | autoM;
       const cut = cuts.get(i) || 0;
       if (m || cut) {
         let h = '<div class="sdk-notes">';
         for (let n = 1; n <= 9; n++) {
+          const isAuto = autoM & bit(n);
           const sameNote = sv && n === sv && (m & bit(n));
           const isCut = cut & bit(n);
-          h += `<span class="sdk-note${sameNote?' same-note':''}${isCut?' cut':''}">${(m&bit(n))||isCut?n:''}</span>`;
+          h += `<span class="sdk-note${isAuto?' auto':''}${sameNote?' same-note':''}${isCut?' cut':''}">${(m&bit(n))||isCut?n:''}</span>`;
         }
         el.innerHTML = h + '</div>';
       } else {
@@ -2731,13 +2815,33 @@ function sdkInput(n) {
   if (SDK.givens[i]) return sdkSetStatus('Diese Vorgabe ist fest.', 'error');
   if (SDK.notesMode) {
     if (SDK.board[i]) return;
+    if (SDK.autoNotes) {
+      // AutoNotes an: graue Kandidaten streichen bzw. wieder aktivieren
+      const isElim = (SDK.elim[i] & bit(n)) !== 0;
+      if (isElim) {
+        // Streichung zurücknehmen – Kandidat wieder anzeigen
+        sdkPush(); SDK.elim[i] &= ~bit(n); sdkClearHint(); sdkRender(); sdkSave();
+        return sdkSetStatus(`${n} in ${longName(i)} wieder aktiviert.`);
+      }
+      // Nur streichbar, wenn ${n} überhaupt ein aktueller Kandidat ist
+      if (!(cand(SDK.board, SDK.elim, i) & bit(n)))
+        return sdkSetStatus(`${n} ist hier kein Kandidat.`, 'error');
+      // SCHUTZ: die richtige Lösungszahl darf nicht gestrichen werden
+      if (SDK.solution && SDK.solution[i] === n)
+        return sdkSetStatus(`${n} ist hier die richtige Lösung – nicht gestrichen.`, 'error');
+      sdkPush(); SDK.elim[i] |= bit(n); SDK.notes[i] &= ~bit(n);
+      sdkClearHint(); sdkRender(); sdkSave();
+      return sdkSetStatus(`${n} in ${longName(i)} gestrichen.`);
+    }
+    // AutoNotes aus: eigene Notizen togglen
     if (!(baseCand(SDK.board, i) & bit(n))) return sdkSetStatus(`${n} passt hier nicht.`, 'error');
     sdkPush(); SDK.notes[i] ^= bit(n); sdkClearHint(); sdkRender(); sdkSave(); return;
   }
   if (SDK.board[i] === n) return;
-  // Falsche vorherige rote Zahl im selben Feld zuerst löschen
-  if (SDK.wrongCells && SDK.wrongCells[i] !== undefined) delete SDK.wrongCells[i];
   if (SDK.solution && SDK.solution[i] !== n) {
+    // Fehleingabe ist ein eigener Undo-Schritt → Snapshot VOR der Änderung
+    sdkPush();
+    if (SDK.wrongCells && SDK.wrongCells[i] !== undefined) delete SDK.wrongCells[i];
     SDK.errors++;
     if (!SDK.wrongCells) SDK.wrongCells = {};
     SDK.wrongCells[i] = n; // Rot anzeigen, nicht ins board eintragen
@@ -2753,7 +2857,9 @@ function sdkInput(n) {
     sdkSetStatus(`Fehler ${SDK.errors}/${lim>0?lim:'∞'}: Die ${n} gehört nicht in ${longName(i)}. Bitte selbst löschen.`, 'error');
     sdkRender(); sdkSave(); return;
   }
-  sdkPush(); SDK.board[i] = n; SDK.notes[i] = SDK.elim[i] = 0;
+  sdkPush();
+  if (SDK.wrongCells && SDK.wrongCells[i] !== undefined) delete SDK.wrongCells[i];
+  SDK.board[i] = n; SDK.notes[i] = SDK.elim[i] = 0;
   peers[i].forEach(p => SDK.notes[p] &= ~bit(n));
   sdkClearHint(); sdkRender(); sdkSave();
   sdkSetStatus(`${n} in ${longName(i)}.`, 'ok');
@@ -2794,12 +2900,12 @@ function sdkShowHint() {
       return sdkRender();
     }
   }
-  const allowChain = (SDK.level || 0) > 8;
+  const allowChain = (SDK.level || 0) > 8 || SDK.source === 'custom';
   const h = nextHint(SDK.board, SDK.elim, allowChain);
   if (!h) {
     SDK.hint = null; sdkApplyBtn.disabled = true;
     sdkSetMethod('Nicht gefunden', 'Nächste Methode', 'error');
-    sdkSetHint('Kein Schritt', 'Nicht erkannt', 'Die eingebauten Techniken reichen hier nicht aus.', 'Geprüft: Einzelkandidaten, Paare, Drillinge, Quadrupel, Blockausschlüsse, versteckte Gruppen, X-Wing, Y-Wing, Widerspruchsketten.');
+    sdkSetHint('Kein Schritt', 'Nicht erkannt', 'Die eingebauten Techniken reichen hier nicht aus. Tipp: Prüfe, ob alle Zahlen korrekt abgetippt wurden – ein Tippfehler macht das Rätsel oft unlösbar.', 'Geprüft: Einzelkandidaten, Paare, Drillinge, Quadrupel, Blockausschlüsse, versteckte Gruppen, X-Wing, Y-Wing, Widerspruchsketten.');
     return sdkSetStatus('Keine Methode gefunden.', 'error');
   }
   SDK.hint = h;
@@ -2903,13 +3009,17 @@ function sdkResetCustom() {
 function sdkRunWorker(target, onDone, onError) {
   try {
     const code = `
-'use strict';
-// Minimale Sudoku-Helpers für den Worker
-const F = 511;
+// ---- Konstanten & Hilfsfunktionen ----
+const F = 511; // alle 9 Bits gesetzt
 const bit = n => 1 << (n - 1);
 const digits = m => { const a = []; for (let n = 1; n <= 9; n++) if (m & bit(n)) a.push(n); return a; };
-const pc = m => { let c = 0, x = m; while (x) { x &= x - 1; c++; } return c; };
+const pc = m => { let c = 0; let x = m; while (x) { x &= x - 1; c++; } return c; };
+const rc = i => [Math.floor(i / 9), i % 9];
+const cellName = i => { const [r, c] = rc(i); return \`R\${r+1}S\${c+1}\`; };
+const longName = i => { const [r, c] = rc(i); return \`Reihe \${r+1}, Spalte \${c+1}\`; };
+const uname = u => u < 9 ? \`Reihe \${u+1}\` : u < 18 ? \`Spalte \${u-8}\` : \`Block \${u-17}\`;
 
+// ---- Unit-Strukturen aufbauen ----
 const units = [];
 for (let r = 0; r < 9; r++) units.push(Array.from({length:9}, (_,c) => r*9+c));
 for (let c = 0; c < 9; c++) units.push(Array.from({length:9}, (_,r) => r*9+c));
@@ -2917,82 +3027,443 @@ for (let br = 0; br < 3; br++)
   for (let bc = 0; bc < 3; bc++) {
     const u = [];
     for (let dr = 0; dr < 3; dr++)
-      for (let dc = 0; dc < 3; dc++) u.push((br*3+dr)*9+bc*3+dc);
+      for (let dc = 0; dc < 3; dc++)
+        u.push((br*3+dr)*9 + bc*3+dc);
     units.push(u);
   }
-const peers = Array.from({length:81}, () => new Set());
 const cellUnits = Array.from({length:81}, () => []);
 units.forEach((u,k) => u.forEach(i => cellUnits[i].push(k)));
+const peers = Array.from({length:81}, () => new Set());
 for (let i = 0; i < 81; i++)
-  cellUnits[i].forEach(uk => units[uk].forEach(j => j !== i && peers[i].add(j)));
+  cellUnits[i].forEach(u => units[u].forEach(j => j !== i && peers[i].add(j)));
 
-function baseCand(b, i) {
-  if (b[i]) return 0;
+// ---- Kandidaten-Arithmetik ----
+function baseCand(board, i) {
+  if (board[i]) return 0;
   let used = 0;
-  peers[i].forEach(p => b[p] && (used |= bit(b[p])));
+  peers[i].forEach(p => board[p] && (used |= bit(board[p])));
   return F & ~used;
 }
-function shuffle(a) {
+function cand(board, elim, i) { return baseCand(board, i) & ~(elim[i] || 0); }
+function conflict(board, i) {
+  const v = board[i]; if (!v) return false;
+  for (const p of peers[i]) if (board[p] === v) return true;
+  return false;
+}
+function valid(board) { return !board.some((v,i) => v && conflict(board,i)); }
+
+// ---- Solver ----
+function combos(a, k) {
+  const out = [];
+  function rec(s, x) {
+    if (x.length === k) return out.push(x.slice());
+    for (let i = s; i <= a.length - (k - x.length); i++) { x.push(a[i]); rec(i+1, x); x.pop(); }
+  }
+  rec(0, []);
+  return out;
+}
+
+function nakedSingle(board, elim) {
+  for (let i = 0; i < 81; i++) if (!board[i]) {
+    const m = cand(board, elim, i);
+    if (pc(m) === 1) {
+      const d = digits(m)[0];
+      // Begründung aufbauen: welche Zahl wird wodurch ausgeschlossen?
+      const [r, c] = rc(i);
+      const inRow = new Set(), inCol = new Set(), inBlock = new Set();
+      units[r].forEach(j => board[j] && inRow.add(board[j]));
+      units[9+c].forEach(j => board[j] && inCol.add(board[j]));
+      const bIdx = 18 + Math.floor(r/3)*3 + Math.floor(c/3);
+      units[bIdx].forEach(j => board[j] && inBlock.add(board[j]));
+      const parts = [];
+      const rowD = [...inRow].sort();  if (rowD.length) parts.push(\`Reihe \${r+1} hat schon \${rowD.join(', ')}\`);
+      const colD = [...inCol].filter(x=>!inRow.has(x)).sort(); if (colD.length) parts.push(\`Spalte \${c+1} hat \${colD.join(', ')}\`);
+      const blkD = [...inBlock].filter(x=>!inRow.has(x)&&!inCol.has(x)).sort(); if (blkD.length) parts.push(\`der Block hat \${blkD.join(', ')}\`);
+      const elimD = digits(elim[i]||0); if (elimD.length) parts.push(\`gestrichen wurde \${elimD.join(', ')}\`);
+      return { type:'place', tech:'Einzelkandidat', score:1, cells:[i], place:{cell:i,digit:d},
+        title:\`\${longName(i)} = \${d}\`,
+        text:\`Nur die \${d} bleibt übrig: \${parts.join('; ')}. Damit sind alle Zahlen außer der \${d} ausgeschlossen.\` };
+    }
+  }
+  return null;
+}
+
+function hiddenSingle(board, elim) {
+  for (let u = 0; u < 27; u++)
+    for (let d = 1; d <= 9; d++) {
+      if (units[u].some(i => board[i] === d)) continue;
+      const p = units[u].filter(i => !board[i] && (cand(board,elim,i) & bit(d)));
+      if (p.length === 1)
+        return { type:'place', tech:'Versteckter Einzelkandidat', score:3, cells:units[u], place:{cell:p[0],digit:d},
+          title:\`\${longName(p[0])} = \${d}\`,
+          text:\`Im \${uname(u)} kann die \${d} nur in dieses eine Feld. Alle anderen Positionen sind durch Reihe, Spalte oder Block belegt.\` };
+    }
+  return null;
+}
+
+function locked(board, elim) {
+  for (let u = 18; u < 27; u++)
+    for (let d = 1; d <= 9; d++) {
+      const p = units[u].filter(i => !board[i] && (cand(board,elim,i) & bit(d)));
+      if (p.length < 2) continue;
+      const rows = [...new Set(p.map(i => rc(i)[0]))];
+      const cols = [...new Set(p.map(i => rc(i)[1]))];
+      if (rows.length === 1) {
+        const cut = units[rows[0]].filter(i => !units[u].includes(i) && !board[i] && (cand(board,elim,i) & bit(d))).map(cell => ({cell, digit:d}));
+        if (cut.length) return { type:'cut', tech:'Block–Reihen-Ausschluss', score:4, cells:p, cuts:cut,
+          title:\`\${d} ist in \${uname(u)} an Reihe \${rows[0]+1} gebunden\`,
+          text:\`Im Block kann die \${d} nur in Reihe \${rows[0]+1} stehen. Außerhalb des Blocks darf sie in dieser Reihe gestrichen werden.\` };
+      }
+      if (cols.length === 1) {
+        const cut = units[9+cols[0]].filter(i => !units[u].includes(i) && !board[i] && (cand(board,elim,i) & bit(d))).map(cell => ({cell, digit:d}));
+        if (cut.length) return { type:'cut', tech:'Block–Spalten-Ausschluss', score:4, cells:p, cuts:cut,
+          title:\`\${d} ist in \${uname(u)} an Spalte \${cols[0]+1} gebunden\`,
+          text:\`Im Block kann die \${d} nur in Spalte \${cols[0]+1} stehen. Außerhalb des Blocks darf sie dort gestrichen werden.\` };
+      }
+    }
+  return null;
+}
+
+function nakedSet(board, elim, size) {
+  for (let u = 0; u < 27; u++) {
+    const e = units[u].filter(i => !board[i] && pc(cand(board,elim,i)) >= 2 && pc(cand(board,elim,i)) <= size);
+    for (const cells of combos(e, size)) {
+      let union = 0;
+      cells.forEach(i => union |= cand(board,elim,i));
+      if (pc(union) !== size) continue;
+      const cut = [];
+      units[u].forEach(i => {
+        if (board[i] || cells.includes(i)) return;
+        digits(cand(board,elim,i) & union).forEach(digit => cut.push({cell:i, digit}));
+      });
+      if (cut.length) {
+        const ds = digits(union);
+        const name = size===2?'Nacktes Paar':size===3?'Nackter Drilling':'Nacktes Quadrupel';
+        return { type:'cut', tech:name, score:size===2?5:size===3?7:7, cells, cuts:cut,
+          title:\`\${name}: \${ds.join(', ')} in \${uname(u)}\`,
+          text:\`Die Zahlen \${ds.join(', ')} können in \${uname(u)} nur in genau \${size} Felder. Daher können sie in allen anderen Feldern dieser Einheit gestrichen werden.\` };
+      }
+    }
+  }
+  return null;
+}
+
+function hiddenSet(board, elim, size) {
+  const all = [1,2,3,4,5,6,7,8,9];
+  for (let u = 0; u < 27; u++) {
+    const open = units[u].filter(i => !board[i]);
+    for (const ds of combos(all, size)) {
+      const cells = new Set(); let ok = true;
+      for (const d of ds) {
+        const p = open.filter(i => cand(board,elim,i) & bit(d));
+        if (!p.length) { ok = false; break; }
+        p.forEach(i => cells.add(i));
+      }
+      if (!ok || cells.size !== size) continue;
+      const keep = ds.reduce((m,d) => m | bit(d), 0);
+      const cut = [];
+      cells.forEach(i => digits(cand(board,elim,i) & ~keep).forEach(digit => cut.push({cell:i,digit})));
+      if (cut.length) {
+        const name = size===2?'Verstecktes Paar':size===3?'Versteckter Drilling':'Verstecktes Quadrupel';
+        return { type:'cut', tech:name, score:size===2?6:size===3?8:8, cells:[...cells], cuts:cut,
+          title:\`\${name}: \${ds.join(', ')} in \${uname(u)}\`,
+          text:\`In \${uname(u)} können die Zahlen \${ds.join(', ')} nur in genau \${size} Felder. Alle anderen Kandidaten in diesen Feldern dürfen gestrichen werden.\` };
+      }
+    }
+  }
+  return null;
+}
+
+function xWing(board, elim) {
+  for (let d = 1; d <= 9; d++) {
+    // Reihen-basierter X-Wing
+    const rows = [];
+    for (let r = 0; r < 9; r++) {
+      const cols = [];
+      for (let c = 0; c < 9; c++) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cols.push(c); }
+      if (cols.length === 2) rows.push({r, cols});
+    }
+    for (const [a, b] of combos(rows, 2)) {
+      if (a.cols[0] !== b.cols[0] || a.cols[1] !== b.cols[1]) continue;
+      const cuts = [];
+      for (let r = 0; r < 9; r++) if (r !== a.r && r !== b.r)
+        for (const c of a.cols) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cuts.push({cell:i,digit:d}); }
+      if (cuts.length) {
+        const cells = [a.r*9+a.cols[0], a.r*9+a.cols[1], b.r*9+b.cols[0], b.r*9+b.cols[1]];
+        return { type:'cut', tech:'X-Wing', score:9, cells, cuts,
+          title:\`X-Wing mit der \${d} (Reihen \${a.r+1} & \${b.r+1})\`,
+          text:\`In Reihe \${a.r+1} und \${b.r+1} erscheint die \${d} jeweils nur in Spalte \${a.cols[0]+1} und \${a.cols[1]+1}. Damit ist die \${d} in diesen Spalten auf diese zwei Reihen fixiert – in allen anderen Reihen dieser Spalten kann die \${d} gestrichen werden.\` };
+      }
+    }
+    // Spalten-basierter X-Wing
+    const cols = [];
+    for (let c = 0; c < 9; c++) {
+      const rowsList = [];
+      for (let r = 0; r < 9; r++) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) rowsList.push(r); }
+      if (rowsList.length === 2) cols.push({c, rows:rowsList});
+    }
+    for (const [a, b] of combos(cols, 2)) {
+      if (a.rows[0] !== b.rows[0] || a.rows[1] !== b.rows[1]) continue;
+      const cuts = [];
+      for (let c = 0; c < 9; c++) if (c !== a.c && c !== b.c)
+        for (const r of a.rows) { const i = r*9+c; if (!board[i] && (cand(board,elim,i) & bit(d))) cuts.push({cell:i,digit:d}); }
+      if (cuts.length) {
+        const cells = [a.rows[0]*9+a.c, a.rows[1]*9+a.c, b.rows[0]*9+b.c, b.rows[1]*9+b.c];
+        return { type:'cut', tech:'X-Wing', score:9, cells, cuts,
+          title:\`X-Wing mit der \${d} (Spalten \${a.c+1} & \${b.c+1})\`,
+          text:\`In Spalte \${a.c+1} und \${b.c+1} erscheint die \${d} jeweils nur in Reihe \${a.rows[0]+1} und \${a.rows[1]+1}. Damit kann die \${d} in allen anderen Spalten dieser Reihen gestrichen werden.\` };
+      }
+    }
+  }
+  return null;
+}
+
+function yWing(board, elim) {
+  // Y-Wing (XY-Wing): Pivot hat genau 2 Kandidaten {A,B}, zwei Pincers mit {A,C} und {B,C}
+  for (let pivot = 0; pivot < 81; pivot++) {
+    if (board[pivot]) continue;
+    const pm = cand(board, elim, pivot);
+    if (pc(pm) !== 2) continue;
+    const [dA, dB] = digits(pm);
+    // Finde Pincers: Felder die zum Pivot sehen, 2 Kandidaten, einen davon teilen
+    const pincerA = [], pincerB = [];
+    for (const p of peers[pivot]) {
+      if (board[p]) continue;
+      const pm2 = cand(board, elim, p);
+      if (pc(pm2) !== 2) continue;
+      if ((pm2 & bit(dA)) && !(pm2 & bit(dB))) pincerA.push(p); // hat A, nicht B
+      if ((pm2 & bit(dB)) && !(pm2 & bit(dA))) pincerB.push(p); // hat B, nicht A
+    }
+    for (const pA of pincerA) {
+      const mA = cand(board, elim, pA);
+      const dC_A = digits(mA & ~bit(dA))[0]; // dritte Ziffer in PincerA
+      for (const pB of pincerB) {
+        const mB = cand(board, elim, pB);
+        if (!(mB & bit(dC_A))) continue; // PincerB muss dC haben
+        if (pc(mB) !== 2) continue;
+        // Beide Pincers teilen dC – Felder die beide Pincers sehen, können dC verlieren
+        const cuts = [];
+        for (let i = 0; i < 81; i++) {
+          if (board[i] || i === pivot || i === pA || i === pB) continue;
+          if (peers[pA].has(i) && peers[pB].has(i) && (cand(board,elim,i) & bit(dC_A)))
+            cuts.push({cell:i, digit:dC_A});
+        }
+        if (cuts.length) {
+          return { type:'cut', tech:'Y-Wing', score:8, cells:[pivot,pA,pB], cuts,
+            title:\`Y-Wing: \${dA}/\${dB} im Pivot, \${dC_A} eliminieren\`,
+            text:\`\${cellName(pivot)} hat nur {\${dA},\${dB}}. \${cellName(pA)} hat {\${dA},\${dC_A}} und \${cellName(pB)} hat {\${dB},\${dC_A}}. Egal ob im Pivot \${dA} oder \${dB} steht – einer der Pincers muss \${dC_A} aufnehmen. Alle Felder, die beide Pincers sehen, können daher \${dC_A} streichen.\` };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function propagateSingles(board, elim, maxSteps = 40) {
+  const b = board.slice();
+  const steps = [];
+  for (let loop = 0; loop < maxSteps; loop++) {
+    let placed = false;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = cand(b, elim, i);
+      if (!m) return {contradiction:true, steps, reason:\`\${cellName(i)} hat keinen möglichen Kandidaten.\`};
+      if (pc(m) === 1) { const d = digits(m)[0]; b[i] = d; steps.push({cell:i,digit:d}); placed=true; break; }
+    }
+    if (placed) continue;
+    let found = false;
+    for (let u = 0; u < 27 && !found; u++)
+      for (let d = 1; d <= 9; d++) {
+        if (units[u].some(i => b[i] === d)) continue;
+        const p = units[u].filter(i => !b[i] && (cand(b,elim,i) & bit(d)));
+        if (!p.length) return {contradiction:true, steps, reason:\`Die \${d} hat in \${uname(u)} keinen Platz mehr.\`};
+        if (p.length === 1) { b[p[0]] = d; steps.push({cell:p[0],digit:d}); found=true; break; }
+      }
+    if (!found) return {contradiction:false, steps};
+  }
+  return {contradiction:false, steps};
+}
+
+function contradictionChain(board, elim) {
+  const cells = Array.from({length:81}, (_,i) => i)
+    .filter(i => !board[i])
+    .sort((a,b) => pc(cand(board,elim,a)) - pc(cand(board,elim,b)));
+  for (const i of cells) {
+    const ds = digits(cand(board, elim, i));
+    if (ds.length < 2 || ds.length > 4) continue;
+    for (const d of ds) {
+      const test = board.slice(); test[i] = d;
+      const r = propagateSingles(test, elim);
+      if (r.contradiction) {
+        const chain = r.steps.slice(0,6).map(x => \`\${cellName(x.cell)}=\${x.digit}\`).join(' → ');
+        const more = r.steps.length > 6 ? ' → …' : '';
+        return { type:'cut', tech:'Widerspruchskette', score:10, cells:[i,...r.steps.map(x=>x.cell)], cuts:[{cell:i,digit:d}],
+          title:\`\${d} aus \${cellName(i)} streichen\`,
+          text:\`Wenn \${cellName(i)} die \${d} wäre, folgen: \${chain||'Zwangsschritte'}\${more}. Das führt zu einem Widerspruch (\${r.reason}). Also kann \${cellName(i)} nicht \${d} sein.\` };
+      }
+    }
+  }
+  return null;
+}
+
+function nextHint(board, elim, allowChain=false) {
+  return nakedSingle(board,elim)
+    || hiddenSingle(board,elim)
+    || locked(board,elim)
+    || nakedSet(board,elim,2)
+    || hiddenSet(board,elim,2)
+    || nakedSet(board,elim,3)
+    || hiddenSet(board,elim,3)
+    || nakedSet(board,elim,4)
+    || hiddenSet(board,elim,4)
+    || xWing(board,elim)
+    || yWing(board,elim)
+    || (allowChain ? contradictionChain(board,elim) : null);
+}
+
+// ---- Generator ----
+function sdkShuffle(a) {
   a = a.slice();
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
+
 function solvedGrid() {
   const b = Array(81).fill(0);
   function go() {
-    let idx=-1, mask=0, best=10;
-    for (let i=0;i<81;i++) if (!b[i]) {
-      const m=baseCand(b,i), c=pc(m);
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
       if (!c) return false;
-      if (c<best){best=c;idx=i;mask=m;if(c===1)break;}
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
     }
-    if (idx<0) return true;
-    for (const d of shuffle(digits(mask))) { b[idx]=d; if(go()) return true; b[idx]=0; }
+    if (idx < 0) return true;
+    for (const d of sdkShuffle(digits(mask))) { b[idx] = d; if (go()) return true; b[idx] = 0; }
     return false;
   }
-  go(); return b;
+  go();
+  return b;
 }
-function countSolutions(board, limit=4) {
-  let count=0;
-  function go(b) {
-    if (count>=limit) return;
-    let idx=-1,mask=0,best=10;
-    for(let i=0;i<81;i++) if(!b[i]){
-      const m=baseCand(b,i),c=pc(m);
-      if(!c) return;
-      if(c<best){best=c;idx=i;mask=m;if(c===1)break;}
+
+function solveOne(board) {
+  const b = board.slice();
+  function go() {
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
+      if (!c) return false;
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
     }
-    if(idx<0){count++;return;}
-    for(const d of digits(mask)){b[idx]=d;go(b);b[idx]=0;if(count>=limit)return;}
+    if (idx < 0) return true;
+    for (const d of digits(mask)) { b[idx] = d; if (go()) return true; b[idx] = 0; }
+    return false;
   }
-  go(board.slice()); return count;
+  return go() ? b : null;
 }
+
+function countSolutions(board, limit = 4) {
+  let count = 0;
+  function go(b) {
+    if (count >= limit) return;
+    let idx = -1, mask = 0, best = 10;
+    for (let i = 0; i < 81; i++) if (!b[i]) {
+      const m = baseCand(b, i), c = pc(m);
+      if (!c) return;
+      if (c < best) { best = c; idx = i; mask = m; if (c === 1) break; }
+    }
+    if (idx < 0) { count++; return; }
+    for (const d of digits(mask)) { b[idx] = d; go(b); b[idx] = 0; if (count >= limit) return; }
+  }
+  go(board.slice());
+  return count;
+}
+
+// Technik → Schwierigkeitswert (Grade)
+const TECH_LEVEL = {
+  'Einzelkandidat': 1, 'Versteckter Einzelkandidat': 2,
+  'Block–Reihen-Ausschluss': 3, 'Block–Spalten-Ausschluss': 3,
+  'Nacktes Paar': 4, 'Verstecktes Paar': 5, 'Nackter Drilling': 5,
+  'Versteckter Drilling': 6, 'Nacktes Quadrupel': 6, 'Verstecktes Quadrupel': 7,
+  'X-Wing': 7, 'Y-Wing': 8, 'Widerspruchskette': 9
+};
+
+// gradePuzzle: löst das Rätsel Schritt für Schritt und gibt den höchsten
+// benötigten Technik-Grad zurück (1–9), oder null wenn unlösbar.
+function gradePuzzle(puzzle) {
+  const board = puzzle.slice();
+  const elim = Array(81).fill(0);
+  let hardest = 1, steps = 0;
+  while (board.some(v => !v) && steps < 500) {
+    const h = nextHint(board, elim, true);
+    if (!h) return null;
+    const lvl = TECH_LEVEL[h.tech] || 1;
+    if (lvl > hardest) hardest = lvl;
+    if (h.place) { board[h.place.cell] = h.place.digit; elim[h.place.cell] = 0; }
+    if (h.cuts) h.cuts.forEach(x => elim[x.cell] |= bit(x.digit));
+    steps++;
+  }
+  return board.every(Boolean) ? hardest : null;
+}
+
+// Nutzer-Level 1–10 → {Vorgaben-Ziel, erlaubter Grad-Bereich}
+const LEVEL_BANDS = {
+  1:  {clue:44, min:1, max:1},
+  2:  {clue:40, min:1, max:2},
+  3:  {clue:36, min:2, max:3},
+  4:  {clue:33, min:2, max:4},
+  5:  {clue:31, min:3, max:5},
+  6:  {clue:29, min:3, max:6},
+  7:  {clue:28, min:4, max:7},
+  8:  {clue:27, min:5, max:8},
+  9:  {clue:25, min:7, max:9},
+  10: {clue:24, min:8, max:9}
+};
+
+// Roh-Generator: bohrt Löcher bis clueTarget, hält Eindeutigkeit ein.
+function genRawPuzzle(clueTarget) {
+  const solution = solvedGrid();
+  const p = solution.slice();
+  for (const i of sdkShuffle(Array.from({length:41}, (_,i) => i))) {
+    const j = 80 - i;
+    const n = i === j ? 1 : 2;
+    if (p.filter(Boolean).length - n < clueTarget) continue;
+    const a = p[i], b = p[j];
+    p[i] = p[j] = 0;
+    if (countSolutions(p.slice(), 2) !== 1) { p[i] = a; p[j] = b; }
+    if (p.filter(Boolean).length <= clueTarget) break;
+  }
+  return {puzzle: p, solution};
+}
+
+// generatePuzzle: erzeugt so lange, bis der Technik-Grad ins Level-Band passt.
 function generatePuzzle(target) {
-  const clueTarget=[40,37,34,32,30,28,27,26,25,23][target-1];
-  const solution=solvedGrid();
-  const p=solution.slice();
-  for (const i of shuffle(Array.from({length:41},(_,i)=>i))) {
-    const j=80-i, n=i===j?1:2;
-    if(p.filter(Boolean).length-n<clueTarget) continue;
-    const a=p[i],b=p[j]; p[i]=p[j]=0;
-    if(countSolutions(p.slice(),2)!==1){p[i]=a;p[j]=b;}
-    if(p.filter(Boolean).length<=clueTarget) break;
+  const band = LEVEL_BANDS[target] || LEVEL_BANDS[5];
+  let best = null, bestDist = 1e9;
+  for (let t = 0; t < 150; t++) {
+    const cand = genRawPuzzle(band.clue);
+    const g = gradePuzzle(cand.puzzle);
+    if (g === null) continue;
+    cand.grade = g;
+    if (g >= band.min && g <= band.max) return cand;
+    const dist = g < band.min ? band.min - g : g - band.max;
+    if (dist < bestDist) { best = cand; bestDist = dist; }
   }
-  return {puzzle:p,solution};
+  return best || genRawPuzzle(band.clue);
 }
+
 self.onmessage = e => {
   if (e.data.type === 'generate') {
     try {
       const result = generatePuzzle(e.data.target);
-      self.postMessage({type:'done', ...result});
+      self.postMessage({type:'done', puzzle: result.puzzle, solution: result.solution, grade: result.grade || null});
     } catch(err) {
       self.postMessage({type:'error', msg: String(err)});
     }
   }
 };
+
 `;
     const blob = new Blob([code], {type: 'application/javascript'});
     const url  = URL.createObjectURL(blob);
@@ -3035,7 +3506,12 @@ document.getElementById('sdk-new').addEventListener('click', () => {
       SDK.notes = Array(81).fill(0); SDK.elim = Array(81).fill(0);
       SDK.sel = SDK.board.findIndex(v => !v);
       SDK.notesMode = false; SDK.history = []; SDK.solution = g.solution;
+      SDK.wrongCells = {};
       SDK.level = target; SDK.elapsed = 0; SDK.errors = 0; SDK.gameOver = false;
+      SDK.autoNotes = false; // neues Spiel startet immer ohne Markierungen
+      document.getElementById('sdk-autonotes').checked = false;
+      // Select fest auf das gespielte Level (verhindert Anzeige-Verwirrung)
+      document.getElementById('sdk-level-sel').value = String(target);
       sdkStartTimer(); sdkClearHint(); sdkSetMethod('Noch nicht geprüft'); sdkRender(); sdkSave();
       sdkSetStatus(`Sudoku Stufe ${target} erstellt.`, 'ok');
     },
@@ -3066,6 +3542,11 @@ sdkNotesBtn.addEventListener('click', () => {
 });
 document.getElementById('sdk-erase-btn').addEventListener('click', sdkErase);
 document.getElementById('sdk-undo-btn').addEventListener('click', sdkUndo);
+document.getElementById('sdk-autonotes').addEventListener('change', (e) => {
+  SDK.autoNotes = e.target.checked;
+  document.getElementById('sdk-autonotes-hint').style.display = e.target.checked ? '' : 'none';
+  sdkRender(); sdkSave();
+});
 
 // ---- Persistenz ----
 const SDK_STORE = 'roadtrip_sudoku_v1';
@@ -3074,7 +3555,7 @@ function sdkSave() {
     localStorage.setItem(SDK_STORE, JSON.stringify({
       source: SDK.source, phase: SDK.phase, board: SDK.board, givens: SDK.givens,
       notes: SDK.notes, elim: SDK.elim, sel: SDK.sel, solution: SDK.solution,
-      wrongCells: SDK.wrongCells || {}, errorLimit: SDK.errorLimit,
+      wrongCells: SDK.wrongCells || {}, errorLimit: SDK.errorLimit, autoNotes: SDK.autoNotes,
       level: SDK.level, elapsed: sdkElapsed(), errors: SDK.errors, gameOver: SDK.gameOver,
       notesMode: SDK.notesMode, lastLevel: +document.getElementById('sdk-level-sel').value
     }));
@@ -3092,15 +3573,18 @@ function sdkLoad() {
       wrongCells: d.wrongCells ? Object.assign({}, d.wrongCells) : {},
       sel: Number.isInteger(d.sel)?d.sel:0, solution: d.solution||null,
       level: d.level||null, elapsed: d.elapsed||0,
-      errors: d.errors||0, errorLimit: d.errorLimit||5, gameOver: !!d.gameOver, notesMode: !!d.notesMode
+      errors: d.errors||0, errorLimit: d.errorLimit||5, gameOver: !!d.gameOver, notesMode: !!d.notesMode, autoNotes: !!d.autoNotes
     });
     SDK.wrongCells = d.wrongCells ? Object.assign({}, d.wrongCells) : {};
     SDK.startTime = SDK.phase==='solving'&&!SDK.gameOver ? Date.now() : null;
     if (SDK.startTime) SDK.timer = setInterval(sdkUpdateTime, 1000);
-    // Letzte Schwierigkeitsstufe im Select wiederherstellen
-    if (d.lastLevel) {
+    // Select: gespieltes Level bei generiertem Spiel, sonst letzte Wahl
+    {
       const sel = document.getElementById('sdk-level-sel');
-      if (sel) sel.value = String(d.lastLevel);
+      if (sel) {
+        if (SDK.source === 'generated' && SDK.level) sel.value = String(SDK.level);
+        else if (d.lastLevel) sel.value = String(d.lastLevel);
+      }
     }
     return true;
   } catch { return false; }
@@ -3108,6 +3592,8 @@ function sdkLoad() {
 
 // ---- Init ----
 if (sdkLoad()) {
+  document.getElementById('sdk-autonotes').checked = SDK.autoNotes;
+  document.getElementById('sdk-autonotes-hint').style.display = SDK.autoNotes ? '' : 'none';
   sdkSetMethod(SDK.phase==='entry'?'Nach dem Start verfügbar':SDK.phase==='complete'?'Gelöst':'Noch nicht geprüft',
     SDK.phase==='complete'?'Status':'Nächste Lösungsmethode', SDK.phase==='complete'?'done':'');
   sdkRender();
@@ -3119,18 +3605,19 @@ if (sdkLoad()) {
 // ---- Sudoku im Tab-System verankern ----
 // Das showSetup/showGame-System muss Sudoku kennen
 window.sdkOnShow = function() {
-  // Level-Select mit gespeicherter Stufe synchronisieren
-  try {
-    const raw = localStorage.getItem(SDK_STORE);
-    if (raw) {
-      const d = JSON.parse(raw);
-      if (d.lastLevel) {
-        const sel = document.getElementById('sdk-level-sel');
-        if (sel) sel.value = String(d.lastLevel);
-      }
+  const sel = document.getElementById('sdk-level-sel');
+  // Läuft ein generiertes Spiel? Dann Select auf dessen tatsächliches Level.
+  if (sel) {
+    if (SDK.source === 'generated' && SDK.level) {
+      sel.value = String(SDK.level);
+    } else {
+      // Sonst letzte im Dropdown gewählte Stufe
+      try {
+        const raw = localStorage.getItem(SDK_STORE);
+        if (raw) { const d = JSON.parse(raw); if (d.lastLevel) sel.value = String(d.lastLevel); }
+      } catch(e) {}
     }
-  } catch(e) {}
-  // Wenn Sudoku-Tab geöffnet wird: Timer weiter
+  }
   if (SDK.phase==='solving'&&!SDK.gameOver&&!SDK.startTime) {
     SDK.startTime = Date.now();
     SDK.timer = setInterval(sdkUpdateTime, 1000);
